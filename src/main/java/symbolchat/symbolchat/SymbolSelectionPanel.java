@@ -69,6 +69,9 @@ public class SymbolSelectionPanel implements Element, Drawable {
         for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
             tab.getRight().render(matrices,mouseX,mouseY,delta);
         }
+        for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
+            tab.getRight().renderToolTip(matrices,mouseX,mouseY);
+        }
         getSymbolTab(selectedTab).render(matrices,mouseX,mouseY,delta);
     }
 

@@ -34,12 +34,11 @@ public class SwitchTabSymbolButtonWidget extends SymbolButtonWidget {
 
     @Override
     public void renderToolTip(MatrixStack matrices, int mouseX, int mouseY) {
-        screen.renderTooltip(matrices,tooltip,mouseX,mouseY);
+        if(this.isMouseOver(mouseX,mouseY)) screen.renderTooltip(matrices,tooltip,mouseX,mouseY);
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if(this.isMouseOver(mouseX,mouseY)) renderToolTip(matrices,mouseX,mouseY);
         super.render(matrices, mouseX, mouseY, delta);
     }
 }
