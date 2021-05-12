@@ -22,8 +22,8 @@ public class SymbolTab implements Drawable, Element {
 
     static {
         //size of tabs for number of symbols plus margin
-        width = symbolsWidth * SymbolButtonWidget.symbolSize + (SymbolTab.symbolsWidth-1);
-        height = symbolsHeight * SymbolButtonWidget.symbolSize + (SymbolTab.symbolsHeight-1);
+        width = symbolsWidth * SymbolButtonWidget.symbolSize + (SymbolTab.symbolsWidth+1);
+        height = symbolsHeight * SymbolButtonWidget.symbolSize + (SymbolTab.symbolsHeight+1);
     }
 
     protected List<SymbolButtonWidget> symbolButtons;
