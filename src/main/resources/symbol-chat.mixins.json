@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "symbolchat.symbolchat.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "ChatScreenMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
