@@ -16,4 +16,9 @@ public class OpenSymbolPanelButtonWidget extends SymbolButtonWidget {
     public void onClick(double mouseX, double mouseY) {
         symbolSelectionPanel.visible = !symbolSelectionPanel.visible;
     }
+
+    @Override
+    public boolean isHovered() {
+        return super.isHovered() || symbolSelectionPanel.visible;
+    }
 }
