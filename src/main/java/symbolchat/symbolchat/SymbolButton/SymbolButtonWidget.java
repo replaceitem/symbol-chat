@@ -4,15 +4,17 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Narratable;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.math.MathHelper;
-import symbolchat.symbolchat.SymbolSelectionPanel;
 
-public class SymbolButtonWidget extends AbstractButtonWidget implements Drawable, Element {
+public class SymbolButtonWidget extends ClickableWidget implements Drawable, Element, Narratable {
 
     public static final int symbolSize = 12;
 
@@ -41,5 +43,11 @@ public class SymbolButtonWidget extends AbstractButtonWidget implements Drawable
             int z = this.isHovered() ? 16777215 : 10526880;
             drawCenteredText(matrices, textRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, z | MathHelper.ceil(this.alpha * 255.0F) << 24);
         }
+    }
+
+    @Override
+    public void appendNarrations(NarrationMessageBuilder builder) {
+        this.method_37021(builder);
+        builder.put(NarrationPart.HINT, "Symbol chat button");
     }
 }
