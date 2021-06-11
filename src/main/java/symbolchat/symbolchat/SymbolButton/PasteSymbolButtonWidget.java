@@ -1,22 +1,22 @@
 package symbolchat.symbolchat.SymbolButton;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import symbolchat.symbolchat.SymbolTab;
 
 public class PasteSymbolButtonWidget extends SymbolButtonWidget {
 
-    protected TextFieldWidget textFieldWidget;
+    protected SymbolTab symbolTab;
 
     protected String symbol;
 
-    public PasteSymbolButtonWidget(Screen screen, int x, int y, TextFieldWidget textFieldWidget, String symbol) {
+    public PasteSymbolButtonWidget(Screen screen, int x, int y, SymbolTab symbolTab, String symbol) {
         super(screen, x, y, symbol);
-        this.textFieldWidget = textFieldWidget;
+        this.symbolTab = symbolTab;
         this.symbol = symbol;
     }
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        this.textFieldWidget.write(this.symbol);
+        this.symbolTab.pasteSymbol(this.symbol);
     }
 }

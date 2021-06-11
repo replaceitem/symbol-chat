@@ -18,7 +18,7 @@ public class SymbolTab implements Drawable, Element {
 
     public static final int width,height;
 
-    public TextFieldWidget textFieldWidget;
+    public SymbolSelectionPanel symbolSelectionPanel;
 
     static {
         //size of tabs for number of symbols plus margin
@@ -31,12 +31,12 @@ public class SymbolTab implements Drawable, Element {
 
     protected Screen screen;
 
-    public SymbolTab(Screen screen, SymbolList symbols, int x, int y, TextFieldWidget textFieldWidget) {
+    public SymbolTab(Screen screen, SymbolList symbols, int x, int y, SymbolSelectionPanel symbolSelectionPanel) {
         this.x = x;
         this.y = y;
         this.screen = screen;
         this.symbolButtons = new ArrayList<>();
-        this.textFieldWidget = textFieldWidget;
+        this.symbolSelectionPanel = symbolSelectionPanel;
         loadSymbols(symbols);
     }
 
@@ -44,7 +44,7 @@ public class SymbolTab implements Drawable, Element {
         for(int i = 0; i < symbols.symbols.size(); i++) {
             int widgetX = this.x+1+(i%symbolsWidth*(SymbolButtonWidget.symbolSize+1));
             int widgetY = this.y+1+(i/symbolsWidth*(SymbolButtonWidget.symbolSize+1));
-            SymbolButtonWidget widget = new PasteSymbolButtonWidget(screen, widgetX, widgetY, textFieldWidget, symbols.symbols.get(i));
+            SymbolButtonWidget widget = new PasteSymbolButtonWidget(screen, widgetX, widgetY, this, symbols.symbols.get(i));
             symbolButtons.add(widget);
         }
     }
@@ -62,5 +62,9 @@ public class SymbolTab implements Drawable, Element {
             if(symbolButtonWidget.mouseClicked(mouseX,mouseY,button)) return true;
         }
         return false;
+    }
+
+    public void pasteSymbol(String symbol) {
+        symbolSelectionPanel.onSymbolPasted(symbol);
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.util.SelectionManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Pair;
 import symbolchat.symbolchat.SymbolButton.SwitchTabSymbolButtonWidget;
@@ -12,11 +13,10 @@ import symbolchat.symbolchat.SymbolButton.SymbolButtonWidget;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static net.minecraft.client.gui.DrawableHelper.fill;
 
-public class SymbolSelectionPanel implements Element, Drawable {
+public abstract class SymbolSelectionPanel implements Element, Drawable {
     protected List<Pair<SymbolTab,SymbolButtonWidget>> tabs;
     protected TextFieldWidget textFieldWidget;
 
@@ -33,19 +33,18 @@ public class SymbolSelectionPanel implements Element, Drawable {
         height = SymbolTab.height + SymbolButtonWidget.symbolSize + 2;
     }
 
-    public SymbolSelectionPanel(Screen screen, int x, int y, TextFieldWidget textFieldWidget) {
+    public SymbolSelectionPanel(Screen screen, int x, int y) {
         tabs = new ArrayList<>();
         this.x = x;
         this.y = y;
         this.visible = false;
         this.selectedTab = 0;
         this.screen = screen;
-        this.textFieldWidget = textFieldWidget;
 
         int buttonY = this.y+height-1- SymbolButtonWidget.symbolSize;
 
         for(int i = 0; i < SymbolStorage.symbolLists.size(); i++) {
-            SymbolTab tab = new SymbolTab(screen, SymbolStorage.symbolLists.get(i),this.x,this.y, this.textFieldWidget);
+            SymbolTab tab = new SymbolTab(screen, SymbolStorage.symbolLists.get(i),this.x,this.y, this);
             int buttonX = this.x+1+((SymbolButtonWidget.symbolSize+1)*i);
             SymbolButtonWidget buttonWidget = new SwitchTabSymbolButtonWidget(screen, buttonX, buttonY, i, this);
             tabs.add(new Pair<>(tab,buttonWidget));
@@ -83,5 +82,32 @@ public class SymbolSelectionPanel implements Element, Drawable {
         }
         if(getSymbolTab(selectedTab).mouseClicked(mouseX,mouseY,button)) return true;
         return false;
+    }
+
+    public abstract void onSymbolPasted(String symbol);
+
+
+
+
+
+
+
+
+    public static SymbolSelectionPanel createChatBoxPanel(Screen screen, TextFieldWidget textFieldWidget, int x, int y) {
+        return new SymbolSelectionPanel(screen,x,y) {
+            @Override
+            public void onSymbolPasted(String symbol) {
+                textFieldWidget.write(symbol);
+            }
+        };
+    }
+
+    public static SymbolSelectionPanel createSignEditPanel(Screen screen, SelectionManager selectionManager, int x, int y) {
+        return new SymbolSelectionPanel(screen,x,y) {
+            @Override
+            public void onSymbolPasted(String symbol) {
+                selectionManager.insert(symbol);
+            }
+        };
     }
 }

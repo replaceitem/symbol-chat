@@ -31,7 +31,7 @@ public class ChatScreenMixin extends Screen {
     private void addSymbolButton(CallbackInfo ci) {
         int symbolButtonX = this.width-2-SymbolButtonWidget.symbolSize;
         int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;
-        this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.width-2,symbolButtonY-2-SymbolSelectionPanel.height, this.chatField);
+        this.symbolSelectionPanel = SymbolSelectionPanel.createChatBoxPanel(this,chatField,this.width-SymbolSelectionPanel.width-2,symbolButtonY-2-SymbolSelectionPanel.height);
         this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
     }
 
@@ -45,13 +45,13 @@ public class ChatScreenMixin extends Screen {
     }
 
     @Inject(method = "mouseClicked", at = @At(value = "HEAD"), cancellable = true)
-    private void clickSymbolButton(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+    private void renderSymbolButton(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if(symbolSelectionPanel.mouseClicked(mouseX,mouseY,button)) cir.setReturnValue(true);
         if(symbolButtonWidget.mouseClicked(mouseX,mouseY,button)) cir.setReturnValue(true);
     }
 
     @Inject(method = "render", at = @At(value = "HEAD"), cancellable = true)
-    private void clickSymbolButton(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void renderSymbolButton(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         symbolButtonWidget.render(matrices,mouseX,mouseY,delta);
         symbolSelectionPanel.render(matrices, mouseX, mouseY, delta);
     }
