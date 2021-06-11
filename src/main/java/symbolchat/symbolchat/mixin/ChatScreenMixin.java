@@ -37,11 +37,11 @@ public class ChatScreenMixin extends Screen {
 
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 1),require = 1)
     private int changeTextBoxWidth(int original) {
-        return original + SymbolButtonWidget.symbolSize + 2;
+        return original + SymbolButtonWidget.symbolSize + 8;
     }
     @ModifyConstant(method = "render",constant = @Constant(intValue = 2, ordinal = 1),require = 1)
     private int changeChatBoxFillWidth(int original) {
-        return changeTextBoxWidth(original);
+        return original + SymbolButtonWidget.symbolSize + 2;
     }
 
     @Inject(method = "mouseClicked", at = @At(value = "HEAD"), cancellable = true)
