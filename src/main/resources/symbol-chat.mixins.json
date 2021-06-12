@@ -4,6 +4,7 @@
   "package": "symbolchat.symbolchat.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "AnvilScreenMixin",
     "ChatScreenMixin",
     "SignEditScreenMixin"
   ],

@@ -5,7 +5,6 @@ import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.SelectionManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Pair;
 import symbolchat.symbolchat.SymbolButton.SwitchTabSymbolButtonWidget;
@@ -16,7 +15,7 @@ import java.util.List;
 
 import static net.minecraft.client.gui.DrawableHelper.fill;
 
-public abstract class SymbolSelectionPanel implements Element, Drawable {
+public class SymbolSelectionPanel implements Element, Drawable {
     protected List<Pair<SymbolTab,SymbolButtonWidget>> tabs;
     protected TextFieldWidget textFieldWidget;
 
@@ -84,30 +83,9 @@ public abstract class SymbolSelectionPanel implements Element, Drawable {
         return false;
     }
 
-    public abstract void onSymbolPasted(String symbol);
-
-
-
-
-
-
-
-
-    public static SymbolSelectionPanel createChatBoxPanel(Screen screen, TextFieldWidget textFieldWidget, int x, int y) {
-        return new SymbolSelectionPanel(screen,x,y) {
-            @Override
-            public void onSymbolPasted(String symbol) {
-                textFieldWidget.write(symbol);
-            }
-        };
-    }
-
-    public static SymbolSelectionPanel createSignEditPanel(Screen screen, SelectionManager selectionManager, int x, int y) {
-        return new SymbolSelectionPanel(screen,x,y) {
-            @Override
-            public void onSymbolPasted(String symbol) {
-                selectionManager.insert(symbol);
-            }
-        };
+    public void onSymbolPasted(String symbol) {
+        if(this.screen instanceof SymbolInsertable) {
+            ((SymbolInsertable) this.screen).insertSymbol(symbol);
+        }
     }
 }
