@@ -1,7 +1,6 @@
 package symbolchat.symbolchat;
 
 import com.google.gson.annotations.SerializedName;
-import org.apache.commons.codec.binary.Hex;
 
 import java.util.ArrayList;
 

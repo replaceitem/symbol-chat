@@ -14,7 +14,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.math.MathHelper;
 
-public class SymbolButtonWidget extends ClickableWidget implements Drawable, Element, Narratable {
+public abstract class SymbolButtonWidget extends ClickableWidget implements Drawable, Element, Narratable {
 
     public static final int symbolSize = 12;
 
@@ -26,9 +26,7 @@ public class SymbolButtonWidget extends ClickableWidget implements Drawable, Ele
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
-
-    }
+    public abstract void onClick(double mouseX, double mouseY);
 
     @Override
     protected MutableText getNarrationMessage() {

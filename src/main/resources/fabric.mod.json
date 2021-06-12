@@ -13,11 +13,9 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "symbolchat.symbolchat.client.SymbolChatClient"
-    ],
-    "main": [
       "symbolchat.symbolchat.SymbolChat"
-    ]
+    ],
+    "main": []
   },
   "mixins": [
     "symbol-chat.mixins.json"
