@@ -4,7 +4,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import symbolchat.symbolchat.SymbolList;
 import symbolchat.symbolchat.SymbolSelectionPanel;
 import symbolchat.symbolchat.SymbolStorage;
 

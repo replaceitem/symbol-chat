@@ -3,7 +3,6 @@ package symbolchat.symbolchat;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import symbolchat.symbolchat.SymbolButton.PasteSymbolButtonWidget;
 import symbolchat.symbolchat.SymbolButton.SymbolButtonWidget;

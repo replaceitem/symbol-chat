@@ -3,9 +3,9 @@ package symbolchat.symbolchat;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SymbolList {
-    @SerializedName("id")
     public String id;
 
     @SerializedName("name")
@@ -18,8 +18,15 @@ public class SymbolList {
     public int position;
 
     @SerializedName("symbols")
-    public ArrayList<String> symbols;
+    public List<String> symbols;
 
+    public SymbolList(List<String> symbols) {
+        this.symbols = symbols;
+        this.name = "Custom";
+        this.icon = "✎";
+        this.position = Integer.MAX_VALUE;
+        this.id = "custom";
+    }
 
     public void splitStrings() {
 
