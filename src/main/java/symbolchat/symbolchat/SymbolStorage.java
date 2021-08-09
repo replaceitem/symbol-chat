@@ -21,6 +21,7 @@ import java.util.List;
 public class SymbolStorage {
 
     public static ArrayList<SymbolList> symbolLists;
+    public static SymbolList customList;
 
     public static void loadLists() {
         symbolLists = new ArrayList<>();
@@ -63,9 +64,14 @@ public class SymbolStorage {
                 symbols.add(read);
                 read = reader.readLine();
             }
-            SymbolList symbolList = new SymbolList(symbols);
-            symbolList.splitStrings();
-            symbolLists.add(symbolList);
+
+            if(customList == null) {
+                customList = new SymbolList(symbols);
+                symbolLists.add(customList);
+            } else {
+                customList.symbols = symbols;
+            }
+            customList.splitStrings();
         } catch (IOException e) {
             SymbolChat.LOGGER.error("Could not load custom symbol file");
             SymbolChat.LOGGER.error(e);
