@@ -56,7 +56,7 @@ public class SymbolStorage {
                 SymbolChat.LOGGER.info("No custom symbol file present");
                 return;
             }
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(symbolFile)));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(symbolFile),StandardCharsets.UTF_8));
             String read = reader.readLine();
             List<String> symbols = new ArrayList<>();
             while(read != null) {
