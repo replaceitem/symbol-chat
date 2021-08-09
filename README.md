@@ -9,6 +9,7 @@ All symbols are supported by minecraft, meaning everyone can see them, without n
 
 You can specify a list of your own symbols in a `symbols.txt` file in the config directory.
 Those will be loaded in the "Custom" symbol category.
+You can reload this list by reloading the resourcepacks using F3+T
 
 ## Preview
 
