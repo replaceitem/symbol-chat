@@ -62,8 +62,8 @@ public class SymbolSelectionPanel implements Element, Drawable {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if(!this.visible) return;
-        fill(matrices, this.x, this.y, this.x + width, this.y + height, MinecraftClient.getInstance().options.getTextBackgroundColor(Integer.MIN_VALUE));
-        fill(matrices, this.x, this.y + height - 2 - SymbolButtonWidget.symbolSize, this.x + width, this.y + height, MinecraftClient.getInstance().options.getTextBackgroundColor(Integer.MIN_VALUE));
+        fill(matrices, this.x, this.y, this.x + width, this.y + height, Config.hud_color);
+        fill(matrices, this.x, this.y + height - 2 - SymbolButtonWidget.symbolSize, this.x + width, this.y + height, Config.hud_color);
         for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
             tab.getRight().render(matrices,mouseX,mouseY,delta);
         }

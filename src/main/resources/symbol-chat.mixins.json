@@ -6,7 +6,7 @@
   "mixins": [
     "AnvilScreenMixin",
     "ChatScreenMixin",
-    "ReloadableResourceManagerImplMixin",
+    "MinecraftClientMixin",
     "SignEditScreenMixin"
   ],
   "client": [
