@@ -4,8 +4,8 @@ import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import symbolchat.symbolchat.SymbolButton.PasteSymbolButtonWidget;
-import symbolchat.symbolchat.SymbolButton.SymbolButtonWidget;
+import symbolchat.symbolchat.widget.symbolButton.PasteSymbolButtonWidget;
+import symbolchat.symbolchat.widget.symbolButton.SymbolButtonWidget;
 
 import java.util.ArrayList;
 import java.util.List;

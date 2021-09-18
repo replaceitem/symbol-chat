@@ -11,10 +11,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import symbolchat.symbolchat.SymbolButton.OpenSymbolPanelButtonWidget;
-import symbolchat.symbolchat.SymbolButton.SymbolButtonWidget;
 import symbolchat.symbolchat.SymbolInsertable;
 import symbolchat.symbolchat.SymbolSelectionPanel;
+import symbolchat.symbolchat.widget.symbolButton.OpenSymbolPanelButtonWidget;
+import symbolchat.symbolchat.widget.symbolButton.SymbolButtonWidget;
 
 @Mixin(SignEditScreen.class)
 public class SignEditScreenMixin extends Screen implements SymbolInsertable {

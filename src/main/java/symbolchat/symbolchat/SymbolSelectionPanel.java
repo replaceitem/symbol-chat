@@ -1,14 +1,13 @@
 package symbolchat.symbolchat;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Pair;
-import symbolchat.symbolchat.SymbolButton.SwitchTabSymbolButtonWidget;
-import symbolchat.symbolchat.SymbolButton.SymbolButtonWidget;
+import symbolchat.symbolchat.widget.symbolButton.SwitchTabSymbolButtonWidget;
+import symbolchat.symbolchat.widget.symbolButton.SymbolButtonWidget;
 
 import java.util.ArrayList;
 import java.util.List;

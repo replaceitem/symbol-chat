@@ -1,4 +1,4 @@
-package symbolchat.symbolchat.SymbolButton;
+package symbolchat.symbolchat.widget.symbolButton;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
