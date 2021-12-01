@@ -46,7 +46,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
 
     @Override
     public void appendNarrations(NarrationMessageBuilder builder) {
-        this.method_37021(builder);
+        this.appendDefaultNarrations(builder);
         builder.put(NarrationPart.HINT, "Symbol chat button");
     }
 }

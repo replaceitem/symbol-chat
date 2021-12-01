@@ -81,7 +81,7 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
 
     @Override
     public void appendNarrations(NarrationMessageBuilder builder) {
-        this.method_37021(builder);
+        this.appendDefaultNarrations(builder);
         builder.put(NarrationPart.HINT, "Dropdown: " + getSelection().toString());
     }
     public T getSelection() {
