@@ -228,10 +228,10 @@ public abstract class FontProcessor {
 
 
             if(c >= 'A' && c <= 'Z') {
-                return "ᗩᗷᑢᕲᘿᖴᘜᕼᓰᒚᐸᒪᘻᘉᓍᕵᕴᖇᏕᖶᑘᐺᘺ᙭ᖻℤ".substring(c-'A',c-'A'+1);
+                return "ᗩᗷᑢᗫᘿᖴᏩᕼᓰℐᏦᒪℳℕℴᕵℚᖇᏕτᑘᐺᘺ᙭ᖻℤ".substring(c-'A',c-'A'+1);
             }
             if(c >= 'a' && c <= 'z') {
-                return "ᗩᗷᑢᕲᘿᖴᘜᕼᓰᒚᐸᒪᘻᘉᓍᕵᕴᖇᏕᖶᑘᐺᘺ᙭ᖻℤ".substring(c-'a',c-'a'+1);
+                return "αϬᏨȡℯƒℊℎᎥℑҡℓᗰℵℴᕵᕴℜᏕᖶ∪Ꮙѡ᙭௶Ꮓ".substring(c-'a',c-'a'+1);
             }
 
             return string;
