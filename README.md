@@ -1,5 +1,7 @@
 # symbol-chat
 
+![Symbol-chat](/src/main/resources/assets/symbol-chat/icon.png)
+
 This client side mod allows you to paste special characters into the chat, on signs and in the anvil text box.
 Additionally, you can select a unicode font that is supported by minecraft,
 and your typed text will automatically get converted into the supported characters.
