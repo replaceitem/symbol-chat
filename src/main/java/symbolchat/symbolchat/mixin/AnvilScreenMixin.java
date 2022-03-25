@@ -46,7 +46,7 @@ public class AnvilScreenMixin extends Screen implements SymbolInsertable {
         return super.mouseClicked(mouseX,mouseY,button);
     }
 
-    @Inject(method = "renderForeground", at = @At(value = "RETURN"), cancellable = true)
+    @Inject(method = "renderForeground", at = @At(value = "RETURN"))
     private void renderSymbolButton(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         symbolButtonWidget.render(matrices,mouseX,mouseY,delta);
         symbolSelectionPanel.render(matrices, mouseX, mouseY, delta);

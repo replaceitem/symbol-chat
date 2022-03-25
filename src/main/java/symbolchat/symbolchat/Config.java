@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Properties;
 
 public class Config {
@@ -21,8 +22,8 @@ public class Config {
         Properties properties = new Properties();
         if(!configPath.toFile().exists()) {
             try {
-                Files.copy(SymbolChat.class.getResourceAsStream("/default_config.properties"),configPath);
-            } catch (IOException e) {
+                Files.copy(Objects.requireNonNull(SymbolChat.class.getResourceAsStream("/default_config.properties")),configPath);
+            } catch (IOException | NullPointerException e) {
                 SymbolChat.LOGGER.error("Could not create config file");
                 SymbolChat.LOGGER.error(e);
             }
