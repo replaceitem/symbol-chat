@@ -1,13 +1,11 @@
 # symbol-chat
 
-![Symbol-chat](/src/main/resources/assets/symbol-chat/icon.png)
+<img src="https://raw.githubusercontent.com/replaceitem/symbol-chat/master/images/icon.png" align="right" width="128px"/>
 
 This client side mod allows you to paste special characters into the chat, on signs and in the anvil text box.
 Additionally, you can select a unicode font that is supported by minecraft,
 and your typed text will automatically get converted into the supported characters.
 All symbols are supported by minecraft, meaning everyone can see them, without needing the mod.
-
-## [Download](https://github.com/replaceitem/symbol-chat/releases)
 
 ## Config
 
@@ -31,8 +29,7 @@ which makes use of unicode characters to produce a more interesting looking text
 
 ## Preview
 
-![Preview](images/preview.png)
-![Fonts](images/fonts.png)
-![Objects](images/objects.png)
-![Shapes](images/shapes.png)
-![Characters](images/characters.png)
+![Symbol menu](https://raw.githubusercontent.com/replaceitem/symbol-chat/master/images/symbol_menu.png)
+![Font menu](https://raw.githubusercontent.com/replaceitem/symbol-chat/master/images/font_menu.png)
+![All symbols](https://raw.githubusercontent.com/replaceitem/symbol-chat/master/images/symbol_list.png)
+![Fonts](https://raw.githubusercontent.com/replaceitem/symbol-chat/master/images/fonts.png)
