@@ -1,6 +1,7 @@
 plugins {
     id 'fabric-loom' version '0.10-SNAPSHOT'
     id 'maven-publish'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -40,6 +41,18 @@ jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}"}
     }
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN") // This is the default. Remember to have the MODRINTH_TOKEN environment variable set or else this will fail, or set it to whatever you want - just make sure it stays private!
+    projectId = "NKvLVQMc"
+    versionNumber = project.version // You don't need to set this manually. Will fail if Modrinth has this version already
+    versionType = "release" // This is the default
+    uploadFile = remapJar // With Fabric Loom or Architectury Loom, this MUST be set to `remapJar` instead of `jar`!
+    gameVersions = ["1.18", "1.18.1", "1.18.2"] // Must be an array, even with only one version
+    loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Fabric Loom or ForgeGradle
+    dependencies = []
+    syncBodyFrom = rootProject.file("README.md").text
 }
 
 // configure the maven publication
