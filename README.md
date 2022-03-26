@@ -7,6 +7,8 @@ Additionally, you can select a unicode font that is supported by minecraft,
 and your typed text will automatically get converted into the supported characters.
 All symbols are supported by minecraft, meaning everyone can see them, without needing the mod.
 
+[**Download**](https://modrinth.com/mod/symbol-chat/versions)
+
 ## Config
 
 Some aspects of this mod can be customized in the `symbol-chat.properties` file.
@@ -21,7 +23,7 @@ You can specify a list of your own symbols in a `symbols.txt` file in the config
 Those will be loaded in the "Custom" symbol category.
 You can reload this list by reloading the resourcepacks using F3+T
 
-# Font selection
+## Font selection
 
 On the top right of the chat screen, you can choose between multiple different fonts.
 Everything you type will get converted to that font,
