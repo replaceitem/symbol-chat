@@ -201,8 +201,7 @@ public abstract class FontProcessor {
             if(string.length() == 0) return string;
             if(string.length() > 1) return string;
             char c = string.charAt(0);
-            if(c >= '0' && c <= '9') {
-                if( c == '0') return FontProcessor.symbolFromUnicodeNumber(0x24C4);
+            if(c >= '1' && c <= '9') {
                 return FontProcessor.symbolFromUnicodeNumber(c-'1'+0x2474);
             }
             if(c >= 'A' && c <= 'Z') {
