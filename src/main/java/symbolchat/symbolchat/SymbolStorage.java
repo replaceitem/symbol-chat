@@ -25,14 +25,13 @@ public class SymbolStorage {
 
     public static void loadLists() {
         symbolLists = new ArrayList<>();
-
-        tryLoadList("faces");
-        tryLoadList("nature");
-        tryLoadList("objects");
-        tryLoadList("arrows");
-        tryLoadList("symbols");
-        tryLoadList("shapes");
-        tryLoadList("characters");
+        tryLoadList("1_people_nature");
+        tryLoadList("2_objects");
+        tryLoadList("3_arrows");
+        tryLoadList("4_symbols");
+        tryLoadList("5_shapes");
+        tryLoadList("6_lines_blocks");
+        tryLoadList("7_numbers");
         tryLoadCustomList();
 
         symbolLists.sort(Comparator.comparingInt(o -> o.position));
