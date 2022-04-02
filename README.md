@@ -2,6 +2,8 @@
 
 <img src="https://raw.githubusercontent.com/replaceitem/symbol-chat/master/images/icon.png" align="right" width="128px"/>
 
+**Requires [Cloth config](https://www.curseforge.com/minecraft/mc-mods/cloth-config)**
+
 This client side mod allows you to paste special characters into the chat, on signs and in the anvil text box.
 Additionally, you can select a unicode font that is supported by minecraft,
 and your typed text will automatically get converted into the supported characters.
@@ -11,17 +13,12 @@ All symbols are supported by minecraft, meaning everyone can see them, without n
 
 ## Config
 
-Some aspects of this mod can be customized in the `symbol-chat.properties` file.
-
-* `hud_color` Background color of the symbol selection hud in hex notation (`#AARRGGBB`)
-
-* `button_color` Color of the button in the symbol selection hud
+Some aspects of this mod are configurable using [Cloth config](https://www.curseforge.com/minecraft/mc-mods/cloth-config).
+The configuration screen is (for now only) accessible through the [ModMenu](https://modrinth.com/mod/modmenu) config button.
 
 ## Custom symbols
 
-You can specify a list of your own symbols in a `symbols.txt` file in the config directory.
-Those will be loaded in the "Custom" symbol category.
-You can reload this list by reloading the resourcepacks using F3+T
+You can specify custom symbols in the configuration screen, which will appear in the last "custom" symbol tab.
 
 ## Font selection
 
