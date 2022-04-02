@@ -3,11 +3,15 @@
   "id": "symbol-chat",
   "version": "${version}",
   "name": "Symbol Chat",
-  "description": "Adds a button for symbols to chat",
+  "description": "A client side mod that adds a symbol/emoji menu as well as writing in different unicode fonts.",
   "authors": [
     "replaceitem"
   ],
-  "contact": {},
+  "contact": {
+    "homepage": "https://modrinth.com/mod/symbol-chat",
+    "issues": "https://github.com/replaceitem/symbol-chat/issues",
+    "sources": "https://github.com/replaceitem/symbol-chat"
+  },
   "license": "MIT",
   "icon": "assets/symbol-chat/icon.png",
   "environment": "client",
@@ -15,13 +19,14 @@
     "client": [
       "symbolchat.symbolchat.SymbolChat"
     ],
-    "main": []
+    "modmenu": ["symbolchat.symbolchat.ModMenuApiImpl"]
   },
   "mixins": [
     "symbol-chat.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.3",
-    "minecraft": "1.18.x"
+    "minecraft": "1.18.x",
+    "cloth-config": ">=6.0.0"
   }
 }

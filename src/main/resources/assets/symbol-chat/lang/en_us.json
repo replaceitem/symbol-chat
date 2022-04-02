@@ -1,0 +1,7 @@
+{
+  "text.autoconfig.symbol-chat.title": "Symbol Chat config",
+  "text.autoconfig.symbol-chat.option.hud_color": "HUD Color",
+  "text.autoconfig.symbol-chat.option.button_color": "Button Color",
+  "text.autoconfig.symbol-chat.option.custom_symbols": "Custom symbols",
+  "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "You can paste custom symbols here, which will appear in the custom symbols tab"
+}

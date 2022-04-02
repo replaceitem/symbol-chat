@@ -1,4 +1,4 @@
-# symbol-chat
+# Symbol Chat
 
 <img src="https://raw.githubusercontent.com/replaceitem/symbol-chat/master/images/icon.png" align="right" width="128px"/>
 

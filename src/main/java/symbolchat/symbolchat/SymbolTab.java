@@ -18,6 +18,8 @@ public class SymbolTab implements Drawable, Element {
     public static final int width,height;
 
     public SymbolSelectionPanel symbolSelectionPanel;
+    
+    protected SymbolList symbols;
 
     static {
         //size of tabs for number of symbols plus margin
@@ -36,14 +38,16 @@ public class SymbolTab implements Drawable, Element {
         this.screen = screen;
         this.symbolButtons = new ArrayList<>();
         this.symbolSelectionPanel = symbolSelectionPanel;
-        loadSymbols(symbols);
+        this.symbols = symbols;
+        loadSymbols();
     }
 
-    protected void loadSymbols(SymbolList symbols) {
-        for(int i = 0; i < symbols.symbols.size(); i++) {
+    public void loadSymbols() {
+        symbolButtons.clear();
+        for(int i = 0; i < this.symbols.items.size(); i++) {
             int widgetX = this.x+1+(i%symbolsWidth*(SymbolButtonWidget.symbolSize+1));
             int widgetY = this.y+1+(i/symbolsWidth*(SymbolButtonWidget.symbolSize+1));
-            SymbolButtonWidget widget = new PasteSymbolButtonWidget(screen, widgetX, widgetY, this, symbols.symbols.get(i));
+            SymbolButtonWidget widget = new PasteSymbolButtonWidget(screen, widgetX, widgetY, this, symbols.items.get(i));
             symbolButtons.add(widget);
         }
     }

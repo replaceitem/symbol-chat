@@ -18,10 +18,10 @@ public class SymbolList {
     public int position;
 
     @SerializedName("symbols")
-    public List<String> symbols;
+    public List<String> items;
 
-    public SymbolList(List<String> symbols) {
-        this.symbols = symbols;
+    public SymbolList(List<String> items) {
+        this.items = items;
         this.name = "Custom";
         this.icon = "✎";
         this.position = Integer.MAX_VALUE;
@@ -32,11 +32,11 @@ public class SymbolList {
 
         ArrayList<String> newSymbols = new ArrayList<>();
 
-        for(String s : symbols) {
+        for(String s : items) {
             for(int i = 0; i < s.codePointCount(0, s.length()); i++) {
                 newSymbols.add(new StringBuilder().appendCodePoint(s.codePointAt(s.offsetByCodePoints(0, i))).toString());
             }
         }
-        symbols = newSymbols;
+        items = newSymbols;
     }
 }

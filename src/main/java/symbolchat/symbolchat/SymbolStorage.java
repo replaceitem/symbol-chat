@@ -2,26 +2,20 @@ package symbolchat.symbolchat;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 public class SymbolStorage {
 
     public static ArrayList<SymbolList> symbolLists;
-    public static SymbolList customList;
+    public static SymbolList customList = new SymbolList(new ArrayList<>());
 
     public static void loadLists() {
         symbolLists = new ArrayList<>();
@@ -32,7 +26,7 @@ public class SymbolStorage {
         tryLoadList("5_shapes");
         tryLoadList("6_lines_blocks");
         tryLoadList("7_numbers");
-        tryLoadCustomList();
+        loadCustomList();
 
         symbolLists.sort(Comparator.comparingInt(o -> o.position));
     }
@@ -45,36 +39,15 @@ public class SymbolStorage {
         }
         symbolLists.add(list);
     }
-
-    public static void tryLoadCustomList() {
-        try {
-            Path config = FabricLoader.getInstance().getConfigDir().normalize();
-            Files.createDirectories(config);
-            Path symbolPath = config.resolve("symbols.txt").normalize();
-            File symbolFile = symbolPath.toFile();
-            if(!symbolFile.exists()) {
-                SymbolChat.LOGGER.info("No custom symbol file present");
-                return;
-            }
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(symbolFile),StandardCharsets.UTF_8));
-            String read = reader.readLine();
-            List<String> symbols = new ArrayList<>();
-            while(read != null) {
-                symbols.add(read);
-                read = reader.readLine();
-            }
-
-            if(customList == null) {
-                customList = new SymbolList(symbols);
-                symbolLists.add(customList);
-            } else {
-                customList.symbols = symbols;
-            }
-            customList.splitStrings();
-        } catch (IOException e) {
-            SymbolChat.LOGGER.error("Could not load custom symbol file");
-            SymbolChat.LOGGER.error(e);
-        }
+    
+    public static void loadCustomList() {
+        reloadCustomList();
+        symbolLists.add(customList);
+    }
+    
+    public static void reloadCustomList() {
+        customList.items = Collections.singletonList(SymbolChat.config.custom_symbols);
+        customList.splitStrings();
     }
 
     public static SymbolList loadList(String id) {

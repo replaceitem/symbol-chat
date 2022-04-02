@@ -7,7 +7,6 @@
     "AnonymousChatTextFieldWidgetMixin",
     "AnvilScreenMixin",
     "ChatScreenMixin",
-    "MinecraftClientMixin",
     "SignEditScreenMixin"
   ],
   "client": [
