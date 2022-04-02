@@ -1,4 +1,4 @@
-package symbolchat.symbolchat;
+package symbolchat;
 
 
 import java.util.ArrayList;

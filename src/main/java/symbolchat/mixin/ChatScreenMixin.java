@@ -1,4 +1,4 @@
-package symbolchat.symbolchat.mixin;
+package symbolchat.mixin;
 
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -13,15 +13,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import symbolchat.symbolchat.FontProcessor;
-import symbolchat.symbolchat.FontProcessorAccessor;
-import symbolchat.symbolchat.SymbolChat;
-import symbolchat.symbolchat.widget.DropDownWidget;
-import symbolchat.symbolchat.widget.FontSelectionDropDownWidget;
-import symbolchat.symbolchat.widget.symbolButton.OpenSymbolPanelButtonWidget;
-import symbolchat.symbolchat.widget.symbolButton.SymbolButtonWidget;
-import symbolchat.symbolchat.SymbolInsertable;
-import symbolchat.symbolchat.SymbolSelectionPanel;
+import symbolchat.FontProcessor;
+import symbolchat.FontProcessorAccessor;
+import symbolchat.SymbolChat;
+import symbolchat.gui.widget.DropDownWidget;
+import symbolchat.gui.widget.FontSelectionDropDownWidget;
+import symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
+import symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
+import symbolchat.SymbolInsertable;
+import symbolchat.gui.SymbolSelectionPanel;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin extends Screen implements SymbolInsertable, FontProcessorAccessor {

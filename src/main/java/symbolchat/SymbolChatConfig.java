@@ -1,4 +1,4 @@
-package symbolchat.symbolchat;
+package symbolchat;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;

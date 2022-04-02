@@ -1,8 +1,9 @@
-package symbolchat.symbolchat.mixin;
+package symbolchat.mixin;
+
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.AnvilScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.screen.ingame.SignEditScreen;
+import net.minecraft.client.util.SelectionManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,30 +11,24 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import symbolchat.symbolchat.FontProcessor;
-import symbolchat.symbolchat.FontProcessorAccessor;
-import symbolchat.symbolchat.SymbolChat;
-import symbolchat.symbolchat.widget.DropDownWidget;
-import symbolchat.symbolchat.widget.FontSelectionDropDownWidget;
-import symbolchat.symbolchat.widget.symbolButton.OpenSymbolPanelButtonWidget;
-import symbolchat.symbolchat.widget.symbolButton.SymbolButtonWidget;
-import symbolchat.symbolchat.SymbolInsertable;
-import symbolchat.symbolchat.SymbolSelectionPanel;
+import symbolchat.SymbolInsertable;
+import symbolchat.gui.SymbolSelectionPanel;
+import symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
+import symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 
-@Mixin(AnvilScreen.class)
-public class AnvilScreenMixin extends Screen implements SymbolInsertable {
-    @Shadow private TextFieldWidget nameField;
-
+@Mixin(SignEditScreen.class)
+public class SignEditScreenMixin extends Screen implements SymbolInsertable {
+    @Shadow private SelectionManager selectionManager;
     private SymbolButtonWidget symbolButtonWidget;
     private SymbolSelectionPanel symbolSelectionPanel;
 
-    protected AnvilScreenMixin(Text title) {
+    protected SignEditScreenMixin(Text title) {
         super(title);
     }
 
-    @Inject(method = "setup", at = @At(value = "RETURN"))
-    private void addSymbolChatComponents(CallbackInfo ci) {
-        int symbolButtonX = this.width-2-SymbolButtonWidget.symbolSize;
+    @Inject(method = "init", at = @At(value = "RETURN"))
+    private void addSymbolButton(CallbackInfo ci) {
+        int symbolButtonX = this.width-SymbolButtonWidget.symbolSize;
         int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;
         this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.width-2,symbolButtonY-2-SymbolSelectionPanel.height);
         this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
@@ -46,7 +41,7 @@ public class AnvilScreenMixin extends Screen implements SymbolInsertable {
         return super.mouseClicked(mouseX,mouseY,button);
     }
 
-    @Inject(method = "renderForeground", at = @At(value = "RETURN"))
+    @Inject(method = "render", at = @At(value = "RETURN"))
     private void renderSymbolButton(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         symbolButtonWidget.render(matrices,mouseX,mouseY,delta);
         symbolSelectionPanel.render(matrices, mouseX, mouseY, delta);
@@ -54,7 +49,6 @@ public class AnvilScreenMixin extends Screen implements SymbolInsertable {
 
     @Override
     public void insertSymbol(String symbol) {
-        if(this.nameField.isActive())
-            this.nameField.write(symbol);
+        this.selectionManager.insert(symbol);
     }
 }

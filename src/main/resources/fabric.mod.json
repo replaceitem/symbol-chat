@@ -17,9 +17,11 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "symbolchat.symbolchat.SymbolChat"
+      "symbolchat.SymbolChat"
     ],
-    "modmenu": ["symbolchat.symbolchat.ModMenuApiImpl"]
+    "modmenu": [
+      "symbolchat.ModMenuApiImpl"
+    ]
   },
   "mixins": [
     "symbol-chat.mixins.json"

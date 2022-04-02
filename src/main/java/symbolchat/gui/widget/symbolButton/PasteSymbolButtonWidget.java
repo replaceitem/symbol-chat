@@ -1,7 +1,7 @@
-package symbolchat.symbolchat.widget.symbolButton;
+package symbolchat.gui.widget.symbolButton;
 
 import net.minecraft.client.gui.screen.Screen;
-import symbolchat.symbolchat.SymbolTab;
+import symbolchat.gui.SymbolTab;
 
 public class PasteSymbolButtonWidget extends SymbolButtonWidget {
 

@@ -1,4 +1,4 @@
-package symbolchat.symbolchat.widget;
+package symbolchat.gui.widget;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -12,7 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
-import symbolchat.symbolchat.SymbolChat;
+import symbolchat.SymbolChat;
 
 import java.util.ArrayList;
 import java.util.List;

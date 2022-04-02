@@ -1,4 +1,4 @@
-package symbolchat.symbolchat;
+package symbolchat;
 
 public interface FontProcessorAccessor {
     FontProcessor getFontProcessor();

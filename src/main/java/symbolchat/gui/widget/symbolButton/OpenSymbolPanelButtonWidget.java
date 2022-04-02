@@ -1,11 +1,7 @@
-package symbolchat.symbolchat.widget.symbolButton;
+package symbolchat.gui.widget.symbolButton;
 
 import net.minecraft.client.gui.screen.Screen;
-import symbolchat.symbolchat.SymbolChat;
-import symbolchat.symbolchat.SymbolList;
-import symbolchat.symbolchat.SymbolSelectionPanel;
-import symbolchat.symbolchat.SymbolStorage;
-import symbolchat.symbolchat.SymbolTab;
+import symbolchat.gui.SymbolSelectionPanel;
 
 public class OpenSymbolPanelButtonWidget extends SymbolButtonWidget {
 

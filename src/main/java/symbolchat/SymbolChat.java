@@ -1,4 +1,4 @@
-package symbolchat.symbolchat;
+package symbolchat;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;

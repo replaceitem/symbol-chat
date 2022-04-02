@@ -1,7 +1,7 @@
-package symbolchat.symbolchat.widget;
+package symbolchat.gui.widget;
 
-import symbolchat.symbolchat.FontProcessor;
-import symbolchat.symbolchat.SymbolChat;
+import symbolchat.FontProcessor;
+import symbolchat.SymbolChat;
 
 import java.util.List;
 

@@ -1,9 +1,8 @@
-package symbolchat.symbolchat.mixin;
-
+package symbolchat.mixin;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.SignEditScreen;
-import net.minecraft.client.util.SelectionManager;
+import net.minecraft.client.gui.screen.ingame.AnvilScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,24 +10,25 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import symbolchat.symbolchat.SymbolInsertable;
-import symbolchat.symbolchat.SymbolSelectionPanel;
-import symbolchat.symbolchat.widget.symbolButton.OpenSymbolPanelButtonWidget;
-import symbolchat.symbolchat.widget.symbolButton.SymbolButtonWidget;
+import symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
+import symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
+import symbolchat.SymbolInsertable;
+import symbolchat.gui.SymbolSelectionPanel;
 
-@Mixin(SignEditScreen.class)
-public class SignEditScreenMixin extends Screen implements SymbolInsertable {
-    @Shadow private SelectionManager selectionManager;
+@Mixin(AnvilScreen.class)
+public class AnvilScreenMixin extends Screen implements SymbolInsertable {
+    @Shadow private TextFieldWidget nameField;
+
     private SymbolButtonWidget symbolButtonWidget;
     private SymbolSelectionPanel symbolSelectionPanel;
 
-    protected SignEditScreenMixin(Text title) {
+    protected AnvilScreenMixin(Text title) {
         super(title);
     }
 
-    @Inject(method = "init", at = @At(value = "RETURN"))
-    private void addSymbolButton(CallbackInfo ci) {
-        int symbolButtonX = this.width-SymbolButtonWidget.symbolSize;
+    @Inject(method = "setup", at = @At(value = "RETURN"))
+    private void addSymbolChatComponents(CallbackInfo ci) {
+        int symbolButtonX = this.width-2-SymbolButtonWidget.symbolSize;
         int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;
         this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.width-2,symbolButtonY-2-SymbolSelectionPanel.height);
         this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
@@ -41,7 +41,7 @@ public class SignEditScreenMixin extends Screen implements SymbolInsertable {
         return super.mouseClicked(mouseX,mouseY,button);
     }
 
-    @Inject(method = "render", at = @At(value = "RETURN"))
+    @Inject(method = "renderForeground", at = @At(value = "RETURN"))
     private void renderSymbolButton(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         symbolButtonWidget.render(matrices,mouseX,mouseY,delta);
         symbolSelectionPanel.render(matrices, mouseX, mouseY, delta);
@@ -49,6 +49,7 @@ public class SignEditScreenMixin extends Screen implements SymbolInsertable {
 
     @Override
     public void insertSymbol(String symbol) {
-        this.selectionManager.insert(symbol);
+        if(this.nameField.isActive())
+            this.nameField.write(symbol);
     }
 }
