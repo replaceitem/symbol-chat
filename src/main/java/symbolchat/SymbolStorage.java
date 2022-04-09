@@ -46,7 +46,7 @@ public class SymbolStorage {
     }
     
     public static void reloadCustomList() {
-        customList.items = Collections.singletonList(SymbolChat.config.custom_symbols);
+        customList.items = Collections.singletonList(SymbolChat.config.getCustomSymbols());
         customList.splitStrings();
     }
 

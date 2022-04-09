@@ -65,8 +65,8 @@ public class SymbolSelectionPanel implements Element, Drawable {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if(!this.visible) return;
-        fill(matrices, this.x, this.y, this.x + width, this.y + height, SymbolChat.config.hud_color);
-        fill(matrices, this.x, this.y + height - 2 - SymbolButtonWidget.symbolSize, this.x + width, this.y + height, SymbolChat.config.hud_color);
+        fill(matrices, this.x, this.y, this.x + width, this.y + height, SymbolChat.config.getHudColor());
+        fill(matrices, this.x, this.y + height - 2 - SymbolButtonWidget.symbolSize, this.x + width, this.y + height, SymbolChat.config.getHudColor());
         for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
             tab.getRight().render(matrices,mouseX,mouseY,delta);
         }

@@ -1,4 +1,4 @@
-package symbolchat;
+package symbolchat.config;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
@@ -6,7 +6,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 @SuppressWarnings("unused")
 @Config(name = "symbol-chat")
-public class SymbolChatConfig implements ConfigData {
+public class ClothConfig implements ConfigData {
     @ConfigEntry.ColorPicker(allowAlpha = true)
     public int hud_color = 0x80000000;
 

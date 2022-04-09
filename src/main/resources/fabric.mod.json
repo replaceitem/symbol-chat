@@ -20,7 +20,7 @@
       "symbolchat.SymbolChat"
     ],
     "modmenu": [
-      "symbolchat.ModMenuApiImpl"
+      "symbolchat.config.ModMenuApiImpl"
     ]
   },
   "mixins": [
@@ -28,7 +28,6 @@
   ],
   "depends": {
     "fabricloader": ">=0.11.3",
-    "minecraft": "1.18.x",
-    "cloth-config": ">=6.0.0"
+    "minecraft": "1.18.x"
   }
 }
