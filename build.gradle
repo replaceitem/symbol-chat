@@ -20,6 +20,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:6.2.57") {
         exclude(group: "net.fabricmc.fabric-api")
     }
@@ -52,6 +53,8 @@ jar {
     }
 }
 
+import com.modrinth.minotaur.dependencies.ModDependency
+
 modrinth {
     token = System.getenv("MODRINTH_TOKEN") // This is the default. Remember to have the MODRINTH_TOKEN environment variable set or else this will fail, or set it to whatever you want - just make sure it stays private!
     projectId = "NKvLVQMc"
@@ -60,7 +63,9 @@ modrinth {
     uploadFile = remapJar // With Fabric Loom or Architectury Loom, this MUST be set to `remapJar` instead of `jar`!
     gameVersions = ["1.18", "1.18.1", "1.18.2"] // Must be an array, even with only one version
     loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Fabric Loom or ForgeGradle
-    dependencies = []
+    dependencies = [
+            new ModDependency("P7dR8mSH", "required")
+    ]
     syncBodyFrom = rootProject.file("README.md").text
 }
 
