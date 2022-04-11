@@ -11,16 +11,14 @@ public class SymbolChat implements ClientModInitializer {
     public static Logger LOGGER;
     public static int selectedFont = 0;
     public static ConfigProvider config;
+    public static boolean clothConfigEnabled;
 
 
     @Override
     public void onInitializeClient() {
         LOGGER = LogManager.getLogger("symbol-chat");
-        if(FabricLoader.getInstance().isModLoaded("cloth-config2")) {
-            config = new ClothConfigProvider();
-        } else {
-            config = new ConfigProvider();
-        }
+        clothConfigEnabled = FabricLoader.getInstance().isModLoaded("cloth-config2");
+        config = clothConfigEnabled ? new ClothConfigProvider() : new ConfigProvider();
         FontProcessor.registerFontProcessors();
         SymbolStorage.loadLists();
     }

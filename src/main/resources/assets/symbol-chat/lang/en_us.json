@@ -5,6 +5,9 @@
   "text.autoconfig.symbol-chat.option.custom_symbols": "Custom symbols",
   "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "You can paste custom symbols here, which will appear in the custom symbols tab",
   
+  "symbolchat.no_custom_symbols": "No custom symbols specified. You can add symbols in the ClothConfig configuration accessible from the ModMenu screen.",
+  "symbolchat.no_clothconfig": "Install ClothConfig to add custom symbols.",
+  
   "symbolchat.tab.people_nature": "People & Nature",
   "symbolchat.tab.objects": "Objects",
   "symbolchat.tab.arrows_hands": "Arrows & Hands",

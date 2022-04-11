@@ -3,8 +3,11 @@
   "text.autoconfig.symbol-chat.option.hud_color": "Hintergrundfarbe",
   "text.autoconfig.symbol-chat.option.button_color": "Schaltflächenfarbe",
   "text.autoconfig.symbol-chat.option.custom_symbols": "Eigene symbole",
-  "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Hier kannst du eine symbole einfügen, welche dann in dem tab für eigene symbole erscheinen.",
-  
+  "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Hier kannst du eine Symbole einfügen, welche dann in dem tab für eigene Symbole erscheinen.",
+
+  "symbolchat.no_custom_symbols": "Keine eigenen Symbole angegeben. Du kannst Symbole in der ClothConfig Konfiguration hinzufügen, die vom ModMenu Seite erreichbar ist.",
+  "symbolchat.no_clothconfig": "Installiere ClothConfig um eigene Symbole hinzuzufügen.",
+
   "symbolchat.tab.people_nature": "Menschen & Natur",
   "symbolchat.tab.objects": "Gegenstände",
   "symbolchat.tab.arrows_hands": "Pfeile & Hände",

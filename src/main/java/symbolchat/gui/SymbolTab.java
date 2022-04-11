@@ -1,9 +1,18 @@
 package symbolchat.gui;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.OrderedText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.MathHelper;
+import symbolchat.SymbolChat;
 import symbolchat.SymbolList;
 import symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
@@ -11,12 +20,15 @@ import symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SymbolTab implements Drawable, Element {
+public class SymbolTab extends DrawableHelper implements Drawable, Element {
 
     protected static final int symbolsWidth = 8;
     protected static final int symbolsHeight = 16;
 
     public static final int width,height;
+    
+    public static final Text NO_CUSTOM_SYMBOLS = new TranslatableText("symbolchat.no_custom_symbols");
+    public static final Text NO_CLOTHCONFIG = new TranslatableText("symbolchat.no_clothconfig");
 
     public SymbolSelectionPanel symbolSelectionPanel;
     
@@ -55,6 +67,18 @@ public class SymbolTab implements Drawable, Element {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if(symbolButtons.size() == 0) {
+            if(this.symbols.id.equals("custom")) {
+                TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+                Text text = SymbolChat.clothConfigEnabled ? NO_CUSTOM_SYMBOLS : NO_CLOTHCONFIG;
+                List<OrderedText> orderedTexts = textRenderer.wrapLines(text, width - 4);
+                for(int i = 0; i < orderedTexts.size(); i++) {
+                    int dy = this.y + 2 + (i * textRenderer.fontHeight);
+                    textRenderer.draw(matrices, orderedTexts.get(i), this.x + 2, dy, 0x66FFFFFF);
+                }
+            }
+            return;
+        }
         for(SymbolButtonWidget widget : symbolButtons) {
             widget.render(matrices,mouseX,mouseY,delta);
         }

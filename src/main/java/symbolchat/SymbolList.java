@@ -23,7 +23,7 @@ public class SymbolList {
     public static SymbolList createCustom() {
         return new SymbolList(
                 new ArrayList<>(),
-                "symbolchat.tab.name.custom",
+                "symbolchat.tab.custom",
                 "✎",
                 Integer.MAX_VALUE,
                 "custom"
