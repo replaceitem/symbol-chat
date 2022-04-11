@@ -5,7 +5,7 @@
   "text.autoconfig.symbol-chat.option.custom_symbols": "Kohandatud sümbolid",
   "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Sa saad kopeerida siia sümbolid, mis lähevad kohandatud sümbolite lehele"
   
-  "symbolchat.no_custom_symbols": "Ühtegi kohandatud sümbolit pole tüpsustatud. Saate lisada sümboleid ClothConfig konfiguratsioonis, millele pääseb ModMenu ekraanilt.",
+  "symbolchat.no_custom_symbols": "Ühtegi kohandatud sümbolit pole täpsustatud. Saate lisada sümboleid ClothConfig konfiguratsioonis, millele pääseb ModMenu ekraanilt.",
   "symbolchat.no_clothconfig": "Tõmmake ClothConfig, et lisada kohandatud sümboleid.",
   
   "symbolchat.tab.people_nature": "Inimesed & Loodus",
