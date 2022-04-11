@@ -1,0 +1,7 @@
+{
+  "text.autoconfig.symbol-chat.title": "Настройки Symbol Chat",
+  "text.autoconfig.symbol-chat.option.hud_color": "Цвет фона",
+  "text.autoconfig.symbol-chat.option.button_color": "Цвет кнопок",
+  "text.autoconfig.symbol-chat.option.custom_symbols": "Пользовательские символы",
+  "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Впишите сюда свои собственные символы, и они появятся в соответствующей вкладке."
+}
