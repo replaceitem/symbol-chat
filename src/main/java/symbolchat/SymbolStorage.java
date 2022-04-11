@@ -15,7 +15,7 @@ import java.util.Comparator;
 public class SymbolStorage {
 
     public static ArrayList<SymbolList> symbolLists;
-    public static SymbolList customList = new SymbolList(new ArrayList<>());
+    public static SymbolList customList = SymbolList.createCustom();
 
     public static void loadLists() {
         symbolLists = new ArrayList<>();

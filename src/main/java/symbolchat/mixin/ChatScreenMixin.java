@@ -41,7 +41,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
         int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;
         this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.width-2,symbolButtonY-2-SymbolSelectionPanel.height);
         this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
-        this.fontSelectionDropDown = new FontSelectionDropDownWidget(this.width-82, 2, 80, 15, FontProcessor.fontProcessors, SymbolChat.selectedFont);
+        this.fontSelectionDropDown = new FontSelectionDropDownWidget(this.width-142, 2, 140, 15, FontProcessor.fontProcessors, SymbolChat.selectedFont);
     }
 
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 1),require = 1)

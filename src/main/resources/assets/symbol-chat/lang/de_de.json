@@ -3,5 +3,25 @@
   "text.autoconfig.symbol-chat.option.hud_color": "Hintergrundfarbe",
   "text.autoconfig.symbol-chat.option.button_color": "Schaltflächenfarbe",
   "text.autoconfig.symbol-chat.option.custom_symbols": "Eigene symbole",
-  "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Hier kannst du eine symbole einfügen, welche dann in dem tab für eigene symbole erscheinen."
+  "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Hier kannst du eine symbole einfügen, welche dann in dem tab für eigene symbole erscheinen.",
+  
+  "symbolchat.tab.people_nature": "Menschen & Natur",
+  "symbolchat.tab.objects": "Gegenstände",
+  "symbolchat.tab.arrows_hands": "Pfeile & Hände",
+  "symbolchat.tab.symbols": "Symbole",
+  "symbolchat.tab.shapes": "Formen",
+  "symbolchat.tab.lines_blocks": "Linien & Blöcke",
+  "symbolchat.tab.numbers": "Zahlen",
+  "symbolchat.tab.custom": "Eigene Symbole",
+
+  "symbolchat.font.normal": "Normal",
+  "symbolchat.font.capitalized": "Großgeschrieben",
+  "symbolchat.font.superscript": "Hochgestellt",
+  "symbolchat.font.subscript": "Tiefgestellt",
+  "symbolchat.font.circled": "Eingekreist",
+  "symbolchat.font.inverse": "Umgekehrt",
+  "symbolchat.font.fullwidth": "Volle Breite",
+  "symbolchat.font.small": "Klein",
+  "symbolchat.font.brackets": "Eingeklammert",
+  "symbolchat.font.scribble": "Gekritzel"
 }

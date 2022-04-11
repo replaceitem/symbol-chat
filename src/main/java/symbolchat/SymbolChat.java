@@ -16,7 +16,7 @@ public class SymbolChat implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         LOGGER = LogManager.getLogger("symbol-chat");
-        if(FabricLoader.getInstance().isModLoaded("cloth-config")) {
+        if(FabricLoader.getInstance().isModLoaded("cloth-config2")) {
             config = new ClothConfigProvider();
         } else {
             config = new ConfigProvider();

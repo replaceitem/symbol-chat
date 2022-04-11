@@ -3,5 +3,25 @@
   "text.autoconfig.symbol-chat.option.hud_color": "HUD Color",
   "text.autoconfig.symbol-chat.option.button_color": "Button Color",
   "text.autoconfig.symbol-chat.option.custom_symbols": "Custom symbols",
-  "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "You can paste custom symbols here, which will appear in the custom symbols tab"
+  "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "You can paste custom symbols here, which will appear in the custom symbols tab",
+  
+  "symbolchat.tab.people_nature": "People & Nature",
+  "symbolchat.tab.objects": "Objects",
+  "symbolchat.tab.arrows_hands": "Arrows & Hands",
+  "symbolchat.tab.symbols": "Symbols",
+  "symbolchat.tab.shapes": "Shapes",
+  "symbolchat.tab.lines_blocks": "Lines & Blocks",
+  "symbolchat.tab.numbers": "Numbers",
+  "symbolchat.tab.custom": "Custom symbols",
+  
+  "symbolchat.font.normal": "Normal",
+  "symbolchat.font.capitalized": "Capitalized",
+  "symbolchat.font.superscript": "Superscript",
+  "symbolchat.font.subscript": "Subscript",
+  "symbolchat.font.circled": "Circled",
+  "symbolchat.font.inverse": "Inverse",
+  "symbolchat.font.fullwidth": "Full width",
+  "symbolchat.font.small": "Small",
+  "symbolchat.font.brackets": "Brackets",
+  "symbolchat.font.scribble": "Scribble"
 }

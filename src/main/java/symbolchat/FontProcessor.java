@@ -1,6 +1,8 @@
 package symbolchat;
 
 
+import net.minecraft.client.resource.language.I18n;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -9,12 +11,10 @@ public abstract class FontProcessor {
 
     public static List<FontProcessor> fontProcessors;
 
-    public String name;
-    private final String convertedName;
+    protected final String nameKey;
 
-    public FontProcessor(String name) {
-        this.name = name;
-        this.convertedName = this.convertString(this.name);
+    public FontProcessor(String nameKey) {
+        this.nameKey = "symbolchat.font." + nameKey;
     }
 
     public abstract String convertChar(String string);
@@ -28,7 +28,7 @@ public abstract class FontProcessor {
     }
 
     public String getConvertedName() {
-        return convertedName;
+        return this.convertString(I18n.translate(this.nameKey));
     }
 
     @Override
@@ -36,14 +36,14 @@ public abstract class FontProcessor {
         return getConvertedName();
     }
 
-    public static FontProcessor NORMAL = new FontProcessor("Normal") {
+    public static FontProcessor NORMAL = new FontProcessor("normal") {
         @Override
         public String convertChar(String string) {
             return string;
         }
     };
 
-    public static FontProcessor CAPITALIZED = new FontProcessor("Capitalized") {
+    public static FontProcessor CAPITALIZED = new FontProcessor("capitalized") {
         @Override
         public String convertChar(String string) {
             return "";
@@ -55,7 +55,7 @@ public abstract class FontProcessor {
         }
     };
 
-    public static FontProcessor SUPERSCRIPT = new FontProcessor("Superscript") {
+    public static FontProcessor SUPERSCRIPT = new FontProcessor("superscript") {
         @Override
         public String convertChar(String string) {
             if(string.length() == 0) return string;
@@ -81,7 +81,7 @@ public abstract class FontProcessor {
         }
     };
 
-    public static FontProcessor SUBSCRIPT = new FontProcessor("Subscript") {
+    public static FontProcessor SUBSCRIPT = new FontProcessor("subscript") {
         @Override
         public String convertChar(String string) {
             if(string.length() == 0) return string;
@@ -108,7 +108,7 @@ public abstract class FontProcessor {
     };
 
 
-    public static FontProcessor CIRCLED = new FontProcessor("Circled") {
+    public static FontProcessor CIRCLED = new FontProcessor("circled") {
         @Override
         public String convertChar(String string) {
             if(string.length() == 0) return string;
@@ -137,7 +137,7 @@ public abstract class FontProcessor {
     };
 
 
-    public static FontProcessor INVERSE = new FontProcessor("esrevnI") {
+    public static FontProcessor INVERSE = new FontProcessor("inverse") {
         @Override
         public String convertChar(String string) {
             if(string.length() == 0) return string;
@@ -160,9 +160,14 @@ public abstract class FontProcessor {
 
             return string;
         }
+
+        @Override
+        public String getConvertedName() {
+            return new StringBuilder(super.getConvertedName()).reverse().toString();
+        }
     };
 
-    public static FontProcessor FULLWIDTH = new FontProcessor("FullWidth") {
+    public static FontProcessor FULLWIDTH = new FontProcessor("fullwidth") {
         @Override
         public String convertChar(String string) {
             if(string.length() == 0) return string;
@@ -176,7 +181,7 @@ public abstract class FontProcessor {
         }
     };
 
-    public static FontProcessor SMALL = new FontProcessor("Small") {
+    public static FontProcessor SMALL = new FontProcessor("small") {
         @Override
         public String convertChar(String string) {
             if(string.length() == 0) return string;
@@ -195,7 +200,7 @@ public abstract class FontProcessor {
     };
 
 
-    public static FontProcessor BRACKETS = new FontProcessor("Brackets") {
+    public static FontProcessor BRACKETS = new FontProcessor("brackets") {
         @Override
         public String convertChar(String string) {
             if(string.length() == 0) return string;
@@ -217,7 +222,7 @@ public abstract class FontProcessor {
     };
 
 
-    public static FontProcessor SCRIBBLE = new FontProcessor("Scribble") {
+    public static FontProcessor SCRIBBLE = new FontProcessor("scribble") {
         @Override
         public String convertChar(String string) {
             if(string.length() == 0) return string;

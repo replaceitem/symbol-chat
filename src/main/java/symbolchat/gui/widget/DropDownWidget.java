@@ -53,7 +53,11 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
 
     @Override
     public Text getMessage() {
-        return new LiteralText(elements.get(selected).getElement().toString());
+        return this.elements.get(selected).getMessage();
+    }
+    
+    public Text getTextForElement(T element) {
+        return new LiteralText(element.toString());
     }
 
     @Override

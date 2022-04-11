@@ -9,7 +9,7 @@ public class SymbolList {
     public String id;
 
     @SerializedName("name")
-    public String name;
+    public String nameKey;
 
     @SerializedName("icon")
     public String icon;
@@ -20,12 +20,22 @@ public class SymbolList {
     @SerializedName("symbols")
     public List<String> items;
 
-    public SymbolList(List<String> items) {
+    public static SymbolList createCustom() {
+        return new SymbolList(
+                new ArrayList<>(),
+                "symbolchat.tab.name.custom",
+                "✎",
+                Integer.MAX_VALUE,
+                "custom"
+        );
+    }
+    
+    public SymbolList(List<String> items, String nameKey, String icon, int position, String id) {
         this.items = items;
-        this.name = "Custom";
-        this.icon = "✎";
-        this.position = Integer.MAX_VALUE;
-        this.id = "custom";
+        this.nameKey = nameKey;
+        this.icon = icon;
+        this.position = position;
+        this.id = id;
     }
 
     public void splitStrings() {

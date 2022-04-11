@@ -16,11 +16,11 @@ import symbolchat.SymbolChat;
 
 public class DropDownElementWidget<T> extends ClickableWidget implements Drawable, Element, Narratable {
 
-    private final DropDownWidget<?> dropDownWidget;
+    private final DropDownWidget<T> dropDownWidget;
     private final T element;
     private final int index;
 
-    public DropDownElementWidget(int x, int y, int width, int height, T element, int index, DropDownWidget<?> dropDownWidget) {
+    public DropDownElementWidget(int x, int y, int width, int height, T element, int index, DropDownWidget<T> dropDownWidget) {
         super(x, y, width, height, new LiteralText(""));
         this.element = element;
         this.dropDownWidget = dropDownWidget;
