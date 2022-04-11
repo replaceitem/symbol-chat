@@ -39,7 +39,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
         if (this.visible) {
             fill(matrices, this.x, this.y, this.x + this.width, this.y + this.height, SymbolChat.config.getButtonColor());
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-            int z = this.isHovered() ? 16777215 : 10526880;
+            int z = this.isHovered() ? 0xFFFFFF : 0xA0A0A0;
             drawCenteredText(matrices, textRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, z | MathHelper.ceil(this.alpha * 255.0F) << 24);
         }
     }

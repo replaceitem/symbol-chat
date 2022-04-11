@@ -33,6 +33,9 @@ public class SymbolTab extends DrawableHelper implements Drawable, Element {
     public SymbolSelectionPanel symbolSelectionPanel;
     
     protected SymbolList symbols;
+    
+    private int scroll;
+    private final int maxScroll;
 
     static {
         //size of tabs for number of symbols plus margin
@@ -52,7 +55,11 @@ public class SymbolTab extends DrawableHelper implements Drawable, Element {
         this.symbolButtons = new ArrayList<>();
         this.symbolSelectionPanel = symbolSelectionPanel;
         this.symbols = symbols;
+        this.scroll = 0;
         loadSymbols();
+        int count = this.symbolButtons.size();
+        int rows = (count/symbolsWidth) + Math.min(count%symbolsWidth,1);
+        this.maxScroll = Math.max(rows-symbolsHeight, 0);
     }
 
     public void loadSymbols() {
@@ -79,8 +86,11 @@ public class SymbolTab extends DrawableHelper implements Drawable, Element {
             }
             return;
         }
-        for(SymbolButtonWidget widget : symbolButtons) {
-            widget.render(matrices,mouseX,mouseY,delta);
+        for (int i = 0; i < symbolButtons.size(); i++) {
+            int row = (i/symbolsWidth-scroll);
+            if(row >= 0 && row < symbolsHeight) {
+                symbolButtons.get(i).render(matrices, mouseX, mouseY, delta);
+            }
         }
     }
 
@@ -90,6 +100,16 @@ public class SymbolTab extends DrawableHelper implements Drawable, Element {
             if(symbolButtonWidget.mouseClicked(mouseX,mouseY,button)) return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        this.scroll = Math.max(Math.min(this.scroll - ((int) amount),maxScroll),0);
+        System.out.println(scroll);
+        for(int i = 0; i < this.symbolButtons.size(); i++) {
+            this.symbolButtons.get(i).y = this.y+1+((i/symbolsWidth-scroll)*(SymbolButtonWidget.symbolSize+1));
+        }
+        return true;
     }
 
     public void pasteSymbol(String symbol) {

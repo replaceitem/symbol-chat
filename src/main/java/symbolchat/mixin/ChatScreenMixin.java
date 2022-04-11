@@ -60,6 +60,12 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
         if(fontSelectionDropDown.mouseClicked(mouseX,mouseY,button)) cir.setReturnValue(true);
     }
 
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if(symbolSelectionPanel.mouseScrolled(mouseX,mouseY,amount)) return true;
+        return super.mouseScrolled(mouseX, mouseY, amount);
+    }
+
     @Inject(method = "render", at = @At(value = "HEAD"))
     private void renderSymbolChat(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         symbolButtonWidget.render(matrices,mouseX,mouseY,delta);

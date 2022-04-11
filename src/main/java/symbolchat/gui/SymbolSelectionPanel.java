@@ -61,6 +61,9 @@ public class SymbolSelectionPanel implements Element, Drawable {
         return tabs.get(index).getLeft();
     }
 
+    public SymbolTab getCurrentTab() {
+        return this.getSymbolTab(selectedTab);
+    }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -73,7 +76,7 @@ public class SymbolSelectionPanel implements Element, Drawable {
         for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
             tab.getRight().renderTooltip(matrices,mouseX,mouseY);
         }
-        getSymbolTab(selectedTab).render(matrices,mouseX,mouseY,delta);
+        getCurrentTab().render(matrices,mouseX,mouseY,delta);
     }
 
     @Override
@@ -82,8 +85,14 @@ public class SymbolSelectionPanel implements Element, Drawable {
         for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
             if(tab.getRight().mouseClicked(mouseX,mouseY,button)) return true;
         }
-        if(getSymbolTab(selectedTab).mouseClicked(mouseX,mouseY,button)) return true;
+        if(getCurrentTab().mouseClicked(mouseX,mouseY,button)) return true;
         return false;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if(!this.visible) return false;
+        return getCurrentTab().mouseScrolled(mouseX, mouseY, amount);
     }
 
     public void onSymbolPasted(String symbol) {

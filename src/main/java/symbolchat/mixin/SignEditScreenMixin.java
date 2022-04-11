@@ -41,6 +41,12 @@ public class SignEditScreenMixin extends Screen implements SymbolInsertable {
         return super.mouseClicked(mouseX,mouseY,button);
     }
 
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if(symbolSelectionPanel.mouseScrolled(mouseX,mouseY,amount)) return true;
+        return super.mouseScrolled(mouseX, mouseY, amount);
+    }
+
     @Inject(method = "render", at = @At(value = "RETURN"))
     private void renderSymbolButton(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         symbolButtonWidget.render(matrices,mouseX,mouseY,delta);
