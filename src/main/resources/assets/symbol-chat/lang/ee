@@ -4,4 +4,27 @@
   "text.autoconfig.symbol-chat.option.button_color": "Nupu Värv",
   "text.autoconfig.symbol-chat.option.custom_symbols": "Kohandatud sümbolid",
   "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Sa saad kopeerida siia sümbolid, mis lähevad kohandatud sümbolite lehele"
+  
+  "symbolchat.no_custom_symbols": "Ühtegi kohandatud sümbolit pole tüpsustatud. Saate lisada sümboleid ClothConfig konfiguratsioonis, millele pääseb ModMenu ekraanilt.",
+  "symbolchat.no_clothconfig": "Tõmmake ClothConfig, et lisada kohandatud sümboleid.",
+  
+  "symbolchat.tab.people_nature": "Inimesed & Loodus",
+  "symbolchat.tab.objects": "Objektid",
+  "symbolchat.tab.arrows_hands": "Nooled & Käed",
+  "symbolchat.tab.symbols": "Sümbolid",
+  "symbolchat.tab.shapes": "Kujundid",
+  "symbolchat.tab.lines_blocks": "Jooned ja Blokkid",
+  "symbolchat.tab.numbers": "Numbrid",
+  "symbolchat.tab.custom": "Kohandatud sümbolid",
+  
+  "symbolchat.font.normal": "Normaalne",
+  "symbolchat.font.capitalized": "Suurtähtedega",
+  "symbolchat.font.superscript": "Ülaindeks",
+  "symbolchat.font.subscript": "Alamindeks",
+  "symbolchat.font.circled": "Circled",
+  "symbolchat.font.inverse": "Vastupidine",
+  "symbolchat.font.fullwidth": "Täislaiuses",
+  "symbolchat.font.small": "Väike",
+  "symbolchat.font.brackets": "Sulgudes",
+  "symbolchat.font.scribble": "Kritseldatud"
 }
