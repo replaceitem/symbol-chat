@@ -64,7 +64,10 @@ modrinth {
     gameVersions = ["1.18", "1.18.1", "1.18.2"] // Must be an array, even with only one version
     loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Fabric Loom or ForgeGradle
     dependencies = [
-            new ModDependency("P7dR8mSH", "required")
+            // fabric api needed
+            new ModDependency("P7dR8mSH", "required"),
+            // modmenu optional for configuration
+            new ModDependency("mOgUt4GM", "optional")
     ]
     syncBodyFrom = rootProject.file("README.md").text
 }
