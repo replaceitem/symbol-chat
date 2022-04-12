@@ -7,6 +7,8 @@ Additionally, you can select a unicode font that is supported by minecraft,
 and your typed text will automatically get converted into the supported characters.
 All symbols are supported by minecraft, meaning everyone can see them, without needing the mod on their client and the server.
 
+[<img src="https://i.imgur.com/Ol1Tcf8.png" width="128px"/>](https://modrinth.com/mod/fabric-api)
+
 [**Download**](https://modrinth.com/mod/symbol-chat/versions)
 
 ## Config
