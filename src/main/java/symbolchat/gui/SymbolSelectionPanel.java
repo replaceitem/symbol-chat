@@ -91,7 +91,7 @@ public class SymbolSelectionPanel implements Element, Drawable {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if(!this.visible) return false;
+        if(!visible || !isHovered(mouseX, mouseY)) return false;
         return getCurrentTab().mouseScrolled(mouseX, mouseY, amount);
     }
 
@@ -99,5 +99,9 @@ public class SymbolSelectionPanel implements Element, Drawable {
         if(this.screen instanceof SymbolInsertable) {
             ((SymbolInsertable) this.screen).insertSymbol(symbol);
         }
+    }
+    
+    private boolean isHovered(double mouseX, double mouseY) {
+        return mouseX >= this.x && mouseY >= this.y && mouseX < this.x + width && mouseY < this.y + height;
     }
 }
