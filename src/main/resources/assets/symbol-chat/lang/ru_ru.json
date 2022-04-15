@@ -3,5 +3,28 @@
   "text.autoconfig.symbol-chat.option.hud_color": "Цвет фона",
   "text.autoconfig.symbol-chat.option.button_color": "Цвет кнопок",
   "text.autoconfig.symbol-chat.option.custom_symbols": "Пользовательские символы",
-  "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Впишите сюда свои собственные символы, и они появятся в соответствующей вкладке."
+  "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Впишите сюда свои собственные символы, и они появятся в соответствующей вкладке.",
+
+  "symbolchat.no_custom_symbols": "Пользовательских символов не обнаружено. Вы можете добавить их в настройках мода в ModMenu, доступных через ClothConfig.",
+  "symbolchat.no_clothconfig": "Установите ClothConfig для добавления символов.",
+  
+  "symbolchat.tab.people_nature": "Природа и люди",
+  "symbolchat.tab.objects": "Предметы",
+  "symbolchat.tab.arrows_hands": "Стрелки и жесты",
+  "symbolchat.tab.symbols": "Символы",
+  "symbolchat.tab.shapes": "Фигуры",
+  "symbolchat.tab.lines_blocks": "Линии и блоки",
+  "symbolchat.tab.numbers": "Числа",
+  "symbolchat.tab.custom": "Пользовательские",
+  
+  "symbolchat.font.normal": "Обычные",
+  "symbolchat.font.capitalized": "Заглавные",
+  "symbolchat.font.superscript": "Superscript",
+  "symbolchat.font.subscript": "Subscript",
+  "symbolchat.font.circled": "Circled",
+  "symbolchat.font.inverse": "Inverse",
+  "symbolchat.font.fullwidth": "Full width",
+  "symbolchat.font.small": "Small",
+  "symbolchat.font.brackets": "Brackets",
+  "symbolchat.font.scribble": "Scribble"
 }
