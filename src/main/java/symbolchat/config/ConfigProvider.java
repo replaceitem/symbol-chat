@@ -6,11 +6,15 @@ public class ConfigProvider {
     public int getHudColor() {
         return 0x80000000;
     }
-    
+
     public int getButtonColor() {
         return 0xA0000000;
     }
-    
+
+    public int getOutlineColor() {
+        return 0xFFFFFFFF;
+    }
+
     public String getCustomSymbols() {
         return "";
     }

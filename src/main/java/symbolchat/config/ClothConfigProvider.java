@@ -24,6 +24,11 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
+    public int getOutlineColor() {
+        return config.outline_color;
+    }
+
+    @Override
     public String getCustomSymbols() {
         return config.custom_symbols;
     }

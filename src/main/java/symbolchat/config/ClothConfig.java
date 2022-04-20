@@ -12,6 +12,9 @@ public class ClothConfig implements ConfigData {
 
     @ConfigEntry.ColorPicker(allowAlpha = true)
     public int button_color = 0xA0000000;
+
+    @ConfigEntry.ColorPicker(allowAlpha = true)
+    public int outline_color = 0xFFFFFFFF;
     
     @ConfigEntry.Gui.Tooltip
     public String custom_symbols = "";

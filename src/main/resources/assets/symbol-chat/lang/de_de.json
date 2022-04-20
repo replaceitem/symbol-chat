@@ -2,6 +2,7 @@
   "text.autoconfig.symbol-chat.title": "Symbol Chat konfiguration",
   "text.autoconfig.symbol-chat.option.hud_color": "Hintergrundfarbe",
   "text.autoconfig.symbol-chat.option.button_color": "Schaltflächenfarbe",
+  "text.autoconfig.symbol-chat.option.outline_color": "Konturfarbe",
   "text.autoconfig.symbol-chat.option.custom_symbols": "Eigene symbole",
   "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Hier kannst du eine Symbole einfügen, welche dann in dem tab für eigene Symbole erscheinen.",
 
