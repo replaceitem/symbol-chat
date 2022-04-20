@@ -2,16 +2,14 @@ package symbolchat.gui;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.AbstractParentElement;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.MathHelper;
 import symbolchat.SymbolChat;
 import symbolchat.SymbolList;
 import symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
@@ -20,7 +18,7 @@ import symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SymbolTab extends DrawableHelper implements Drawable, Element {
+public class SymbolTab extends AbstractParentElement implements Drawable, Element {
 
     protected static final int symbolsWidth = 8;
     protected static final int symbolsHeight = 16;
@@ -95,17 +93,19 @@ public class SymbolTab extends DrawableHelper implements Drawable, Element {
     }
 
     @Override
+    public List<? extends Element> children() {
+        return this.symbolButtons;
+    }
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        for(SymbolButtonWidget symbolButtonWidget : symbolButtons) {
-            if(symbolButtonWidget.mouseClicked(mouseX,mouseY,button)) return true;
-        }
-        return false;
+        if(this.symbolSelectionPanel.getCurrentTab() != this) return false;
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         this.scroll = Math.max(Math.min(this.scroll - ((int) amount),maxScroll),0);
-        System.out.println(scroll);
         for(int i = 0; i < this.symbolButtons.size(); i++) {
             this.symbolButtons.get(i).y = this.y+1+((i/symbolsWidth-scroll)*(SymbolButtonWidget.symbolSize+1));
         }

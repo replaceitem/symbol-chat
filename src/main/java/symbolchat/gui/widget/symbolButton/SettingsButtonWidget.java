@@ -42,6 +42,7 @@ public class SettingsButtonWidget extends SymbolButtonWidget implements Drawable
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
             int z = this.isHovered() ? 0xFFFFFF : 0xA0A0A0;
             drawCenteredText(matrices, textRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, z | MathHelper.ceil(this.alpha * 255.0F) << 24);
+            this.renderTooltip(matrices, mouseX, mouseY);
         }
     }
 
@@ -53,8 +54,9 @@ public class SettingsButtonWidget extends SymbolButtonWidget implements Drawable
     
     @Override
     public void renderTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-        Text tooltip = new TranslatableText(SymbolChat.clothConfigEnabled ? "text.autoconfig.symbol-chat.title" : "symbolchat.no_clothconfig");
-        if(this.isMouseOver(mouseX,mouseY))
+        if(this.isHovered()) {
+            Text tooltip = new TranslatableText(SymbolChat.clothConfigEnabled ? "text.autoconfig.symbol-chat.title" : "symbolchat.no_clothconfig");
             screen.renderTooltip(matrices,tooltip,mouseX,mouseY);
+        }
     }
 }

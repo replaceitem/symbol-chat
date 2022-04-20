@@ -1,8 +1,12 @@
 package symbolchat.gui;
 
+import net.minecraft.client.gui.AbstractParentElement;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Pair;
@@ -15,11 +19,10 @@ import symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.minecraft.client.gui.DrawableHelper.fill;
-
-public class SymbolSelectionPanel implements Element, Drawable {
+public class SymbolSelectionPanel extends AbstractParentElement implements Drawable, Selectable {
+    private final List<Element> children;
+    
     protected List<Pair<SymbolTab,SymbolButtonWidget>> tabs;
-    protected TextFieldWidget textFieldWidget;
 
     protected int x,y;
     public static final int width, height;
@@ -35,7 +38,8 @@ public class SymbolSelectionPanel implements Element, Drawable {
     }
 
     public SymbolSelectionPanel(Screen screen, int x, int y) {
-        tabs = new ArrayList<>();
+        this.tabs = new ArrayList<>();
+        this.children = new ArrayList<>();
         this.x = x;
         this.y = y;
         this.visible = false;
@@ -50,11 +54,10 @@ public class SymbolSelectionPanel implements Element, Drawable {
             int buttonX = this.x+1+((SymbolButtonWidget.symbolSize+1)*i);
             SymbolButtonWidget buttonWidget = new SwitchTabSymbolButtonWidget(screen, buttonX, buttonY, i, this);
             tabs.add(new Pair<>(tab,buttonWidget));
+            
+            this.children.add(buttonWidget);
+            this.children.add(tab);
         }
-    }
-
-    public SymbolButtonWidget getSymbolButtonWidget(int index) {
-        return tabs.get(index).getRight();
     }
 
     public SymbolTab getSymbolTab(int index) {
@@ -70,29 +73,23 @@ public class SymbolSelectionPanel implements Element, Drawable {
         if(!this.visible) return;
         fill(matrices, this.x, this.y, this.x + width, this.y + height, SymbolChat.config.getHudColor());
         fill(matrices, this.x, this.y + height - 2 - SymbolButtonWidget.symbolSize, this.x + width, this.y + height, SymbolChat.config.getHudColor());
+        this.getCurrentTab().render(matrices,mouseX,mouseY,delta);
         for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
-            tab.getRight().render(matrices,mouseX,mouseY,delta);
+            tab.getRight().render(matrices, mouseX, mouseY, delta);
         }
         for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
-            tab.getRight().renderTooltip(matrices,mouseX,mouseY);
+            tab.getRight().renderTooltip(matrices, mouseX, mouseY);
         }
-        getCurrentTab().render(matrices,mouseX,mouseY,delta);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(!visible) return false;
-        for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
-            if(tab.getRight().mouseClicked(mouseX,mouseY,button)) return true;
-        }
-        if(getCurrentTab().mouseClicked(mouseX,mouseY,button)) return true;
-        return false;
+    public List<? extends Element> children() {
+        return this.children;
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if(!visible || !isHovered(mouseX, mouseY)) return false;
-        return getCurrentTab().mouseScrolled(mouseX, mouseY, amount);
+        return this.getCurrentTab().mouseScrolled(mouseX, mouseY, amount);
     }
 
     public void onSymbolPasted(String symbol) {
@@ -100,8 +97,19 @@ public class SymbolSelectionPanel implements Element, Drawable {
             ((SymbolInsertable) this.screen).insertSymbol(symbol);
         }
     }
-    
-    private boolean isHovered(double mouseX, double mouseY) {
+
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
         return mouseX >= this.x && mouseY >= this.y && mouseX < this.x + width && mouseY < this.y + height;
+    }
+
+    @Override
+    public SelectionType getType() {
+        return SelectionType.NONE;
+    }
+
+    @Override
+    public void appendNarrations(NarrationMessageBuilder builder) {
+        builder.put(NarrationPart.HINT, "Symbol chat panel");
     }
 }
