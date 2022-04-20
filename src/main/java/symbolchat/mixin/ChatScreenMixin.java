@@ -27,9 +27,7 @@ import symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 public class ChatScreenMixin extends Screen implements SymbolInsertable, FontProcessorAccessor {
     @Shadow protected TextFieldWidget chatField;
 
-    private SymbolButtonWidget symbolButtonWidget;
     private SymbolSelectionPanel symbolSelectionPanel;
-    private SettingsButtonWidget settingsButtonWidget;
     private DropDownWidget<FontProcessor> fontSelectionDropDown;
 
     protected ChatScreenMixin(Text title) {
@@ -41,8 +39,8 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
         int symbolButtonX = this.width-2-SymbolButtonWidget.symbolSize;
         int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;
         this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.width-2,symbolButtonY-2-SymbolSelectionPanel.height);
-        this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
-        this.settingsButtonWidget = new SettingsButtonWidget(this, this.width-142-15-2, 2);
+        SymbolButtonWidget symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
+        SettingsButtonWidget settingsButtonWidget = new SettingsButtonWidget(this, this.width - 142 - 15 - 2, 2);
         this.fontSelectionDropDown = new FontSelectionDropDownWidget(this.width-142, 2, 140, 15, FontProcessor.fontProcessors, SymbolChat.selectedFont);
         this.addDrawableChild(symbolSelectionPanel);
         this.addDrawableChild(symbolButtonWidget);

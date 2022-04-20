@@ -19,7 +19,6 @@ import symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 @Mixin(SignEditScreen.class)
 public class SignEditScreenMixin extends Screen implements SymbolInsertable {
     @Shadow private SelectionManager selectionManager;
-    private SymbolButtonWidget symbolButtonWidget;
     private SymbolSelectionPanel symbolSelectionPanel;
 
     protected SignEditScreenMixin(Text title) {
@@ -31,26 +30,15 @@ public class SignEditScreenMixin extends Screen implements SymbolInsertable {
         int symbolButtonX = this.width-SymbolButtonWidget.symbolSize;
         int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;
         this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.width-2,symbolButtonY-2-SymbolSelectionPanel.height);
-        this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(symbolSelectionPanel.mouseClicked(mouseX,mouseY,button)) return true;
-        if(symbolButtonWidget.mouseClicked(mouseX,mouseY,button)) return true;
-        return super.mouseClicked(mouseX,mouseY,button);
+        SymbolButtonWidget symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
+        this.addDrawableChild(symbolSelectionPanel);
+        this.addDrawableChild(symbolButtonWidget);
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if(symbolSelectionPanel.mouseScrolled(mouseX,mouseY,amount)) return true;
         return super.mouseScrolled(mouseX, mouseY, amount);
-    }
-
-    @Inject(method = "render", at = @At(value = "RETURN"))
-    private void renderSymbolButton(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        symbolButtonWidget.render(matrices,mouseX,mouseY,delta);
-        symbolSelectionPanel.render(matrices, mouseX, mouseY, delta);
     }
 
     @Override
