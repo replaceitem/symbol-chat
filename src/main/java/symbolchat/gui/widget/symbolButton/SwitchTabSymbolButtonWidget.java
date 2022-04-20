@@ -27,8 +27,13 @@ public class SwitchTabSymbolButtonWidget extends SymbolButtonWidget {
     }
 
     @Override
+    protected boolean isSelected() {
+        return symbolSelectionPanel.selectedTab == index;
+    }
+
+    @Override
     public boolean isHovered() {
-        return super.isHovered() || symbolSelectionPanel.selectedTab == index;
+        return super.isHovered() || this.isSelected();
     }
 
     @Override

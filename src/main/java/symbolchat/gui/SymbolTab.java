@@ -99,12 +99,18 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(this.symbolSelectionPanel.getCurrentTab() != this) return false;
+        if(this.symbolSelectionPanel.getCurrentTab() != this || !this.isMouseOver(mouseX, mouseY)) return false;
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        return mouseX >= this.x && mouseY >= this.y && mouseX < this.x + width && mouseY < this.y + height;
+    }
+
+    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if(!this.isMouseOver(mouseX,mouseY)) return false;
         this.scroll = Math.max(Math.min(this.scroll - ((int) amount),maxScroll),0);
         for(int i = 0; i < this.symbolButtons.size(); i++) {
             this.symbolButtons.get(i).y = this.y+1+((i/symbolsWidth-scroll)*(SymbolButtonWidget.symbolSize+1));

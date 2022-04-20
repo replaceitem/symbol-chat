@@ -40,8 +40,19 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
             fill(matrices, this.x, this.y, this.x + this.width, this.y + this.height, SymbolChat.config.getButtonColor());
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
             int z = this.isHovered() ? 0xFFFFFF : 0xA0A0A0;
+            if(this.isSelected()) {
+                int color = SymbolChat.config.getOutlineColor();
+                drawHorizontalLine(matrices, x-1, x+width, y-1, color);
+                drawHorizontalLine(matrices, x-1, x+width, y+height, color);
+                drawVerticalLine(matrices, x-1, y-1, y+height, color);
+                drawVerticalLine(matrices, x+width, y-1, y+height, color);
+            }
             drawCenteredText(matrices, textRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, z | MathHelper.ceil(this.alpha * 255.0F) << 24);
         }
+    }
+
+    protected boolean isSelected() {
+        return false;
     }
 
     @Override

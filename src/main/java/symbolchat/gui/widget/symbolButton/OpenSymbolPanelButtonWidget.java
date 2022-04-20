@@ -18,7 +18,12 @@ public class OpenSymbolPanelButtonWidget extends SymbolButtonWidget {
     }
 
     @Override
+    protected boolean isSelected() {
+        return symbolSelectionPanel.visible;
+    }
+    
+    @Override
     public boolean isHovered() {
-        return super.isHovered() || symbolSelectionPanel.visible;
+        return super.isHovered() || this.isSelected();
     }
 }

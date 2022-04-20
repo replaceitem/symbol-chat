@@ -89,12 +89,13 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if(!visible) return false;
         return this.getCurrentTab().mouseScrolled(mouseX, mouseY, amount);
     }
 
     public void onSymbolPasted(String symbol) {
-        if(this.screen instanceof SymbolInsertable) {
-            ((SymbolInsertable) this.screen).insertSymbol(symbol);
+        if(this.screen instanceof SymbolInsertable symbolInsertable) {
+            symbolInsertable.insertSymbol(symbol);
         }
     }
 
