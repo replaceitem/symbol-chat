@@ -2,6 +2,7 @@ package symbolchat.config;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import net.minecraft.client.gui.screen.Screen;
 
 public class ClothConfigProvider extends ConfigProvider {
     
@@ -25,5 +26,10 @@ public class ClothConfigProvider extends ConfigProvider {
     @Override
     public String getCustomSymbols() {
         return config.custom_symbols;
+    }
+
+    @Override
+    public Screen getConfigScreen(Screen parent) {
+        return AutoConfig.getConfigScreen(ClothConfig.class, parent).get();
     }
 }

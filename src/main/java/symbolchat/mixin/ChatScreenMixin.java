@@ -19,6 +19,7 @@ import symbolchat.SymbolChat;
 import symbolchat.gui.widget.DropDownWidget;
 import symbolchat.gui.widget.FontSelectionDropDownWidget;
 import symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
+import symbolchat.gui.widget.symbolButton.SettingsButtonWidget;
 import symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import symbolchat.SymbolInsertable;
 import symbolchat.gui.SymbolSelectionPanel;
@@ -29,6 +30,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
 
     private SymbolButtonWidget symbolButtonWidget;
     private SymbolSelectionPanel symbolSelectionPanel;
+    private SettingsButtonWidget settingsButtonWidget;
     private DropDownWidget<FontProcessor> fontSelectionDropDown;
 
     protected ChatScreenMixin(Text title) {
@@ -41,6 +43,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
         int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;
         this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.width-2,symbolButtonY-2-SymbolSelectionPanel.height);
         this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
+        this.settingsButtonWidget = new SettingsButtonWidget(this, this.width-142-15-2, 2);
         this.fontSelectionDropDown = new FontSelectionDropDownWidget(this.width-142, 2, 140, 15, FontProcessor.fontProcessors, SymbolChat.selectedFont);
     }
 
@@ -57,6 +60,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
     private void symbolChatMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if(symbolSelectionPanel.mouseClicked(mouseX,mouseY,button)) cir.setReturnValue(true);
         if(symbolButtonWidget.mouseClicked(mouseX,mouseY,button)) cir.setReturnValue(true);
+        if(settingsButtonWidget.mouseClicked(mouseX,mouseY,button)) cir.setReturnValue(true);
         if(fontSelectionDropDown.mouseClicked(mouseX,mouseY,button)) cir.setReturnValue(true);
     }
 
@@ -69,6 +73,8 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
     private void renderSymbolChat(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         symbolButtonWidget.render(matrices,mouseX,mouseY,delta);
         symbolSelectionPanel.render(matrices, mouseX, mouseY, delta);
+        settingsButtonWidget.render(matrices, mouseX, mouseY, delta);
+        settingsButtonWidget.renderTooltip(matrices, mouseX, mouseY);
         fontSelectionDropDown.render(matrices,mouseX,mouseY,delta);
     }
 
