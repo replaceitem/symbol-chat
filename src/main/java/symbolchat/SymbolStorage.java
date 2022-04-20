@@ -2,6 +2,7 @@ package symbolchat;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import net.minecraft.client.MinecraftClient;
 
 import java.io.IOException;
@@ -68,10 +69,16 @@ public class SymbolStorage {
             e.printStackTrace();
             return null;
         }
-
-        SymbolList list = gson.fromJson(stringBuilder.toString(), SymbolList.class);
-        list.splitStrings();
-        list.id = id;
+        
+        SymbolList list;
+        try {
+            list = gson.fromJson(stringBuilder.toString(), SymbolList.class);
+            list.splitStrings();
+            list.id = id;
+        } catch (JsonSyntaxException e) {
+            SymbolChat.LOGGER.error("Could not load " + id + " list", e);
+            list = null;
+        }
         return list;
     }
 }
