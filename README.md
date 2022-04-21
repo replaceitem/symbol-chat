@@ -14,7 +14,7 @@ All symbols are supported by minecraft, meaning everyone can see them, without n
 ## Config
 
 Some aspects of this mod are configurable using [Cloth config](https://www.curseforge.com/minecraft/mc-mods/cloth-config) (not required).
-The configuration screen is (for now only) accessible through the [ModMenu](https://modrinth.com/mod/modmenu) config button.
+The configuration screen is accessible through the button on the top of the chat screen, as well as the [ModMenu](https://modrinth.com/mod/modmenu) config button.
 You can specify custom symbols in the configuration screen, which will appear in the last "custom" symbol tab.
 
 ## Font selection
