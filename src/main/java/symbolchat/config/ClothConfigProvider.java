@@ -29,6 +29,16 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
+    public boolean getHideFontButton() {
+        return config.hide_font_button;
+    }
+
+    @Override
+    public HudPosition getHudPosition() {
+        return config.hud_position;
+    }
+
+    @Override
     public String getCustomSymbols() {
         return config.custom_symbols;
     }

@@ -16,6 +16,12 @@ public class ClothConfig implements ConfigData {
     @ConfigEntry.ColorPicker(allowAlpha = true)
     public int outline_color = 0xFFFFFFFF;
     
+    public boolean hide_font_button = false;
+    
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    public ConfigProvider.HudPosition hud_position = ConfigProvider.HudPosition.RIGHT;
+    
     @ConfigEntry.Gui.Tooltip
     public String custom_symbols = "";
 }

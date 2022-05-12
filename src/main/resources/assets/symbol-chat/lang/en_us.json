@@ -3,6 +3,9 @@
   "text.autoconfig.symbol-chat.option.hud_color": "HUD Color",
   "text.autoconfig.symbol-chat.option.button_color": "Button Color",
   "text.autoconfig.symbol-chat.option.outline_color": "Outline Color",
+  "text.autoconfig.symbol-chat.option.hide_font_button": "Hide font button",
+  "text.autoconfig.symbol-chat.option.hud_position": "HUD Position",
+  "text.autoconfig.symbol-chat.option.hud_position.@Tooltip": "Position of the font selection and settings button",
   "text.autoconfig.symbol-chat.option.custom_symbols": "Custom symbols",
   "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "You can paste custom symbols here, which will appear in the custom symbols tab",
   
