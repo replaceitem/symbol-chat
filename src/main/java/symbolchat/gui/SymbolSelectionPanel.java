@@ -83,6 +83,12 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     }
 
     @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if(!this.visible) return false;
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
     public List<? extends Element> children() {
         return this.children;
     }
