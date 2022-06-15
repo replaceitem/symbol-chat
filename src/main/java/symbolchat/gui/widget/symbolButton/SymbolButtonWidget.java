@@ -10,8 +10,8 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import symbolchat.SymbolChat;
 
@@ -22,7 +22,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     protected Screen screen;
 
     public SymbolButtonWidget(Screen screen, int x, int y, String symbol) {
-        super(x, y, symbolSize, symbolSize, new LiteralText(symbol));
+        super(x, y, symbolSize, symbolSize, Text.literal(symbol));
         this.screen = screen;
     }
 
@@ -31,7 +31,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
 
     @Override
     protected MutableText getNarrationMessage() {
-        return new LiteralText("Add Symbol");
+        return Text.literal("Add Symbol");
     }
 
     @Override

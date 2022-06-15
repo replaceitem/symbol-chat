@@ -3,7 +3,6 @@ package symbolchat.gui.widget.symbolButton;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import symbolchat.gui.SymbolSelectionPanel;
 import symbolchat.SymbolStorage;
 
@@ -18,7 +17,7 @@ public class SwitchTabSymbolButtonWidget extends SymbolButtonWidget {
         super(screen, x, y, SymbolStorage.symbolLists.get(index).icon);
         this.symbolSelectionPanel = symbolSelectionPanel;
         this.index = index;
-        this.tooltip = new TranslatableText(SymbolStorage.symbolLists.get(index).nameKey);
+        this.tooltip = Text.translatable(SymbolStorage.symbolLists.get(index).nameKey);
     }
 
     @Override

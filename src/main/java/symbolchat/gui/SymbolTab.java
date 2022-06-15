@@ -9,7 +9,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import symbolchat.SymbolChat;
 import symbolchat.SymbolList;
 import symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
@@ -25,8 +24,8 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
 
     public static final int width,height;
     
-    public static final Text NO_CUSTOM_SYMBOLS = new TranslatableText("symbolchat.no_custom_symbols");
-    public static final Text NO_CLOTHCONFIG = new TranslatableText("symbolchat.no_clothconfig");
+    public static final Text NO_CUSTOM_SYMBOLS = Text.translatable("symbolchat.no_custom_symbols");
+    public static final Text NO_CLOTHCONFIG = Text.translatable("symbolchat.no_clothconfig");
 
     public SymbolSelectionPanel symbolSelectionPanel;
     

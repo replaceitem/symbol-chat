@@ -9,7 +9,6 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import symbolchat.SymbolChat;
@@ -21,7 +20,7 @@ public class DropDownElementWidget<T> extends ClickableWidget implements Drawabl
     private final int index;
 
     public DropDownElementWidget(int x, int y, int width, int height, T element, int index, DropDownWidget<T> dropDownWidget) {
-        super(x, y, width, height, new LiteralText(""));
+        super(x, y, width, height, Text.empty());
         this.element = element;
         this.dropDownWidget = dropDownWidget;
         this.index = index;
@@ -44,7 +43,7 @@ public class DropDownElementWidget<T> extends ClickableWidget implements Drawabl
 
     @Override
     public Text getMessage() {
-        return new LiteralText(element.toString());
+        return Text.literal(element.toString());
     }
 
     @Override

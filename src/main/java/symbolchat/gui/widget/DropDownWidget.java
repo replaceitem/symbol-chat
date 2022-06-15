@@ -9,7 +9,6 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import symbolchat.SymbolChat;
@@ -24,7 +23,7 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
     public boolean expanded;
 
     public DropDownWidget(int x, int y, int width, int height, List<T> elementList, int defaultSelection) {
-        super(x, y, width, height, new LiteralText(""));
+        super(x, y, width, height, Text.empty());
         this.elements = new ArrayList<>();
         for(int i = 0; i < elementList.size(); i++) {
             int dy = this.y + this.height + 1 + i*(this.height+1);
@@ -57,7 +56,7 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
     }
     
     public Text getTextForElement(T element) {
-        return new LiteralText(element.toString());
+        return Text.literal(element.toString());
     }
 
     @Override

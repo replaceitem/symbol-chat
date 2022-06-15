@@ -11,7 +11,6 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.MathHelper;
 import symbolchat.SymbolChat;
 
@@ -32,7 +31,7 @@ public class SettingsButtonWidget extends SymbolButtonWidget implements Drawable
 
     @Override
     protected MutableText getNarrationMessage() {
-        return new TranslatableText("text.autoconfig.symbol-chat.title");
+        return Text.translatable("text.autoconfig.symbol-chat.title");
     }
 
     @Override
@@ -55,7 +54,7 @@ public class SettingsButtonWidget extends SymbolButtonWidget implements Drawable
     @Override
     public void renderTooltip(MatrixStack matrices, int mouseX, int mouseY) {
         if(this.isHovered()) {
-            Text tooltip = new TranslatableText(SymbolChat.clothConfigEnabled ? "text.autoconfig.symbol-chat.title" : "symbolchat.no_clothconfig");
+            Text tooltip = Text.translatable(SymbolChat.clothConfigEnabled ? "text.autoconfig.symbol-chat.title" : "symbolchat.no_clothconfig");
             screen.renderTooltip(matrices,tooltip,mouseX,mouseY);
         }
     }
