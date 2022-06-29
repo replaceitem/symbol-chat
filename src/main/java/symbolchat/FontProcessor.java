@@ -189,10 +189,10 @@ public abstract class FontProcessor {
             char c = string.charAt(0);
 
             if(c >= 'A' && c <= 'Z') {
-                return "ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ".substring(c-'A',c-'A'+1);
+                return "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ".substring(c-'A',c-'A'+1);
             }
             if(c >= 'a' && c <= 'z') {
-                return "ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ".substring(c-'a',c-'a'+1);
+                return "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ".substring(c-'a',c-'a'+1);
             }
 
             return string;
