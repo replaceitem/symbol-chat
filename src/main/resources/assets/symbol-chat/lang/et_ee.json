@@ -26,5 +26,6 @@
   "symbolchat.font.fullwidth": "Täislaiuses",
   "symbolchat.font.small": "Väike",
   "symbolchat.font.brackets": "Sulgudes",
-  "symbolchat.font.scribble": "Kritseldatud"
+  "symbolchat.font.scribble": "Kritseldatud",
+  "symbolchat.font.big_scribble": "Suur kripseldus"
 }

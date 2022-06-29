@@ -30,5 +30,6 @@
   "symbolchat.font.fullwidth": "Volle Breite",
   "symbolchat.font.small": "Klein",
   "symbolchat.font.brackets": "Eingeklammert",
-  "symbolchat.font.scribble": "Gekritzel"
+  "symbolchat.font.scribble": "Gekritzel",
+  "symbolchat.font.big_scribble": "Großes Gekritzel"
 }

@@ -147,7 +147,7 @@ public abstract class FontProcessor {
                 return "0ƖՇƐh૬9L86".substring(c-'0',c-'0'+1);
             }
             if(c >= 'A' && c <= 'Z') {
-                return "ⱯqɔpƎɟɓɥᴉſʞๅWuOdῸɹSʇnʌMX⅄Z".substring(c-'A',c-'A'+1);
+                return "ⱯᗺƆᗡƎℲ⅁HIſʞ˥WuOԀῸᴚSʇ∩ΛMX⅄Z".substring(c-'A',c-'A'+1);
             }
             if(c >= 'a' && c <= 'z') {
                 return "ɐqɔpǝɟɓɥᴉſʞๅɯuodbɹsʇnʌʍxʎz".substring(c-'a',c-'a'+1);
@@ -242,6 +242,26 @@ public abstract class FontProcessor {
         }
     };
 
+    public static FontProcessor BIG_SCRIBBLE = new FontProcessor("big_scribble") {
+        @Override
+        public String convertChar(String string) {
+            if(string.length() == 0) return string;
+            if(string.length() > 1) return string;
+            char c = string.charAt(0);
+
+
+
+            if(c >= 'A' && c <= 'Z') {
+                return "卂乃匚ᗪ乇千Ꮆ卄丨ﾌҜㄥ爪几ㄖ卩Ɋ尺丂ㄒㄩᐯ山乂ㄚ乙".substring(c-'A',c-'A'+1);
+            }
+            if(c >= 'a' && c <= 'z') {
+                return "卂乃匚ᗪ乇千Ꮆ卄丨ﾌҜㄥ爪几ㄖ卩Ɋ尺丂ㄒㄩᐯ山乂ㄚ乙".substring(c-'a',c-'a'+1);
+            }
+
+            return string;
+        }
+    };
+
 
     public static void registerFontProcessors() {
         fontProcessors = new ArrayList<>();
@@ -255,6 +275,7 @@ public abstract class FontProcessor {
         fontProcessors.add(SMALL);
         fontProcessors.add(BRACKETS);
         fontProcessors.add(SCRIBBLE);
+        fontProcessors.add(BIG_SCRIBBLE);
     }
 
 
