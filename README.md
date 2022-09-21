@@ -9,6 +9,9 @@ All symbols are supported by minecraft, meaning everyone can see them, without n
 
 [<img src="https://i.imgur.com/Ol1Tcf8.png" width="128px"/>](https://modrinth.com/mod/fabric-api)
 
+
+[![Discord](https://img.shields.io/badge/Discord-7289DA?logo=discord&logoColor=white)](https://discord.gg/etTDQAVSgt)
+
 [**Download**](https://modrinth.com/mod/symbol-chat/versions)
 
 ## Config
