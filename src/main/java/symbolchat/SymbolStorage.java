@@ -17,41 +17,57 @@ public class SymbolStorage {
 
     public static ArrayList<SymbolList> symbolLists;
     public static SymbolList customList = SymbolList.createCustom();
+    public static SymbolList kaomojiList;
 
     public static void loadLists() {
         symbolLists = new ArrayList<>();
-        tryLoadList("1_people_nature");
-        tryLoadList("2_objects");
-        tryLoadList("3_arrows");
-        tryLoadList("4_symbols");
-        tryLoadList("5_shapes");
-        tryLoadList("6_lines_blocks");
-        tryLoadList("7_numbers");
-        loadCustomList();
-
-        symbolLists.sort(Comparator.comparingInt(o -> o.position));
+        symbolLists.add(tryLoadList("people_nature"));
+        symbolLists.add(tryLoadList("objects"));
+        symbolLists.add(tryLoadList("arrows"));
+        symbolLists.add(tryLoadList("symbols"));
+        symbolLists.add(tryLoadList("shapes"));
+        symbolLists.add(tryLoadList("numbers"));
+        symbolLists.add(loadCustomList());
+        symbolLists.add(loadKaomojiList());
     }
 
-    private static void tryLoadList(String name) {
-        SymbolList list = loadList(name);
+    private static SymbolList tryLoadList(String name) {
+        SymbolList list = loadList(name, true);
         if(list == null) {
             SymbolChat.LOGGER.warn("Could not load symbol file " + name);
-            return;
+            return null;
         }
-        symbolLists.add(list);
+        return list;
     }
     
-    public static void loadCustomList() {
+    public static SymbolList loadCustomList() {
         reloadCustomList();
-        symbolLists.add(customList);
-    }
-    
-    public static void reloadCustomList() {
-        customList.items = Collections.singletonList(SymbolChat.config.getCustomSymbols());
-        customList.splitStrings();
+        return customList;
     }
 
-    public static SymbolList loadList(String id) {
+    public static void reloadCustomList() {
+        customList.items = Collections.singletonList(SymbolChat.config.getCustomSymbols());
+        customList.postProcess();
+    }
+
+    public static SymbolList loadKaomojiList() {
+        reloadKaomojiList();
+        return kaomojiList;
+    }
+
+    public static void reloadKaomojiList() {
+        SymbolList list = loadList("kaomojis", false);
+        if(list == null) return;
+        if(kaomojiList == null) {
+            kaomojiList = list;
+        } else {
+            kaomojiList.items.clear();
+            kaomojiList.items = list.items;
+        }
+        kaomojiList.items.addAll(SymbolChat.config.getCustomKaomojis());
+    }
+
+    public static SymbolList loadList(String id, boolean split) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         InputStream stream = MinecraftClient.getInstance().getClass().getClassLoader().getResourceAsStream("assets/symbol-chat/symbols/" + id + ".json");
         if(stream == null) return null;
@@ -73,7 +89,7 @@ public class SymbolStorage {
         SymbolList list;
         try {
             list = gson.fromJson(stringBuilder.toString(), SymbolList.class);
-            list.splitStrings();
+            if(split) list.postProcess();
             list.id = id;
         } catch (JsonSyntaxException e) {
             SymbolChat.LOGGER.error("Could not load " + id + " list", e);

@@ -4,6 +4,8 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
+import java.util.List;
+
 @SuppressWarnings("unused")
 @Config(name = "symbol-chat")
 public class ClothConfig implements ConfigData {
@@ -24,4 +26,6 @@ public class ClothConfig implements ConfigData {
     
     @ConfigEntry.Gui.Tooltip
     public String custom_symbols = "";
+    
+    public List<String> custom_kaomojis = List.of();
 }

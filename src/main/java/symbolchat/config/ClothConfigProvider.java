@@ -4,6 +4,8 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.client.gui.screen.Screen;
 
+import java.util.List;
+
 public class ClothConfigProvider extends ConfigProvider {
     
     private final ClothConfig config;
@@ -41,6 +43,11 @@ public class ClothConfigProvider extends ConfigProvider {
     @Override
     public String getCustomSymbols() {
         return config.custom_symbols;
+    }
+
+    @Override
+    public List<String> getCustomKaomojis() {
+        return config.custom_kaomojis;
     }
 
     @Override

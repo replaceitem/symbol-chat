@@ -14,9 +14,6 @@ public class SymbolList {
     @SerializedName("icon")
     public String icon;
 
-    @SerializedName("position")
-    public int position;
-
     @SerializedName("symbols")
     public List<String> items;
 
@@ -25,21 +22,18 @@ public class SymbolList {
                 new ArrayList<>(),
                 "symbolchat.tab.custom",
                 "✎",
-                Integer.MAX_VALUE,
                 "custom"
         );
     }
     
-    public SymbolList(List<String> items, String nameKey, String icon, int position, String id) {
+    public SymbolList(List<String> items, String nameKey, String icon, String id) {
         this.items = items;
         this.nameKey = nameKey;
         this.icon = icon;
-        this.position = position;
         this.id = id;
     }
 
-    public void splitStrings() {
-
+    public void postProcess() {
         ArrayList<String> newSymbols = new ArrayList<>();
 
         for(String s : items) {

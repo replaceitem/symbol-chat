@@ -7,7 +7,6 @@ import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Pair;
 import symbolchat.SymbolChat;
@@ -47,10 +46,11 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         this.screen = screen;
 
         int buttonY = this.y+height-1- SymbolButtonWidget.symbolSize;
-        SymbolStorage.loadCustomList();
+        SymbolStorage.reloadCustomList();
+        SymbolStorage.reloadKaomojiList();
 
         for(int i = 0; i < SymbolStorage.symbolLists.size(); i++) {
-            SymbolTab tab = new SymbolTab(screen, SymbolStorage.symbolLists.get(i),this.x,this.y, this);
+            SymbolTab tab = SymbolTab.fromList(screen, SymbolStorage.symbolLists.get(i), this);
             int buttonX = this.x+1+((SymbolButtonWidget.symbolSize+1)*i);
             SymbolButtonWidget buttonWidget = new SwitchTabSymbolButtonWidget(screen, buttonX, buttonY, i, this);
             tabs.add(new Pair<>(tab,buttonWidget));

@@ -8,6 +8,7 @@
   "text.autoconfig.symbol-chat.option.hud_position.@Tooltip": "Position of the font selection and settings button",
   "text.autoconfig.symbol-chat.option.custom_symbols": "Custom symbols",
   "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "You can paste custom symbols here, which will appear in the custom symbols tab",
+  "text.autoconfig.symbol-chat.option.custom_kaomojis": "Custom kaomojis",
   
   "symbolchat.no_custom_symbols": "No custom symbols specified. You can add symbols in the ClothConfig configuration accessible from the ModMenu screen.",
   "symbolchat.no_clothconfig": "Install ClothConfig to add custom symbols.",
@@ -17,9 +18,9 @@
   "symbolchat.tab.arrows_hands": "Arrows & Hands",
   "symbolchat.tab.symbols": "Symbols",
   "symbolchat.tab.shapes": "Shapes",
-  "symbolchat.tab.lines_blocks": "Lines & Blocks",
   "symbolchat.tab.numbers": "Numbers",
   "symbolchat.tab.custom": "Custom symbols",
+  "symbolchat.tab.kaomoji": "Kaomoji",
   
   "symbolchat.font.normal": "Normal",
   "symbolchat.font.capitalized": "Capitalized",

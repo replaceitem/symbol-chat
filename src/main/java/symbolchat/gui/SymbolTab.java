@@ -19,10 +19,11 @@ import java.util.List;
 
 public class SymbolTab extends AbstractParentElement implements Drawable, Element {
 
-    protected static final int symbolsWidth = 8;
-    protected static final int symbolsHeight = 16;
+    protected static int columns = 8;
+    protected static int rows = 16;
 
-    public static final int width,height;
+    public static int width = columns * (SymbolButtonWidget.symbolSize+1) + 1;
+    public static int height = rows * (SymbolButtonWidget.symbolSize+1) + 1;
     
     public static final Text NO_CUSTOM_SYMBOLS = Text.translatable("symbolchat.no_custom_symbols");
     public static final Text NO_CLOTHCONFIG = Text.translatable("symbolchat.no_clothconfig");
@@ -31,23 +32,25 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
     
     protected SymbolList symbols;
     
-    private int scroll;
-    private final int maxScroll;
-
-    static {
-        //size of tabs for number of symbols plus margin
-        width = symbolsWidth * SymbolButtonWidget.symbolSize + (SymbolTab.symbolsWidth+1);
-        height = symbolsHeight * SymbolButtonWidget.symbolSize + (SymbolTab.symbolsHeight+1);
-    }
+    protected int scroll;
+    protected final int maxScroll;
 
     protected List<SymbolButtonWidget> symbolButtons;
     protected int x,y;
 
     protected Screen screen;
+    
+    public static SymbolTab fromList(Screen screen, SymbolList symbols, SymbolSelectionPanel symbolSelectionPanel) {
+        if(symbols.id.equals("kaomojis")) {
+            return new KaomojiTab(screen, symbols, symbolSelectionPanel);
+        } else {
+            return new SymbolTab(screen, symbols, symbolSelectionPanel);
+        }
+    }
 
-    public SymbolTab(Screen screen, SymbolList symbols, int x, int y, SymbolSelectionPanel symbolSelectionPanel) {
-        this.x = x;
-        this.y = y;
+    public SymbolTab(Screen screen, SymbolList symbols, SymbolSelectionPanel symbolSelectionPanel) {
+        this.x = symbolSelectionPanel.x;
+        this.y = symbolSelectionPanel.y;
         this.screen = screen;
         this.symbolButtons = new ArrayList<>();
         this.symbolSelectionPanel = symbolSelectionPanel;
@@ -55,15 +58,19 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
         this.scroll = 0;
         loadSymbols();
         int count = this.symbolButtons.size();
-        int rows = (count/symbolsWidth) + Math.min(count%symbolsWidth,1);
-        this.maxScroll = Math.max(rows-symbolsHeight, 0);
+        int totalRows = (count / getColumns()) + Math.min(count % getColumns(),1);
+        this.maxScroll = Math.max(totalRows - rows, 0);
+    }
+    
+    protected int getColumns() {
+        return columns;
     }
 
     public void loadSymbols() {
         symbolButtons.clear();
         for(int i = 0; i < this.symbols.items.size(); i++) {
-            int widgetX = this.x+1+(i%symbolsWidth*(SymbolButtonWidget.symbolSize+1));
-            int widgetY = this.y+1+(i/symbolsWidth*(SymbolButtonWidget.symbolSize+1));
+            int widgetX = this.x+1+(i % columns *(SymbolButtonWidget.symbolSize+1));
+            int widgetY = this.y+1+(i / columns *(SymbolButtonWidget.symbolSize+1));
             SymbolButtonWidget widget = new PasteSymbolButtonWidget(screen, widgetX, widgetY, this, symbols.items.get(i));
             symbolButtons.add(widget);
         }
@@ -84,8 +91,8 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
             return;
         }
         for (int i = 0; i < symbolButtons.size(); i++) {
-            int row = (i/symbolsWidth-scroll);
-            if(row >= 0 && row < symbolsHeight) {
+            int row = (i/ getColumns() - scroll);
+            if(row >= 0 && row < rows) {
                 symbolButtons.get(i).render(matrices, mouseX, mouseY, delta);
             }
         }
@@ -112,7 +119,7 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
         if(!this.isMouseOver(mouseX,mouseY)) return false;
         this.scroll = Math.max(Math.min(this.scroll - ((int) amount),maxScroll),0);
         for(int i = 0; i < this.symbolButtons.size(); i++) {
-            this.symbolButtons.get(i).y = this.y+1+((i/symbolsWidth-scroll)*(SymbolButtonWidget.symbolSize+1));
+            this.symbolButtons.get(i).y = this.y+1+((i / getColumns() - scroll)*(SymbolButtonWidget.symbolSize+1));
         }
         return true;
     }

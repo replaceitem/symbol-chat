@@ -17,9 +17,10 @@
   "symbolchat.tab.arrows_hands": "Pfeile & Hände",
   "symbolchat.tab.symbols": "Symbole",
   "symbolchat.tab.shapes": "Formen",
-  "symbolchat.tab.lines_blocks": "Linien & Blöcke",
   "symbolchat.tab.numbers": "Zahlen",
   "symbolchat.tab.custom": "Eigene Symbole",
+  "symbolchat.tab.kaomoji": "Kaomoji",
+  "text.autoconfig.symbol-chat.option.custom_kaomojis": "Eigene Kaomojis",
 
   "symbolchat.font.normal": "Normal",
   "symbolchat.font.capitalized": "Großgeschrieben",

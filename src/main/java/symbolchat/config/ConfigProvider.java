@@ -2,6 +2,8 @@ package symbolchat.config;
 
 import net.minecraft.client.gui.screen.Screen;
 
+import java.util.List;
+
 public class ConfigProvider {
     public int getHudColor() {
         return 0x80000000;
@@ -25,6 +27,10 @@ public class ConfigProvider {
 
     public String getCustomSymbols() {
         return "";
+    }
+    
+    public List<String> getCustomKaomojis() {
+        return List.of();
     }
 
     public Screen getConfigScreen(Screen parent) {
