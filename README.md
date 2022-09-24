@@ -3,6 +3,7 @@
 <img src="https://raw.githubusercontent.com/replaceitem/symbol-chat/master/images/icon.png" align="right" width="128px"/>
 
 This client side mod allows you to paste special characters into the chat, on signs and in the anvil text box.
+It also has support for a customizable kaomoji list.
 Additionally, you can select a unicode font that is supported by minecraft,
 and your typed text will automatically get converted into the supported characters.
 All symbols are supported by minecraft, meaning everyone can see them, without needing the mod on their client and the server.
