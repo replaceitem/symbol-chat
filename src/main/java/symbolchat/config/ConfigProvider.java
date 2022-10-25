@@ -21,6 +21,8 @@ public class ConfigProvider {
         return false;
     }
 
+    public boolean getHideSettingsButton() {return false;}
+
     public HudPosition getHudPosition() {
         return HudPosition.RIGHT;
     }

@@ -19,6 +19,9 @@ public class ClothConfig implements ConfigData {
     public int outline_color = 0xFFFFFFFF;
     
     public boolean hide_font_button = false;
+
+    @ConfigEntry.Gui.Tooltip
+    public boolean hide_settings_button = false;
     
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)

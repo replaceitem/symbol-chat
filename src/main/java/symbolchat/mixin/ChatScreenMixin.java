@@ -40,15 +40,21 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
         int symbolButtonX = this.width-2-SymbolButtonWidget.symbolSize;
         int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;
         this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.width-2,symbolButtonY-2-SymbolSelectionPanel.height);
+        this.addDrawableChild(symbolSelectionPanel);
+
         SymbolButtonWidget symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
+        this.addDrawableChild(symbolButtonWidget);
+
         int hudX = SymbolChat.config.getHudPosition().getX(this.width);
         int hiddenOffset = (SymbolChat.config.getHideFontButton() && SymbolChat.config.getHudPosition().equals(ConfigProvider.HudPosition.RIGHT) ? 140 + 2 : 0);
-        SettingsButtonWidget settingsButtonWidget = new SettingsButtonWidget(this, hudX + hiddenOffset, 2);
-        this.fontSelectionDropDown = new FontSelectionDropDownWidget(hudX + 15 + 2, 2, 140, 15, FontProcessor.fontProcessors, SymbolChat.selectedFont);
-        this.addDrawableChild(symbolSelectionPanel);
-        this.addDrawableChild(symbolButtonWidget);
+
+        this.fontSelectionDropDown = new FontSelectionDropDownWidget(hudX + ((SymbolChat.config.getHideSettingsButton() && SymbolChat.config.getHudPosition().equals(ConfigProvider.HudPosition.LEFT)) ? 0 : 15) + 2, 2, 140, 15, FontProcessor.fontProcessors, SymbolChat.selectedFont);
         this.addDrawableChild(fontSelectionDropDown);
-        this.addDrawableChild(settingsButtonWidget);
+
+        if(!SymbolChat.config.getHideSettingsButton()) {
+            SettingsButtonWidget settingsButtonWidget = new SettingsButtonWidget(this, hudX + hiddenOffset, 2);
+            this.addDrawableChild(settingsButtonWidget);
+        }
     }
 
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 1),require = 1)
