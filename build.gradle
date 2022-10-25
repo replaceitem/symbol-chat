@@ -79,6 +79,7 @@ modrinth {
             // modmenu optional for accessing the configuration
             new ModDependency("mOgUt4GM", DependencyType.OPTIONAL)
     ]
+    changelog = rootProject.file("changelog.md").text
     syncBodyFrom = rootProject.file("README.md").text
 }
 
