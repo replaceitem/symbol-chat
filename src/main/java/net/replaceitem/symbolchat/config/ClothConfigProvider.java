@@ -36,6 +36,11 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
+    public boolean getHideSettingsButton() {
+        return config.hide_settings_button;
+    }
+
+    @Override
     public HudPosition getHudPosition() {
         return config.hud_position;
     }

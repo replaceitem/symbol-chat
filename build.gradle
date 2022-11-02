@@ -59,6 +59,8 @@ jar {
     }
 }
 
+
+import com.modrinth.minotaur.dependencies.DependencyType
 import com.modrinth.minotaur.dependencies.ModDependency
 
 modrinth {
@@ -71,9 +73,11 @@ modrinth {
     loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Fabric Loom or ForgeGradle
     dependencies = [
             // fabric api needed
-            new ModDependency("P7dR8mSH", "required"),
-            // modmenu optional for configuration
-            new ModDependency("mOgUt4GM", "optional")
+            new ModDependency("P7dR8mSH", DependencyType.REQUIRED),
+            // cloth config optional for configuration
+            new ModDependency("9s6osm5g", DependencyType.OPTIONAL),
+            // modmenu optional for accessing the configuration
+            new ModDependency("mOgUt4GM", DependencyType.OPTIONAL)
     ]
     changelog = rootProject.file("changelog.md").text
     syncBodyFrom = rootProject.file("MODRINTH.md").text
