@@ -17,10 +17,10 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "symbolchat.SymbolChat"
+      "net.replaceitem.symbolchat.SymbolChat"
     ],
     "modmenu": [
-      "symbolchat.config.ModMenuApiImpl"
+      "net.replaceitem.symbolchat.config.ModMenuApiImpl"
     ]
   },
   "mixins": [
