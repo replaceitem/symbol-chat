@@ -35,7 +35,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
         super(title);
     }
 
-    @Inject(method = "init", at = @At(value = "HEAD"))
+    @Inject(method = "init", at = @At(value = "RETURN"))
     private void addSymbolChatComponents(CallbackInfo ci) {
         int symbolButtonX = this.width-2- SymbolButtonWidget.symbolSize;
         int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;
@@ -55,6 +55,12 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
             SettingsButtonWidget settingsButtonWidget = new SettingsButtonWidget(this, hudX + hiddenOffset, 2);
             this.addDrawableChild(settingsButtonWidget);
         }
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if(symbolSelectionPanel.mouseClicked(mouseX, mouseY, button)) return true;
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 1),require = 1)
