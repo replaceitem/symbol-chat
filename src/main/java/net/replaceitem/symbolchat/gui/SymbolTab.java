@@ -83,10 +83,13 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
                 TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
                 Text text = SymbolChat.clothConfigEnabled ? NO_CUSTOM_SYMBOLS : NO_CLOTHCONFIG;
                 List<OrderedText> orderedTexts = textRenderer.wrapLines(text, width - 4);
+                matrices.push();
+                matrices.translate(0,0,200);
                 for(int i = 0; i < orderedTexts.size(); i++) {
                     int dy = this.y + 2 + (i * textRenderer.fontHeight);
                     textRenderer.draw(matrices, orderedTexts.get(i), this.x + 2, dy, 0x66FFFFFF);
                 }
+                matrices.pop();
             }
             return;
         }

@@ -1,9 +1,7 @@
 package net.replaceitem.symbolchat.gui;
 
-import net.minecraft.client.gui.AbstractParentElement;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
@@ -71,6 +69,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if(!this.visible) return;
+        RenderSystem.disableDepthTest();
         fill(matrices, this.x, this.y, this.x + width, this.y + height, SymbolChat.config.getHudColor());
         fill(matrices, this.x, this.y + height - 2 - SymbolButtonWidget.symbolSize, this.x + width, this.y + height, SymbolChat.config.getHudColor());
         this.getCurrentTab().render(matrices,mouseX,mouseY,delta);
@@ -84,8 +83,11 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(!this.visible) return false;
-        return super.mouseClicked(mouseX, mouseY, button);
+        if(this.isMouseOver(mouseX, mouseY)) {
+            super.mouseClicked(mouseX, mouseY, button);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -107,7 +109,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return mouseX >= this.x && mouseY >= this.y && mouseX < this.x + width && mouseY < this.y + height;
+        return this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < this.x + width && mouseY < this.y + height;
     }
 
     @Override

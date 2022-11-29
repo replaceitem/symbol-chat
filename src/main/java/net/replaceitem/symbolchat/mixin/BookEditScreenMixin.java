@@ -25,7 +25,7 @@ public class BookEditScreenMixin extends Screen implements SymbolInsertable {
         super(title);
     }
 
-    @Inject(method = "init", at = @At(value = "RETURN"))
+    @Inject(method = "init", at = @At(value = "HEAD"))
     private void addSymbolButton(CallbackInfo ci) {
         int symbolButtonX = this.width-SymbolButtonWidget.symbolSize;
         int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;

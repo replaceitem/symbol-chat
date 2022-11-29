@@ -1,5 +1,6 @@
 package net.replaceitem.symbolchat.gui.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Drawable;
@@ -36,6 +37,7 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
     @Override
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (this.visible) {
+            RenderSystem.disableDepthTest();
             fill(matrices, this.x, this.y, this.x + this.width, this.y + this.height, SymbolChat.config.getButtonColor());
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
             int z = this.isHovered() ? 16777215 : 10526880;

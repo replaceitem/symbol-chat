@@ -35,7 +35,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
         super(title);
     }
 
-    @Inject(method = "init", at = @At(value = "RETURN"))
+    @Inject(method = "init", at = @At(value = "HEAD"))
     private void addSymbolChatComponents(CallbackInfo ci) {
         int symbolButtonX = this.width-2- SymbolButtonWidget.symbolSize;
         int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;

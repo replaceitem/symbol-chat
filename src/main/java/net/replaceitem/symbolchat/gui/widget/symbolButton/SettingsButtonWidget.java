@@ -17,7 +17,7 @@ import net.replaceitem.symbolchat.SymbolChat;
 public class SettingsButtonWidget extends SymbolButtonWidget implements Drawable, Element, Narratable {
 
     public SettingsButtonWidget(Screen screen, int x, int y) {
-        super(screen, x, y, "⚙");
+        super(screen, x, y, "\u2699");
         this.width = 15;
         this.height = 15;
     }
@@ -32,17 +32,6 @@ public class SettingsButtonWidget extends SymbolButtonWidget implements Drawable
     @Override
     protected MutableText getNarrationMessage() {
         return Text.translatable("text.autoconfig.symbol-chat.title");
-    }
-
-    @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (this.visible) {
-            fill(matrices, this.x, this.y, this.x + this.width, this.y + this.height, SymbolChat.config.getButtonColor());
-            TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-            int z = this.isHovered() ? 0xFFFFFF : 0xA0A0A0;
-            drawCenteredText(matrices, textRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, z | MathHelper.ceil(this.alpha * 255.0F) << 24);
-            this.renderTooltip(matrices, mouseX, mouseY);
-        }
     }
 
     @Override

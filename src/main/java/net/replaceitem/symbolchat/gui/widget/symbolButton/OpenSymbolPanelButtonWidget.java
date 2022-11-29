@@ -12,6 +12,11 @@ public class OpenSymbolPanelButtonWidget extends SymbolButtonWidget {
         this.symbolSelectionPanel = symbolSelectionPanel;
     }
 
+    public OpenSymbolPanelButtonWidget(Screen screen, int x, int y, int w, int h, SymbolSelectionPanel symbolSelectionPanel) {
+        super(screen, x, y, w, h,"\u263a");
+        this.symbolSelectionPanel = symbolSelectionPanel;
+    }
+
     @Override
     public void onClick(double mouseX, double mouseY) {
         symbolSelectionPanel.visible = !symbolSelectionPanel.visible;
