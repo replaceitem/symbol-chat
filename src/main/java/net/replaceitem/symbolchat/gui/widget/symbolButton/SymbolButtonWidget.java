@@ -10,9 +10,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -48,15 +45,9 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
         if (this.visible) {
             RenderSystem.disableDepthTest();
             setZOffset(10000000);
-            fill(matrices, this.x, this.y, this.x + this.width, this.y + this.height, SymbolChat.config.getButtonColor());
+            int backgroundColor = this.isSelected() ? SymbolChat.config.getButtonHoverColor() : SymbolChat.config.getButtonColor();
+            fill(matrices, this.x, this.y, this.x + this.width, this.y + this.height, backgroundColor);
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-            if(this.isSelected()) {
-                int color = SymbolChat.config.getOutlineColor();
-                drawHorizontalLine(matrices, x-1, x+width, y-1, color);
-                drawHorizontalLine(matrices, x-1, x+width, y+height, color);
-                drawVerticalLine(matrices, x-1, y-1, y+height, color);
-                drawVerticalLine(matrices, x+width, y-1, y+height, color);
-            }
 
             int rgb = this.isHovered() ? 0xFFFFFF : 0xA0A0A0;
             int argb = rgb | MathHelper.ceil(this.alpha * 255.0F) << 24;

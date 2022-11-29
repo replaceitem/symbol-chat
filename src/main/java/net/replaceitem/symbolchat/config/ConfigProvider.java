@@ -13,8 +13,8 @@ public class ConfigProvider {
         return 0xA0000000;
     }
 
-    public int getOutlineColor() {
-        return 0xFFFFFFFF;
+    public int getButtonHoverColor() {
+        return 0xA0303030;
     }
 
     public boolean getHideFontButton() {
