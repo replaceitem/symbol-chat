@@ -21,11 +21,20 @@ public class SymbolList {
         return new SymbolList(
                 new ArrayList<>(),
                 "symbolchat.tab.custom",
-                "✎",
+                "\u270E",
                 "custom"
         );
     }
-    
+
+    public static SymbolList createAll() {
+        return new SymbolList(
+                new ArrayList<>(),
+                "symbolchat.tab.all",
+                "\u221E",
+                "all"
+        );
+    }
+
     public SymbolList(List<String> items, String nameKey, String icon, String id) {
         this.items = items;
         this.nameKey = nameKey;

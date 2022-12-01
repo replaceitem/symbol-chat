@@ -16,6 +16,7 @@ public class SymbolStorage {
 
     public static ArrayList<SymbolList> symbolLists;
     public static SymbolList customList = SymbolList.createCustom();
+    public static SymbolList allList = SymbolList.createAll();
     public static SymbolList kaomojiList;
 
     public static void loadLists() {
@@ -47,6 +48,11 @@ public class SymbolStorage {
     public static void reloadCustomList() {
         customList.items = Collections.singletonList(SymbolChat.config.getCustomSymbols());
         customList.postProcess();
+        allList.items.clear();
+        for (SymbolList symbolList : symbolLists) {
+            if(!symbolList.id.equals("kaomojis")) allList.items.addAll(symbolList.items);
+        }
+        allList.items.addAll(customList.items);
     }
 
     public static SymbolList loadKaomojiList() {
@@ -95,5 +101,10 @@ public class SymbolStorage {
             list = null;
         }
         return list;
+    }
+
+    public static SymbolList getListWithIndex(int index) {
+        if(index == -1) return allList;
+        return symbolLists.get(index);
     }
 }

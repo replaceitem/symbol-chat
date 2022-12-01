@@ -29,7 +29,7 @@ public class BookEditScreenMixin extends Screen implements SymbolInsertable {
     private void addSymbolButton(CallbackInfo ci) {
         int symbolButtonX = this.width-SymbolButtonWidget.symbolSize;
         int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;
-        this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.width-2,symbolButtonY-2-SymbolSelectionPanel.height);
+        this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.WIDTH -2,symbolButtonY-2-SymbolSelectionPanel.HEIGHT);
         this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
         this.addDrawableChild(symbolSelectionPanel);
         this.addDrawableChild(symbolButtonWidget);

@@ -14,15 +14,15 @@ public class SwitchTabSymbolButtonWidget extends SymbolButtonWidget {
     protected int index;
 
     public SwitchTabSymbolButtonWidget(Screen screen, int x, int y, int index, SymbolSelectionPanel symbolSelectionPanel) {
-        super(screen, x, y, SymbolStorage.symbolLists.get(index).icon);
+        super(screen, x, y, SymbolStorage.getListWithIndex(index).icon);
         this.symbolSelectionPanel = symbolSelectionPanel;
         this.index = index;
-        this.tooltip = Text.translatable(SymbolStorage.symbolLists.get(index).nameKey);
+        this.tooltip = Text.translatable(SymbolStorage.getListWithIndex(index).nameKey);
     }
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        symbolSelectionPanel.selectedTab = index;
+        symbolSelectionPanel.setCurrentTab(index);
     }
 
     @Override

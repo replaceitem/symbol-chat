@@ -44,7 +44,6 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             RenderSystem.disableDepthTest();
-            setZOffset(10000000);
             int backgroundColor = this.isSelected() ? SymbolChat.config.getButtonHoverColor() : SymbolChat.config.getButtonColor();
             fill(matrices, this.x, this.y, this.x + this.width, this.y + this.height, backgroundColor);
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
@@ -52,8 +51,6 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
             int rgb = this.isHovered() ? 0xFFFFFF : 0xA0A0A0;
             int argb = rgb | MathHelper.ceil(this.alpha * 255.0F) << 24;
 
-
-            //setZOffset(10000000);
             matrices.push();
             matrices.translate(0.0, 0.0, 200.0f);
 
