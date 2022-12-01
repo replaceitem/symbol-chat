@@ -124,6 +124,9 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
         for (SymbolButtonWidget button : buttons()) {
             button.render(matrices, mouseX, mouseY, delta);
         }
+        for (SymbolButtonWidget button : buttons()) {
+            button.renderTooltip(matrices, mouseX, mouseY);
+        }
     }
 
     protected List<? extends PasteSymbolButtonWidget> buttons() {

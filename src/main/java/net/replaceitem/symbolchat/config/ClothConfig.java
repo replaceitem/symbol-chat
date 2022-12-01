@@ -4,6 +4,7 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -22,13 +23,18 @@ public class ClothConfig implements ConfigData {
 
     @ConfigEntry.Gui.Tooltip
     public boolean hide_settings_button = false;
-    
+
+
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    public ConfigProvider.SymbolTooltipMode symbol_tooltip_mode = ConfigProvider.SymbolTooltipMode.DELAYED;
+
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public ConfigProvider.HudPosition hud_position = ConfigProvider.HudPosition.RIGHT;
-    
+
     @ConfigEntry.Gui.Tooltip
     public String custom_symbols = "";
-    
-    public List<String> custom_kaomojis = List.of();
+
+    public List<String> custom_kaomojis = new ArrayList<>();
 }

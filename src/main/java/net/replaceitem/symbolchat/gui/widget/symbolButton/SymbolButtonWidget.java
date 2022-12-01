@@ -58,23 +58,6 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
             textMatrices.translate(0.0, 0.0, 0 + 200.0f);
             drawCenteredText(matrices, textRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, argb);
             matrices.pop();
-
-
-            /*
-            MatrixStack matrixStack = new MatrixStack();
-            matrixStack.translate(0.0, 0.0, 0 + 200.0f);
-            VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
-            textRenderer.draw(this.getMessage(), (float)(x + 19 - 2 - textRenderer.getWidth(this.getMessage())), (float)(y + 6 + 3), 0xFFFFFF, true, matrixStack.peek().getPositionMatrix(), (VertexConsumerProvider)immediate, false, 0, LightmapTextureManager.MAX_LIGHT_COORDINATE);
-            immediate.draw();
-             */
-
-            /* In drawCenteredText:
-            VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
-            int i = this.draw(text, x, y, color, shadow, matrix, (VertexConsumerProvider)immediate, false, 0, LightmapTextureManager.MAX_LIGHT_COORDINATE);
-            immediate.draw();
-            */
-
-            this.renderTooltip(matrices, mouseX, mouseY);
         }
     }
 
@@ -82,10 +65,6 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
         return false;
     }
 
-    @Override
-    public void renderTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-
-    }
 
     @Override
     public void appendNarrations(NarrationMessageBuilder builder) {
