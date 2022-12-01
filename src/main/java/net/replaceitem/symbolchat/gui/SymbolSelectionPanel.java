@@ -56,7 +56,12 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         SymbolStorage.reloadCustomList();
         SymbolStorage.reloadKaomojiList();
 
-        this.searchBar = new SymbolSearchBar(this.x + 2 + SymbolButtonWidget.symbolSize, this.y + 1 + 2, WIDTH - 2 - SymbolButtonWidget.symbolSize - 10, SymbolButtonWidget.symbolSize - 2);
+        this.searchBar = new SymbolSearchBar(this.x + 2 + SymbolButtonWidget.symbolSize, this.y + 1 + 2, WIDTH - 2 - SymbolButtonWidget.symbolSize - 10, SymbolButtonWidget.symbolSize - 2) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                setCurrentTab(-1);
+            }
+        };
         this.searchBar.setChangedListener(s -> getCurrentTab().rearrangeSymbols());
         this.children.add(searchBar);
 
