@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AnvilScreen.class)
 public class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implements SymbolInsertable {
@@ -64,6 +65,22 @@ public class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implemen
         if(symbolSelectionPanel.mouseClicked(mouseX,mouseY,button)) return true;
         if(symbolButtonWidget.mouseClicked(mouseX,mouseY,button)) return true;
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
+    public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if(this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers)) {
+            cir.setReturnValue(true);
+            cir.cancel();
+        }
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        if(this.symbolSelectionPanel.charTyped(chr, modifiers)) {
+            return true;
+        }
+        return super.charTyped(chr, modifiers);
     }
 
     @Override

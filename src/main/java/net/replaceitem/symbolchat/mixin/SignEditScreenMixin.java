@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.replaceitem.symbolchat.SymbolInsertable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SignEditScreen.class)
 public class SignEditScreenMixin extends Screen implements SymbolInsertable {
@@ -38,6 +39,22 @@ public class SignEditScreenMixin extends Screen implements SymbolInsertable {
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if(symbolSelectionPanel.mouseScrolled(mouseX,mouseY,amount)) return true;
         return super.mouseScrolled(mouseX, mouseY, amount);
+    }
+
+    @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
+    public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if(this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers)) {
+            cir.setReturnValue(true);
+            cir.cancel();
+        }
+    }
+
+    @Inject(method = "charTyped", at = @At("HEAD"), cancellable = true)
+    public void charTyped(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if(this.symbolSelectionPanel.charTyped(chr, modifiers)) {
+            cir.setReturnValue(true);
+            cir.cancel();
+        }
     }
 
     @Override
