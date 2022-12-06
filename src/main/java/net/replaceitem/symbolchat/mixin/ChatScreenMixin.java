@@ -57,10 +57,12 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
         }
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(symbolSelectionPanel.mouseClicked(mouseX, mouseY, button)) return true;
-        return super.mouseClicked(mouseX, mouseY, button);
+    @Inject(method = "mouseClicked", at = @At("HEAD"))
+    public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        if(symbolSelectionPanel.mouseClicked(mouseX, mouseY, button)) {
+            cir.setReturnValue(true);
+            cir.cancel();
+        }
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)

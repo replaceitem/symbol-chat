@@ -44,12 +44,6 @@ public class BookEditScreenMixin extends Screen implements SymbolInsertable {
         RenderSystem.setShaderColor(1,1,1,1);
     }
 
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if(symbolSelectionPanel.mouseScrolled(mouseX,mouseY,amount)) return true;
-        return super.mouseScrolled(mouseX, mouseY, amount);
-    }
-
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if(this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers)) {

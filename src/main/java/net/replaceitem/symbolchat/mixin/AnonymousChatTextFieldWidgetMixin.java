@@ -19,8 +19,8 @@ public class AnonymousChatTextFieldWidgetMixin extends TextFieldWidget {
     @Override
     public void write(String text) {
         Screen screen = MinecraftClient.getInstance().currentScreen;
-        if(screen instanceof FontProcessorAccessor) {
-            FontProcessor processor = ((FontProcessorAccessor) screen).getFontProcessor();
+        if(screen instanceof FontProcessorAccessor fontProcessorAccessor) {
+            FontProcessor processor = fontProcessorAccessor.getFontProcessor();
             super.write(processor.convertString(text));
             if(processor == FontProcessor.INVERSE) {
                 int pos = this.getCursor()-1;
