@@ -29,7 +29,7 @@ public class SymbolSearchBar extends TextFieldWidget {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         boolean b = super.mouseClicked(mouseX, mouseY, button);
-        this.onClick(mouseX, mouseY);
+        if(b) this.onClick(mouseX, mouseY);
         return b;
     }
 }
