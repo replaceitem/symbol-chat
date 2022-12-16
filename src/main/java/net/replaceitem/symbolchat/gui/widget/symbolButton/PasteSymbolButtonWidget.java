@@ -31,7 +31,7 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
 
     public void placeInTabGrid(int gx, int gy) {
         this.setX(symbolTab.getX()+1+(gx * (SymbolButtonWidget.symbolSize+1)));
-        this.setX(symbolTab.getY()+1+(gy * (SymbolButtonWidget.symbolSize+1)));
+        this.setY(symbolTab.getY()+1+(gy * (SymbolButtonWidget.symbolSize+1)));
     }
 
     @Override
