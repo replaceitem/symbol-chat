@@ -45,7 +45,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
         if (this.visible) {
             RenderSystem.disableDepthTest();
             int backgroundColor = this.isSelected() ? SymbolChat.config.getButtonHoverColor() : SymbolChat.config.getButtonColor();
-            fill(matrices, this.x, this.y, this.x + this.width, this.y + this.height, backgroundColor);
+            fill(matrices, this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, backgroundColor);
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 
             int rgb = this.isHovered() ? 0xFFFFFF : 0xA0A0A0;
@@ -56,7 +56,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
 
             MatrixStack textMatrices = new MatrixStack();
             textMatrices.translate(0.0, 0.0, 0 + 200.0f);
-            drawCenteredText(matrices, textRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, argb);
+            drawCenteredText(matrices, textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, argb);
             matrices.pop();
         }
     }
@@ -67,7 +67,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
 
 
     @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
+    public void appendClickableNarrations(NarrationMessageBuilder builder) {
         this.appendDefaultNarrations(builder);
         builder.put(NarrationPart.HINT, "Symbol chat button");
     }

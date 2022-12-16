@@ -36,7 +36,15 @@ public class ConfigProvider {
 
 
     public enum SymbolTooltipMode {
-        OFF,ON,DELAYED
+        OFF(Integer.MAX_VALUE),
+        ON(0),
+        DELAYED(500);
+
+        public final int delay;
+
+        SymbolTooltipMode(int delay) {
+            this.delay = delay;
+        }
     }
 
     public enum HudPosition {

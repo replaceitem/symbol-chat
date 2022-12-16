@@ -8,6 +8,7 @@ import net.minecraft.client.gui.Narratable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -20,6 +21,7 @@ public class SettingsButtonWidget extends SymbolButtonWidget implements Drawable
         super(screen, x, y, "\u2699");
         this.width = 15;
         this.height = 15;
+        this.setTooltip(Tooltip.of(Text.translatable(SymbolChat.clothConfigEnabled ? "text.autoconfig.symbol-chat.title" : "symbolchat.no_clothconfig")));
     }
 
     @Override
@@ -35,16 +37,8 @@ public class SettingsButtonWidget extends SymbolButtonWidget implements Drawable
     }
 
     @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
+    public void appendClickableNarrations(NarrationMessageBuilder builder) {
         this.appendDefaultNarrations(builder);
-        builder.put(NarrationPart.HINT, "Symbol chat button");
-    }
-    
-    @Override
-    public void renderTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-        if(this.isHovered()) {
-            Text tooltip = Text.translatable(SymbolChat.clothConfigEnabled ? "text.autoconfig.symbol-chat.title" : "symbolchat.no_clothconfig");
-            screen.renderTooltip(matrices,tooltip,mouseX,mouseY);
-        }
+        builder.put(NarrationPart.HINT, "Symbol chat settings");
     }
 }

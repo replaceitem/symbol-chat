@@ -2,7 +2,7 @@ package net.replaceitem.symbolchat.mixin;
 
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.SignEditScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(SignEditScreen.class)
+@Mixin(AbstractSignEditScreen.class)
 public class SignEditScreenMixin extends Screen implements SymbolInsertable {
     @Shadow private SelectionManager selectionManager;
     private SymbolSelectionPanel symbolSelectionPanel;

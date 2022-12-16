@@ -57,7 +57,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
         }
     }
 
-    @Inject(method = "mouseClicked", at = @At("HEAD"))
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if(symbolSelectionPanel.mouseClicked(mouseX, mouseY, button)) {
             cir.setReturnValue(true);

@@ -1,6 +1,7 @@
 package net.replaceitem.symbolchat.gui.widget.symbolButton;
 
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.SymbolChat;
@@ -11,10 +12,6 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class PasteSymbolButtonWidget extends SymbolButtonWidget {
-
-    protected static long startHover = Long.MAX_VALUE;
-    protected static SymbolButtonWidget hoveredButton = null;
-
     protected SymbolTab symbolTab;
 
     public String getSymbol() {
@@ -27,27 +24,14 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
         super(screen, x, y, symbol);
         this.symbolTab = symbolTab;
         this.symbol = symbol;
+        String tooltipText = symbol.codePoints().mapToObj(operand -> generateCapitalization(Character.getName(operand))).collect(Collectors.joining(", "));
+        this.setTooltip(Tooltip.of(Text.of(tooltipText)));
+        this.setTooltipDelay(SymbolChat.config.getSymbolTooltipMode().delay);
     }
 
     public void placeInTabGrid(int gx, int gy) {
-        this.x = symbolTab.getX()+1+(gx * (SymbolButtonWidget.symbolSize+1));
-        this.y = symbolTab.getY()+1+(gy * (SymbolButtonWidget.symbolSize+1));
-    }
-
-    @Override
-    public void renderTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-        super.renderTooltip(matrices, mouseX, mouseY);
-        ConfigProvider.SymbolTooltipMode tooltipMode = SymbolChat.config.getSymbolTooltipMode();
-        if(tooltipMode.equals(ConfigProvider.SymbolTooltipMode.OFF)) return;
-        if(this.isHovered()) {
-            if(hoveredButton != this) {
-                hoveredButton = this;
-                startHover = System.currentTimeMillis();
-            }
-            if(tooltipMode.equals(ConfigProvider.SymbolTooltipMode.ON) || System.currentTimeMillis() - startHover > 500) {
-                screen.renderTooltip(matrices, Text.of(symbol.codePoints().mapToObj(operand -> generateCapitalization(Character.getName(operand))).collect(Collectors.joining(", "))), mouseX, mouseY);
-            }
-        }
+        this.setX(symbolTab.getX()+1+(gx * (SymbolButtonWidget.symbolSize+1)));
+        this.setX(symbolTab.getY()+1+(gy * (SymbolButtonWidget.symbolSize+1)));
     }
 
     @Override

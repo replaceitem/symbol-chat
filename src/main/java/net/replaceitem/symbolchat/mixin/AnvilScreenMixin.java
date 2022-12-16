@@ -42,8 +42,8 @@ public class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implemen
 
     @Inject(method = "setup", at = @At("RETURN"))
     private void addSymbolChatComponents(CallbackInfo ci) {
-        int symbolButtonX = this.nameField.x + this.nameField.getWidth() + 2 + 3;
-        int symbolButtonY = this.nameField.y - 3;
+        int symbolButtonX = this.nameField.getX() + this.nameField.getWidth() + 2 + 3;
+        int symbolButtonY = this.nameField.getY() - 3;
         this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.WIDTH -2,this.height-2-SymbolSelectionPanel.HEIGHT);
         this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, ANVIL_SYMBOL_BUTTON_SIZE, ANVIL_SYMBOL_BUTTON_SIZE, this.symbolSelectionPanel);
     }
