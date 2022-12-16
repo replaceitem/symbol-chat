@@ -20,8 +20,8 @@ public class SymbolSearchBar extends TextFieldWidget {
         matrices.translate(0.0, 0.0, 200.0f);
 
         super.render(matrices, mouseX, mouseY, delta);
-        int lineY = this.y + this.height - 1;
-        fill(matrices, this.x, lineY, this.x + this.width - 1, lineY+1, this.isActive() || this.isHovered() ? 0x99FFFFFF : 0x99A0A0A0);
+        int lineY = this.getY() + this.height - 1;
+        fill(matrices, this.getX(), lineY, this.getX() + this.width - 1, lineY+1, this.isActive() || this.isHovered() ? 0x99FFFFFF : 0x99A0A0A0);
 
         matrices.pop();
     }

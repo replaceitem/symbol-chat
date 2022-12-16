@@ -27,8 +27,8 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
         super(x, y, width, height, Text.empty());
         this.elements = new ArrayList<>();
         for(int i = 0; i < elementList.size(); i++) {
-            int dy = this.y + this.height + 1 + i*(this.height+1);
-            this.elements.add(new DropDownElementWidget<>(this.x + 1, dy, this.width - 2, this.height, elementList.get(i), i, this));
+            int dy = this.getY() + this.height + 1 + i*(this.height+1);
+            this.elements.add(new DropDownElementWidget<>(this.getX() + 1, dy, this.width - 2, this.height, elementList.get(i), i, this));
         }
         this.expanded = false;
         this.selected = defaultSelection;
@@ -38,13 +38,13 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             RenderSystem.disableDepthTest();
-            fill(matrices, this.x, this.y, this.x + this.width, this.y + this.height, SymbolChat.config.getButtonColor());
+            fill(matrices, this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, SymbolChat.config.getButtonColor());
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
             int z = this.isHovered() ? 16777215 : 10526880;
-            drawCenteredText(matrices, textRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, z | MathHelper.ceil(this.alpha * 255.0F) << 24);
+            drawCenteredText(matrices, textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, z | MathHelper.ceil(this.alpha * 255.0F) << 24);
 
             if(this.expanded) {
-                fill(matrices, this.x, this.y+this.height, this.x + this.width, this.y + this.height + 1 + this.elements.size()*(this.height+1), SymbolChat.config.getHudColor());
+                fill(matrices, this.getX(), this.getY()+this.height, this.getX() + this.width, this.getY() + this.height + 1 + this.elements.size()*(this.height+1), SymbolChat.config.getHudColor());
                 for(DropDownElementWidget<?> element : elements) {
                     element.render(matrices,mouseX,mouseY,delta);
                 }
@@ -85,7 +85,7 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
     public void onSelection(int index, T element) {}
 
     @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
+    public void appendClickableNarrations(NarrationMessageBuilder builder) {
         this.appendDefaultNarrations(builder);
         builder.put(NarrationPart.HINT, "Dropdown: " + getSelection().toString());
     }

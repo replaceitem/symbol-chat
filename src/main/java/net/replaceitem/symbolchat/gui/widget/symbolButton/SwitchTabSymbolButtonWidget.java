@@ -1,6 +1,7 @@
 package net.replaceitem.symbolchat.gui.widget.symbolButton;
 
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.SymbolStorage;
@@ -9,7 +10,6 @@ import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 public class SwitchTabSymbolButtonWidget extends SymbolButtonWidget {
 
     protected SymbolSelectionPanel symbolSelectionPanel;
-    protected Text tooltip;
 
     protected int index;
 
@@ -17,7 +17,7 @@ public class SwitchTabSymbolButtonWidget extends SymbolButtonWidget {
         super(screen, x, y, SymbolStorage.getListWithIndex(index).icon);
         this.symbolSelectionPanel = symbolSelectionPanel;
         this.index = index;
-        this.tooltip = Text.translatable(SymbolStorage.getListWithIndex(index).nameKey);
+        this.setTooltip(Tooltip.of(Text.translatable(SymbolStorage.getListWithIndex(index).nameKey)));
     }
 
     @Override
@@ -33,11 +33,6 @@ public class SwitchTabSymbolButtonWidget extends SymbolButtonWidget {
     @Override
     public boolean isHovered() {
         return super.isHovered() || this.isSelected();
-    }
-
-    @Override
-    public void renderTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-        if(this.isMouseOver(mouseX,mouseY)) screen.renderTooltip(matrices,tooltip,mouseX,mouseY);
     }
 
     @Override

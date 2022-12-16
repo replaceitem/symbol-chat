@@ -1,22 +1,23 @@
 package net.replaceitem.symbolchat.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.AbstractParentElement;
+import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
+import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolStorage;
 import net.replaceitem.symbolchat.gui.widget.SymbolSearchBar;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
-import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
-import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SwitchTabSymbolButtonWidget;
+import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,9 +121,6 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         this.getCurrentTab().render(matrices,mouseX,mouseY,delta);
         for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
             tab.getRight().render(matrices, mouseX, mouseY, delta);
-        }
-        for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
-            tab.getRight().renderTooltip(matrices, mouseX, mouseY);
         }
     }
 
