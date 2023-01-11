@@ -27,7 +27,7 @@ public class ClothConfigProvider extends ConfigProvider {
 
     @Override
     public int getButtonHoverColor() {
-        return config.button_hover_color;
+        return config.button_active_color;
     }
 
     @Override

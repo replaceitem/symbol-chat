@@ -17,7 +17,7 @@ public class ClothConfig implements ConfigData {
     public int button_color = 0xA0000000;
 
     @ConfigEntry.ColorPicker(allowAlpha = true)
-    public int button_hover_color = 0xA0303030;
+    public int button_active_color = 0xA0101010;
     
     public boolean hide_font_button = false;
 
