@@ -144,7 +144,7 @@ public abstract class FontProcessor {
             if(string.length() > 1) return string;
             char c = string.charAt(0);
             if(c >= '0' && c <= '9') {
-                return "0ƖՇƐh૬9L86".substring(c-'0',c-'0'+1);
+                return "0ƖՇƐ߈ϛ9ㄥ86".substring(c-'0',c-'0'+1);
             }
             if(c >= 'A' && c <= 'Z') {
                 return "ⱯᗺƆᗡƎℲ⅁HIſʞ˥WuOԀῸᴚSʇ∩ΛMX⅄Z".substring(c-'A',c-'A'+1);

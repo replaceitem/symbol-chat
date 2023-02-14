@@ -2,7 +2,7 @@
   "text.autoconfig.symbol-chat.title": "Symbol Chat konfiguration",
   "text.autoconfig.symbol-chat.option.hud_color": "Hintergrundfarbe",
   "text.autoconfig.symbol-chat.option.button_color": "Schaltflächenfarbe",
-  "text.autoconfig.symbol-chat.option.outline_color": "Konturfarbe",
+  "text.autoconfig.symbol-chat.option.button_active_color": "Aktive Schaltflächenfarbe",
   "text.autoconfig.symbol-chat.option.hide_font_button": "Schriftartschaltfläche verstecken",
   "text.autoconfig.symbol-chat.option.hide_settings_button": "Einstellungsschaltfläche verstecken",
   "text.autoconfig.symbol-chat.option.hide_settings_button.@Tooltip": "Versteckt die Einstellungsschaltfläche, dass sie nur noch über Modmenu erreichbar ist",
@@ -18,6 +18,7 @@
 
   "symbolchat.no_custom_symbols": "Keine eigenen Symbole angegeben. Du kannst Symbole in der ClothConfig Konfiguration hinzufügen, die vom ModMenu Seite erreichbar ist.",
   "symbolchat.no_clothconfig": "Installiere ClothConfig um eigene Symbole hinzuzufügen.",
+  "symbolchat.search": "Suche",
 
   "symbolchat.tab.people_nature": "Menschen & Natur",
   "symbolchat.tab.objects": "Gegenstände",
