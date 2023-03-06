@@ -10,10 +10,10 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
-import net.replaceitem.symbolchat.SymbolList;
+import net.replaceitem.symbolchat.SymbolCategory;
+import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
-import net.replaceitem.symbolchat.SymbolChat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
 
     protected Screen screen;
     
-    public static SymbolTab fromList(Screen screen, SymbolList symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
+    public static SymbolTab fromCategory(Screen screen, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
         if(symbols.id.equals("kaomojis")) {
             return new KaomojiTab(screen, symbols, symbolSelectionPanel, x, y);
         } else {
@@ -57,7 +57,7 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
         }
     }
 
-    public SymbolTab(Screen screen, SymbolList symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
+    public SymbolTab(Screen screen, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
         this.x = x;
         this.y = y;
         this.screen = screen;
@@ -67,7 +67,7 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
         init(symbols);
     }
 
-    protected void init(SymbolList symbols) {
+    protected void init(SymbolCategory symbols) {
         this.loadSymbols(symbols);
         this.rearrangeSymbols();
     }
@@ -80,12 +80,12 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
         return new PasteSymbolButtonWidget(screen, x, y, this, symbol);
     }
 
-    public void loadSymbols(SymbolList symbols) {
+    public void loadSymbols(SymbolCategory symbols) {
         symbolButtons.clear();
-        for(int i = 0; i < symbols.items.size(); i++) {
+        for(int i = 0; i < symbols.symbols.size(); i++) {
             int widgetX = 0;
             int widgetY = 0;
-            symbolButtons.add(createButton(widgetX, widgetY, symbols.items.get(i)));
+            symbolButtons.add(createButton(widgetX, widgetY, symbols.symbols.get(i)));
         }
     }
 

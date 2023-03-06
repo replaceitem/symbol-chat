@@ -6,9 +6,10 @@
   "mixins": [
     "AnonymousChatTextFieldWidgetMixin",
     "AnvilScreenMixin",
+    "BookEditScreenMixin",
     "ChatScreenMixin",
     "SignEditScreenMixin",
-    "BookEditScreenMixin"
+    "TextFieldWidgetAccessor"
   ],
   "client": [
   ],

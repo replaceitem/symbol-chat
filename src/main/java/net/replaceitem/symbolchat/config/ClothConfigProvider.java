@@ -3,6 +3,8 @@ package net.replaceitem.symbolchat.config;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.ActionResult;
+import net.replaceitem.symbolchat.SymbolStorage;
 
 import java.util.List;
 
@@ -13,6 +15,10 @@ public class ClothConfigProvider extends ConfigProvider {
     public ClothConfigProvider() {
         AutoConfig.register(ClothConfig.class, GsonConfigSerializer::new);
         this.config = AutoConfig.getConfigHolder(ClothConfig.class).getConfig();
+        AutoConfig.getConfigHolder(ClothConfig.class).registerSaveListener((configHolder, clothConfig) -> {
+            SymbolStorage.reloadCustomLists(clothConfig);
+            return ActionResult.SUCCESS;
+        });
     }
     
     @Override

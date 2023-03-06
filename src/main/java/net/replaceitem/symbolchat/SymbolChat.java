@@ -20,6 +20,6 @@ public class SymbolChat implements ClientModInitializer {
         clothConfigEnabled = FabricLoader.getInstance().isModLoaded("cloth-config2");
         config = clothConfigEnabled ? new ClothConfigProvider() : new ConfigProvider();
         FontProcessor.registerFontProcessors();
-        SymbolStorage.loadLists();
+        SymbolStorage.load();
     }
 }

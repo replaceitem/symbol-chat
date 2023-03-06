@@ -1,7 +1,7 @@
 package net.replaceitem.symbolchat.gui;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.replaceitem.symbolchat.SymbolList;
+import net.replaceitem.symbolchat.SymbolCategory;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import oshi.util.tuples.Pair;
 
@@ -14,12 +14,12 @@ public class SearchTab extends SymbolTab {
 
     protected List<PasteSymbolButtonWidget> visibleSymbolButtons;
 
-    public SearchTab(Screen screen, SymbolList symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
+    public SearchTab(Screen screen, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
         super(screen, symbols, symbolSelectionPanel, x, y);
     }
 
     @Override
-    protected void init(SymbolList symbols) {
+    protected void init(SymbolCategory symbols) {
         visibleSymbolButtons = new ArrayList<>();
         super.init(symbols);
     }

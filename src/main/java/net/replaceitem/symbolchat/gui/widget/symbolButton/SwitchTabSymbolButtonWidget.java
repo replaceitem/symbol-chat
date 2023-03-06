@@ -4,7 +4,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.replaceitem.symbolchat.SymbolStorage;
+import net.replaceitem.symbolchat.SymbolCategory;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 
 public class SwitchTabSymbolButtonWidget extends SymbolButtonWidget {
@@ -13,11 +13,11 @@ public class SwitchTabSymbolButtonWidget extends SymbolButtonWidget {
 
     protected int index;
 
-    public SwitchTabSymbolButtonWidget(Screen screen, int x, int y, int index, SymbolSelectionPanel symbolSelectionPanel) {
-        super(screen, x, y, SymbolStorage.getListWithIndex(index).icon);
+    public SwitchTabSymbolButtonWidget(Screen screen, int x, int y, int index, SymbolCategory category, SymbolSelectionPanel symbolSelectionPanel) {
+        super(screen, x, y, category.icon);
         this.symbolSelectionPanel = symbolSelectionPanel;
         this.index = index;
-        this.setTooltip(Tooltip.of(Text.translatable(SymbolStorage.getListWithIndex(index).nameKey)));
+        this.setTooltip(Tooltip.of(Text.translatable(category.nameKey)));
     }
 
     @Override
