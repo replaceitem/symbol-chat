@@ -5,13 +5,13 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.AbstractParentElement;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolCategory;
 import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 
@@ -23,8 +23,8 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
     protected static int columns = 8;
     protected static int rows = 16;
 
-    public static int width = columns * (SymbolButtonWidget.symbolSize+1) + 1;
-    public static int height = rows * (SymbolButtonWidget.symbolSize+1);
+    public static int width = columns * (SymbolButtonWidget.SYMBOL_SIZE +1) + 1;
+    public static int height = rows * (SymbolButtonWidget.SYMBOL_SIZE +1);
     
     public static final Text NO_CUSTOM_SYMBOLS = Text.translatable("symbolchat.no_custom_symbols");
     public static final Text NO_CLOTHCONFIG = Text.translatable("symbolchat.no_clothconfig");
@@ -47,20 +47,20 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
 
     protected int y;
 
-    protected Screen screen;
+    protected SymbolInsertable symbolInsertable;
     
-    public static SymbolTab fromCategory(Screen screen, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
+    public static SymbolTab fromCategory(SymbolInsertable symbolInsertable, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
         if(symbols.id.equals("kaomojis")) {
-            return new KaomojiTab(screen, symbols, symbolSelectionPanel, x, y);
+            return new KaomojiTab(symbolInsertable, symbols, symbolSelectionPanel, x, y);
         } else {
-            return new SymbolTab(screen, symbols, symbolSelectionPanel, x, y);
+            return new SymbolTab(symbolInsertable, symbols, symbolSelectionPanel, x, y);
         }
     }
 
-    public SymbolTab(Screen screen, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
+    public SymbolTab(SymbolInsertable symbolInsertable, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
         this.x = x;
         this.y = y;
-        this.screen = screen;
+        this.symbolInsertable = symbolInsertable;
         this.symbolButtons = new ArrayList<>();
         this.symbolSelectionPanel = symbolSelectionPanel;
         this.scroll = 0;
@@ -69,7 +69,7 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
 
     protected void init(SymbolCategory symbols) {
         this.loadSymbols(symbols);
-        this.rearrangeSymbols();
+        this.arrangeButtons();
     }
     
     protected int getColumns() {
@@ -77,7 +77,7 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
     }
 
     protected PasteSymbolButtonWidget createButton(int x, int y, String symbol) {
-        return new PasteSymbolButtonWidget(screen, x, y, this, symbol);
+        return new PasteSymbolButtonWidget(x, y, this.symbolInsertable, symbol);
     }
 
     public void loadSymbols(SymbolCategory symbols) {
@@ -89,7 +89,7 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
         }
     }
 
-    protected void rearrangeSymbols() {
+    protected void arrangeButtons() {
         int count = this.buttons().size();
         int totalRows = (count / getColumns()) + Math.min(count % getColumns(),1);
         this.maxScroll = Math.max(totalRows - rows, 0);
@@ -98,7 +98,7 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
             PasteSymbolButtonWidget button = buttons().get(i);
             int row = i / getColumns() - scroll;
             int col = i % getColumns();
-            button.placeInTabGrid(col, row);
+            button.placeInTabGrid(this, col, row);
             button.visible = row >= 0 && row < rows;
         }
     }
@@ -148,11 +148,7 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if(!this.isMouseOver(mouseX,mouseY)) return false;
         this.scroll -= amount;
-        rearrangeSymbols();
+        arrangeButtons();
         return true;
-    }
-
-    public void pasteSymbol(String symbol) {
-        symbolSelectionPanel.onSymbolPasted(symbol);
     }
 }

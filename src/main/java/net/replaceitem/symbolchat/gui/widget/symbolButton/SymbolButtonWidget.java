@@ -6,7 +6,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Narratable;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -18,18 +17,15 @@ import net.replaceitem.symbolchat.SymbolChat;
 
 public abstract class SymbolButtonWidget extends ClickableWidget implements Drawable, Element, Narratable {
 
-    public static final int symbolSize = 12;
+    public static final int SYMBOL_SIZE = 12;
 
-    protected Screen screen;
 
-    public SymbolButtonWidget(Screen screen, int x, int y, String symbol) {
-        super(x, y, symbolSize, symbolSize, Text.literal(symbol));
-        this.screen = screen;
+    public SymbolButtonWidget(int x, int y, String symbol) {
+        super(x, y, SYMBOL_SIZE, SYMBOL_SIZE, Text.literal(symbol));
     }
 
-    public SymbolButtonWidget(Screen screen, int x, int y, int w, int h, String symbol) {
+    public SymbolButtonWidget(int x, int y, int w, int h, String symbol) {
         super(x, y, w, h, Text.literal(symbol));
-        this.screen = screen;
     }
 
     @Override
@@ -63,6 +59,13 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
 
     protected boolean isSelected() {
         return false;
+    }
+
+    /**
+     * Just to make setFocused publicly accessible
+     */
+    public void makeFocused(boolean focused) {
+        this.setFocused(focused);
     }
 
 

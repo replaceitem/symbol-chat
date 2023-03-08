@@ -8,6 +8,7 @@
     "AnvilScreenMixin",
     "BookEditScreenMixin",
     "ChatScreenMixin",
+    "PageContentAccessor",
     "SignEditScreenMixin",
     "TextFieldWidgetAccessor"
   ],

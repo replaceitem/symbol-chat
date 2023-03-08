@@ -1,19 +1,18 @@
 package net.replaceitem.symbolchat.gui.widget.symbolButton;
 
-import net.minecraft.client.gui.screen.Screen;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 
 public class OpenSymbolPanelButtonWidget extends SymbolButtonWidget {
 
     protected SymbolSelectionPanel symbolSelectionPanel;
 
-    public OpenSymbolPanelButtonWidget(Screen screen, int x, int y, SymbolSelectionPanel symbolSelectionPanel) {
-        super(screen, x, y, "\u263a");
+    public OpenSymbolPanelButtonWidget(int x, int y, SymbolSelectionPanel symbolSelectionPanel) {
+        super(x, y, "☺");
         this.symbolSelectionPanel = symbolSelectionPanel;
     }
 
-    public OpenSymbolPanelButtonWidget(Screen screen, int x, int y, int w, int h, SymbolSelectionPanel symbolSelectionPanel) {
-        super(screen, x, y, w, h,"\u263a");
+    public OpenSymbolPanelButtonWidget(int x, int y, int w, int h, SymbolSelectionPanel symbolSelectionPanel) {
+        super(x, y, w, h,"☺");
         this.symbolSelectionPanel = symbolSelectionPanel;
     }
 

@@ -1,7 +1,6 @@
 package net.replaceitem.symbolchat.gui.widget.symbolButton;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Narratable;
@@ -9,16 +8,18 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
 
 public class SettingsButtonWidget extends SymbolButtonWidget implements Drawable, Element, Narratable {
 
+
+    protected Screen screen;
+    
     public SettingsButtonWidget(Screen screen, int x, int y) {
-        super(screen, x, y, "\u2699");
+        super(x, y, "⚙");
+        this.screen = screen;
         this.width = 15;
         this.height = 15;
         this.setTooltip(Tooltip.of(Text.translatable(SymbolChat.clothConfigEnabled ? "text.autoconfig.symbol-chat.title" : "symbolchat.no_clothconfig")));

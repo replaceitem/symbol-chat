@@ -5,7 +5,6 @@ import net.minecraft.client.gui.AbstractParentElement;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -16,13 +15,11 @@ import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolStorage;
 import net.replaceitem.symbolchat.gui.widget.SymbolSearchBar;
-import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SwitchTabSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class SymbolSelectionPanel extends AbstractParentElement implements Drawable, Selectable {
     private final List<Element> children;
@@ -33,34 +30,34 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
 
     protected int x,y;
     public static final int WIDTH, HEIGHT;
-    public static final int SEARCH_BAR_HEIGHT = SymbolButtonWidget.symbolSize + 2;
+    public static final int SEARCH_BAR_HEIGHT = SymbolButtonWidget.SYMBOL_SIZE + 2;
 
     public boolean visible;
     public int selectedTab;
 
-    protected Screen screen;
+    protected SymbolInsertable symbolInsertable;
 
     static {
         WIDTH = SymbolTab.width;
-        HEIGHT = SEARCH_BAR_HEIGHT + SymbolTab.height + (SymbolButtonWidget.symbolSize + 2);
+        HEIGHT = SEARCH_BAR_HEIGHT + SymbolTab.height + (SymbolButtonWidget.SYMBOL_SIZE + 2);
     }
 
-    public SymbolSelectionPanel(Screen screen, int x, int y) {
+    public SymbolSelectionPanel(SymbolInsertable symbolInsertable, int x, int y) {
         this.tabs = new ArrayList<>();
         this.children = new ArrayList<>();
         this.x = x;
         this.y = y;
         this.visible = false;
         this.selectedTab = -1;
-        this.screen = screen;
+        this.symbolInsertable = symbolInsertable;
 
-        this.searchBar = new SymbolSearchBar(this.x + 2 + SymbolButtonWidget.symbolSize, this.y + 1 + 2, WIDTH - 2 - SymbolButtonWidget.symbolSize - 10, SymbolButtonWidget.symbolSize - 2) {
+        this.searchBar = new SymbolSearchBar(this.x + 2 + SymbolButtonWidget.SYMBOL_SIZE, this.y + 1 + 2, WIDTH - 2 - SymbolButtonWidget.SYMBOL_SIZE - 10, SymbolButtonWidget.SYMBOL_SIZE - 2) {
             @Override
             public void onClick(double mouseX, double mouseY) {
                 setCurrentTab(-1);
             }
         };
-        this.searchBar.setChangedListener(s -> getCurrentTab().rearrangeSymbols());
+        this.searchBar.setChangedListener(s -> getCurrentTab().arrangeButtons());
         this.children.add(searchBar);
 
         int i;
@@ -71,18 +68,18 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         addTab(SymbolStorage.kaomojis, i++);
         addTab(SymbolStorage.customSymbols, i);
 
-        searchTab = new SearchTab(screen, SymbolStorage.all, this, this.x, this.y + SEARCH_BAR_HEIGHT);
-        SwitchTabSymbolButtonWidget searchButtonWidget = new SwitchTabSymbolButtonWidget(screen, this.x+1, this.y+1, -1, SymbolStorage.all, this);
+        searchTab = new SearchTab(symbolInsertable, SymbolStorage.all, this, this.x, this.y + SEARCH_BAR_HEIGHT);
+        SwitchTabSymbolButtonWidget searchButtonWidget = new SwitchTabSymbolButtonWidget(this.x+1, this.y+1, -1, SymbolStorage.all, this);
         tabs.add(new Pair<>(searchTab,searchButtonWidget));
         this.children.add(searchButtonWidget);
         this.children.add(searchTab);
     }
     
     private void addTab(SymbolCategory category, int index) {
-        SymbolTab tab = SymbolTab.fromCategory(screen, category, this, this.x, this.y + SEARCH_BAR_HEIGHT);
-        int buttonX = this.x+1+((SymbolButtonWidget.symbolSize+1)*index);
-        int buttonY = this.y + HEIGHT - 1 - SymbolButtonWidget.symbolSize;
-        SwitchTabSymbolButtonWidget buttonWidget = new SwitchTabSymbolButtonWidget(screen, buttonX, buttonY, index, category, this);
+        SymbolTab tab = SymbolTab.fromCategory(symbolInsertable, category, this, this.x, this.y + SEARCH_BAR_HEIGHT);
+        int buttonX = this.x+1+((SymbolButtonWidget.SYMBOL_SIZE +1)*index);
+        int buttonY = this.y + HEIGHT - 1 - SymbolButtonWidget.SYMBOL_SIZE;
+        SwitchTabSymbolButtonWidget buttonWidget = new SwitchTabSymbolButtonWidget(buttonX, buttonY, index, category, this);
         tabs.add(new Pair<>(tab,buttonWidget));
 
         this.children.add(buttonWidget);
@@ -91,16 +88,6 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
 
     protected String getSearchTerm() {
         return searchBar.getText();
-    }
-
-    public int getSearchOrder(PasteSymbolButtonWidget pasteSymbolButtonWidget) {
-        String searchTerm = getSearchTerm();
-        if(searchTerm.isEmpty()) return 0;
-        String symbol = pasteSymbolButtonWidget.getSymbol();
-        if(symbol.contains(searchTerm)) return 1;
-        int searchIndex = symbol.codePoints().map(codePoint -> Character.getName(codePoint).indexOf(searchTerm.toUpperCase(Locale.ROOT))).findFirst().orElse(-1);
-        if(searchIndex != -1) return searchIndex + 2;
-        return -1;
     }
 
     public SymbolTab getSymbolTab(int index) {
@@ -114,7 +101,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
 
     public void setCurrentTab(int index) {
         this.selectedTab = index;
-        getCurrentTab().rearrangeSymbols();
+        getCurrentTab().arrangeButtons();
     }
 
     @Override
@@ -122,7 +109,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         if(!this.visible) return;
         RenderSystem.disableDepthTest();
         fill(matrices, this.x, this.y, this.x + WIDTH, this.y + HEIGHT, SymbolChat.config.getHudColor());
-        fill(matrices, this.x, this.y + HEIGHT - 2 - SymbolButtonWidget.symbolSize, this.x + WIDTH, this.y + HEIGHT, SymbolChat.config.getHudColor());
+        fill(matrices, this.x, this.y + HEIGHT - 2 - SymbolButtonWidget.SYMBOL_SIZE, this.x + WIDTH, this.y + HEIGHT, SymbolChat.config.getHudColor());
         this.searchBar.render(matrices, mouseX, mouseY, delta);
         this.getCurrentTab().render(matrices,mouseX,mouseY,delta);
         for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
@@ -150,12 +137,6 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if(!visible) return false;
         return this.getCurrentTab().mouseScrolled(mouseX, mouseY, amount);
-    }
-
-    public void onSymbolPasted(String symbol) {
-        if(this.screen instanceof SymbolInsertable symbolInsertable) {
-            symbolInsertable.insertSymbol(symbol);
-        }
     }
 
     @Override

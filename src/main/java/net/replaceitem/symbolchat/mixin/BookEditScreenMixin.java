@@ -6,23 +6,31 @@ import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.replaceitem.symbolchat.SymbolInsertable;
+import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
+import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
+import net.replaceitem.symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
+import org.joml.Vector2i;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.replaceitem.symbolchat.SymbolInsertable;
-import net.replaceitem.symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BookEditScreen.class)
-public class BookEditScreenMixin extends Screen implements SymbolInsertable {
+public abstract class BookEditScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.SelectionManagerSymbolSuggestable {
     @Shadow @Final private SelectionManager currentPageSelectionManager;
+    @Shadow protected abstract String getCurrentPageContent();
+    @Shadow protected abstract BookEditScreen.PageContent getPageContent();
+    @Shadow protected abstract BookEditScreen.Position absolutePositionToScreenPosition(BookEditScreen.Position position);
+
     private SymbolButtonWidget symbolButtonWidget;
     private SymbolSelectionPanel symbolSelectionPanel;
+    private SymbolSuggestor symbolSuggestor;
 
     protected BookEditScreenMixin(Text title) {
         super(title);
@@ -30,12 +38,15 @@ public class BookEditScreenMixin extends Screen implements SymbolInsertable {
 
     @Inject(method = "init", at = @At(value = "HEAD"))
     private void addSymbolButton(CallbackInfo ci) {
-        int symbolButtonX = this.width-SymbolButtonWidget.symbolSize;
-        int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;
+        int symbolButtonX = this.width-SymbolButtonWidget.SYMBOL_SIZE;
+        int symbolButtonY = this.height-2-SymbolButtonWidget.SYMBOL_SIZE;
         this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.WIDTH -2,symbolButtonY-2-SymbolSelectionPanel.HEIGHT);
-        this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
+        this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
         this.addDrawableChild(symbolSelectionPanel);
         this.addDrawableChild(symbolButtonWidget);
+
+        this.symbolSuggestor = new SymbolSuggestor(this, this::replaceSuggestion, this);
+        this.addDrawableChild(symbolSuggestor);
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V"))
@@ -46,9 +57,13 @@ public class BookEditScreenMixin extends Screen implements SymbolInsertable {
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if(this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers)) {
+            cir.setReturnValue(true);
+            this.symbolSuggestor.refresh();
+            
+        }
         if(this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers)) {
             cir.setReturnValue(true);
-            cir.cancel();
         }
     }
 
@@ -56,12 +71,41 @@ public class BookEditScreenMixin extends Screen implements SymbolInsertable {
     public void charTyped(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if(this.symbolSelectionPanel.charTyped(chr, modifiers)) {
             cir.setReturnValue(true);
-            cir.cancel();
         }
+    }
+    
+    @Inject(method = "charTyped", at = @At("RETURN"))
+    private void updateSuggestions(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        this.symbolSuggestor.refresh();
+    }
+    @Inject(method = "keyPressed", at = @At("RETURN"))
+    private void updateSuggestions(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        this.symbolSuggestor.refresh();
+    }
+    @Inject(method = "mouseClicked", at = @At("RETURN"))
+    private void updateSuggestions(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        this.symbolSuggestor.refresh();
     }
 
     @Override
     public void insertSymbol(String symbol) {
         this.currentPageSelectionManager.insert(symbol);
+    }
+
+    @Override
+    public Vector2i getCursorPosition() {
+        BookEditScreen.Position position = ((PageContentAccessor) this.getPageContent()).getPosition();
+        position = this.absolutePositionToScreenPosition(position);
+        return new Vector2i(position.x, position.y);
+    }
+
+    @Override
+    public String getText() {
+        return getCurrentPageContent();
+    }
+
+    @Override
+    public SelectionManager getSelectionManager() {
+        return this.currentPageSelectionManager;
     }
 }

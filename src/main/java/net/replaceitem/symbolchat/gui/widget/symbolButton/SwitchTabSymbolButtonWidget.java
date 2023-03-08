@@ -1,6 +1,5 @@
 package net.replaceitem.symbolchat.gui.widget.symbolButton;
 
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -13,8 +12,8 @@ public class SwitchTabSymbolButtonWidget extends SymbolButtonWidget {
 
     protected int index;
 
-    public SwitchTabSymbolButtonWidget(Screen screen, int x, int y, int index, SymbolCategory category, SymbolSelectionPanel symbolSelectionPanel) {
-        super(screen, x, y, category.icon);
+    public SwitchTabSymbolButtonWidget(int x, int y, int index, SymbolCategory category, SymbolSelectionPanel symbolSelectionPanel) {
+        super(x, y, category.icon);
         this.symbolSelectionPanel = symbolSelectionPanel;
         this.index = index;
         this.setTooltip(Tooltip.of(Text.translatable(category.nameKey)));

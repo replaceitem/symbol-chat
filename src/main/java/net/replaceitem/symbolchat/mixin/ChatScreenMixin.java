@@ -5,9 +5,17 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.FontProcessor;
+import net.replaceitem.symbolchat.FontProcessorAccessor;
+import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.SymbolInsertable;
+import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.config.ConfigProvider;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
+import net.replaceitem.symbolchat.gui.widget.DropDownWidget;
 import net.replaceitem.symbolchat.gui.widget.FontSelectionDropDownWidget;
+import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
+import net.replaceitem.symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
+import net.replaceitem.symbolchat.gui.widget.symbolButton.SettingsButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,19 +25,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import net.replaceitem.symbolchat.FontProcessorAccessor;
-import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.SymbolInsertable;
-import net.replaceitem.symbolchat.gui.widget.DropDownWidget;
-import net.replaceitem.symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
-import net.replaceitem.symbolchat.gui.widget.symbolButton.SettingsButtonWidget;
 
 @Mixin(ChatScreen.class)
-public class ChatScreenMixin extends Screen implements SymbolInsertable, FontProcessorAccessor {
+public class ChatScreenMixin extends Screen implements SymbolInsertable, FontProcessorAccessor, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
     @Shadow protected TextFieldWidget chatField;
 
     private SymbolSelectionPanel symbolSelectionPanel;
     private DropDownWidget<FontProcessor> fontSelectionDropDown;
+    private SymbolSuggestor symbolSuggestor;
 
     protected ChatScreenMixin(Text title) {
         super(title);
@@ -37,12 +40,12 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
 
     @Inject(method = "init", at = @At(value = "RETURN"))
     private void addSymbolChatComponents(CallbackInfo ci) {
-        int symbolButtonX = this.width-2- SymbolButtonWidget.symbolSize;
-        int symbolButtonY = this.height-2-SymbolButtonWidget.symbolSize;
+        int symbolButtonX = this.width-2- SymbolButtonWidget.SYMBOL_SIZE;
+        int symbolButtonY = this.height-2-SymbolButtonWidget.SYMBOL_SIZE;
         this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.WIDTH -2,symbolButtonY-2-SymbolSelectionPanel.HEIGHT);
         this.addDrawableChild(symbolSelectionPanel);
 
-        SymbolButtonWidget symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
+        SymbolButtonWidget symbolButtonWidget = new OpenSymbolPanelButtonWidget(symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
         this.addDrawableChild(symbolButtonWidget);
 
         int hudX = SymbolChat.config.getHudPosition().getX(this.width);
@@ -55,21 +58,25 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
             SettingsButtonWidget settingsButtonWidget = new SettingsButtonWidget(this, hudX + hiddenOffset, 2);
             this.addDrawableChild(settingsButtonWidget);
         }
+        
+        this.symbolSuggestor = new SymbolSuggestor(this, this::replaceSuggestion, this);
+        this.addDrawableChild(symbolSuggestor);
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if(symbolSelectionPanel.mouseClicked(mouseX, mouseY, button)) {
             cir.setReturnValue(true);
-            cir.cancel();
         }
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if(this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers)) {
+            cir.setReturnValue(true);
+        }
         if(this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers)) {
             cir.setReturnValue(true);
-            cir.cancel();
         }
     }
 
@@ -83,19 +90,23 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
 
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 1),require = 1)
     private int changeTextBoxWidth(int original) {
-        return original + SymbolButtonWidget.symbolSize + 8;
+        return original + SymbolButtonWidget.SYMBOL_SIZE + 8;
     }
     @ModifyConstant(method = "render",constant = @Constant(intValue = 2, ordinal = 1),require = 1)
     private int changeChatBoxFillWidth(int original) {
-        return original + SymbolButtonWidget.symbolSize + 2;
+        return original + SymbolButtonWidget.SYMBOL_SIZE + 2;
     }
 
     @Inject(method = "mouseScrolled", at = @At(value = "HEAD"), cancellable = true)
     public void mouseScrolled(double mouseX, double mouseY, double amount, CallbackInfoReturnable<Boolean> cir) {
         if(symbolSelectionPanel.mouseScrolled(mouseX,mouseY,amount)) {
             cir.setReturnValue(true);
-            cir.cancel();
         }
+    }
+    
+    @Inject(method = "onChatFieldUpdate", at = @At("HEAD"))
+    private void updateSuggestions(String chatText, CallbackInfo ci) {
+        this.symbolSuggestor.refresh();
     }
     
     @Override
@@ -106,5 +117,10 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
     @Override
     public FontProcessor getFontProcessor() {
         return this.fontSelectionDropDown.getSelection();
+    }
+
+    @Override
+    public TextFieldWidget getTextField() {
+        return chatField;
     }
 }

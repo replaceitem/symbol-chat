@@ -6,35 +6,22 @@ import java.util.List;
 
 public class ConfigProvider {
     public int getHudColor() {return 0x80000000;}
-    public int getButtonColor() {
-        return 0xA0000000;
-    }
-    public int getButtonHoverColor() {
-        return 0xA0303030;
-    }
-
-    public boolean getHideFontButton() {
-        return false;
-    }
+    public int getButtonColor() {return 0xA0000000;}
+    public int getButtonHoverColor() {return 0xA0303030;}
+    public boolean getHideFontButton() {return false;}
     public boolean getHideSettingsButton() {return false;}
-
+    public int getMaxSymbolSuggestions() {return 5;}
     public SymbolTooltipMode getSymbolTooltipMode() {return SymbolTooltipMode.DELAYED;}
-    public HudPosition getHudPosition() {
-        return HudPosition.RIGHT;
-    }
-
-    public String getCustomSymbols() {
-        return "";
-    }
-    public List<String> getCustomKaomojis() {
-        return List.of();
-    }
+    public HudPosition getHudPosition() {return HudPosition.RIGHT;}
+    public String getCustomSymbols() {return "";}
+    public List<String> getCustomKaomojis() {return List.of();}
 
     public Screen getConfigScreen(Screen parent) {
         return null;
     }
 
 
+    @SuppressWarnings("unused")
     public enum SymbolTooltipMode {
         OFF(Integer.MAX_VALUE),
         ON(0),

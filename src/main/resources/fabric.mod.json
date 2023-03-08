@@ -26,6 +26,7 @@
   "mixins": [
     "symbol-chat.mixins.json"
   ],
+  "accessWidener": "symbol-chat.accesswidener",
   "depends": {
     "fabricloader": ">=0.14.6",
     "minecraft": ">=1.19.3",

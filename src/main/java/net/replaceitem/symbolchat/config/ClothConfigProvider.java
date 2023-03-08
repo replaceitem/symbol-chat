@@ -47,6 +47,11 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
+    public int getMaxSymbolSuggestions() {
+        return config.max_symbol_suggestions;
+    }
+
+    @Override
     public SymbolTooltipMode getSymbolTooltipMode() {return config.symbol_tooltip_mode;}
 
     @Override

@@ -6,6 +6,7 @@
   "text.autoconfig.symbol-chat.option.hide_font_button": "Hide font button",
   "text.autoconfig.symbol-chat.option.hide_settings_button": "Hide settings button",
   "text.autoconfig.symbol-chat.option.hide_settings_button.@Tooltip": "Hides the settings button, only allowing you to access the config from Modmenu",
+  "text.autoconfig.symbol-chat.option.max_symbol_suggestions": "Maximum symbol suggestions",
   "text.autoconfig.symbol-chat.option.symbol_tooltip_mode": "Symbol tooltip mode",
   "text.autoconfig.symbol-chat.option.symbol_tooltip_mode.@Tooltip[0]": "OFF: Do not show a tooltip",
   "text.autoconfig.symbol-chat.option.symbol_tooltip_mode.@Tooltip[1]": "DELAYED: Only show a tooltip after some time hovering",

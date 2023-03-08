@@ -9,7 +9,9 @@ import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.replaceitem.symbolchat.SymbolInsertable;
+import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
+import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,13 +24,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AnvilScreen.class)
-public class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implements SymbolInsertable {
+public class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implements SymbolInsertable, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
     @Shadow private TextFieldWidget nameField;
 
-    private static final int ANVIL_SYMBOL_BUTTON_SIZE = SymbolButtonWidget.symbolSize + 2;
+    private static final int ANVIL_SYMBOL_BUTTON_SIZE = SymbolButtonWidget.SYMBOL_SIZE + 2;
 
     private SymbolSelectionPanel symbolSelectionPanel;
     private SymbolButtonWidget symbolButtonWidget;
+    private SymbolSuggestor symbolSuggestor;
 
     public AnvilScreenMixin(AnvilScreenHandler handler, PlayerInventory playerInventory, Text title, Identifier texture) {
         super(handler, playerInventory, title, texture);
@@ -45,7 +48,10 @@ public class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implemen
         int symbolButtonX = this.nameField.getX() + this.nameField.getWidth() + 2 + 3;
         int symbolButtonY = this.nameField.getY() - 3;
         this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.WIDTH -2,this.height-2-SymbolSelectionPanel.HEIGHT);
-        this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(this, symbolButtonX, symbolButtonY, ANVIL_SYMBOL_BUTTON_SIZE, ANVIL_SYMBOL_BUTTON_SIZE, this.symbolSelectionPanel);
+        this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(symbolButtonX, symbolButtonY, ANVIL_SYMBOL_BUTTON_SIZE, ANVIL_SYMBOL_BUTTON_SIZE, this.symbolSelectionPanel);
+
+        this.symbolSuggestor = new SymbolSuggestor(this, this::replaceSuggestion, this);
+        this.addDrawableChild(symbolSuggestor);
     }
 
     @Inject(method = "renderForeground", at = @At("RETURN"))
@@ -69,9 +75,11 @@ public class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implemen
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if(this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers)) {
+            cir.setReturnValue(true);
+        }
         if(this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers)) {
             cir.setReturnValue(true);
-            cir.cancel();
         }
     }
 
@@ -83,9 +91,19 @@ public class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implemen
         return super.charTyped(chr, modifiers);
     }
 
+    @Inject(method = "onRenamed", at = @At("HEAD"))
+    private void updateSuggestions(String chatText, CallbackInfo ci) {
+        if(this.symbolSuggestor != null) this.symbolSuggestor.refresh();
+    }
+
     @Override
     public void insertSymbol(String symbol) {
         if(this.nameField.isActive())
             this.nameField.write(symbol);
+    }
+
+    @Override
+    public TextFieldWidget getTextField() {
+        return this.nameField;
     }
 }
