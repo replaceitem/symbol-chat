@@ -26,6 +26,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
+
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin extends Screen implements SymbolInsertable, FontProcessorAccessor, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
     @Shadow protected TextFieldWidget chatField;
@@ -122,11 +124,22 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
 
     @Override
     public boolean disabled() {
-        return this.chatField.getText().startsWith("/");
+        String text = this.chatField.getText();
+        return text.startsWith("/") && !(isSuggestingCommand(text));
     }
 
     @Override
     public TextFieldWidget getTextField() {
         return chatField;
+    }
+    
+    
+    private static final List<String> messageCommands = List.of(
+            "msg", "tell", "w",
+            "say", "me",
+            "teammsg", "tm"
+    );
+    private static boolean isSuggestingCommand(String text) {
+        return messageCommands.stream().anyMatch(s -> text.startsWith("/" + s + " "));
     }
 }
