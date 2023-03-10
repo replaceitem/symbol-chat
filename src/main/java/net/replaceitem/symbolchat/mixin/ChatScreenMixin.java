@@ -120,6 +120,12 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
     }
 
     @Override
+    public String getSuggestionTerm() {
+        if(this.chatField.getText().startsWith("/")) return null;
+        return TextFieldWidgetSymbolSuggestable.super.getSuggestionTerm();
+    }
+
+    @Override
     public TextFieldWidget getTextField() {
         return chatField;
     }
