@@ -68,7 +68,7 @@ public interface SymbolSuggestable {
 
     static Pair<Integer, Integer> getSuggestionArea(String text, int cursor) {
         int colonIndex = text.lastIndexOf(':', cursor-1);
-        if(colonIndex == -1) return null;
+        if(colonIndex == -1 || (colonIndex > 0 && text.charAt(colonIndex-1) != ' ')) return null;
         int spaceIndex = text.lastIndexOf(' ', cursor-1);
         if(spaceIndex >= colonIndex) return null;
         return new Pair<>(colonIndex, cursor);
