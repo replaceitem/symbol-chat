@@ -27,7 +27,7 @@ public class ClothConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(min = 0, max = 50)
     public int max_symbol_suggestions = 5;
 
-    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.Tooltip(count = 3)
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public ConfigProvider.SymbolTooltipMode symbol_tooltip_mode = ConfigProvider.SymbolTooltipMode.DELAYED;
 
