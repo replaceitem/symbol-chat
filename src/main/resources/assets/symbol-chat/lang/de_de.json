@@ -41,5 +41,9 @@
   "symbolchat.font.small": "Klein",
   "symbolchat.font.brackets": "Eingeklammert",
   "symbolchat.font.scribble": "Gekritzel",
-  "symbolchat.font.big_scribble": "Großes Gekritzel"
+  "symbolchat.font.big_scribble": "Großes Gekritzel",
+
+
+  "modmenu.summaryTranslation.symbol-chat": "Symbolmenü und Unicode Schriftarten.",
+  "modmenu.descriptionTranslation.symbol-chat": "A client side mod that adds a symbol/emoji menu as well as writing in different unicode fonts."
 }
