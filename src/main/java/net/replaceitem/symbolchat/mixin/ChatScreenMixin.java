@@ -65,24 +65,24 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if(symbolSelectionPanel.mouseClicked(mouseX, mouseY, button)) {
+        if(symbolSelectionPanel != null && symbolSelectionPanel.mouseClicked(mouseX, mouseY, button)) {
             cir.setReturnValue(true);
         }
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers)) {
+        if(symbolSuggestor != null && this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers)) {
             cir.setReturnValue(true);
         }
-        if(this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers)) {
+        if(symbolSelectionPanel != null && this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers)) {
             cir.setReturnValue(true);
         }
     }
 
     @Override
     public boolean charTyped(char chr, int modifiers) {
-        if(this.symbolSelectionPanel.charTyped(chr, modifiers)) {
+        if(symbolSelectionPanel != null && this.symbolSelectionPanel.charTyped(chr, modifiers)) {
             return true;
         }
         return super.charTyped(chr, modifiers);
@@ -99,14 +99,14 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
 
     @Inject(method = "mouseScrolled", at = @At(value = "HEAD"), cancellable = true)
     public void mouseScrolled(double mouseX, double mouseY, double amount, CallbackInfoReturnable<Boolean> cir) {
-        if(symbolSelectionPanel.mouseScrolled(mouseX,mouseY,amount)) {
+        if(symbolSelectionPanel != null && symbolSelectionPanel.mouseScrolled(mouseX,mouseY,amount)) {
             cir.setReturnValue(true);
         }
     }
     
     @Inject(method = "onChatFieldUpdate", at = @At("HEAD"))
     private void updateSuggestions(String chatText, CallbackInfo ci) {
-        this.symbolSuggestor.refresh();
+        if(symbolSuggestor != null) this.symbolSuggestor.refresh();
     }
     
     @Override
@@ -116,6 +116,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
 
     @Override
     public FontProcessor getFontProcessor() {
+        if(this.fontSelectionDropDown == null) return null;
         return this.fontSelectionDropDown.getSelection();
     }
 

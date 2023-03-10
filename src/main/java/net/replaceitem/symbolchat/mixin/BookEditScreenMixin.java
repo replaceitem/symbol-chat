@@ -57,34 +57,34 @@ public abstract class BookEditScreenMixin extends Screen implements SymbolInsert
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers)) {
+        if(symbolSuggestor != null && this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers)) {
             cir.setReturnValue(true);
             this.symbolSuggestor.refresh();
             
         }
-        if(this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers)) {
+        if(symbolSelectionPanel != null && this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers)) {
             cir.setReturnValue(true);
         }
     }
 
     @Inject(method = "charTyped", at = @At("HEAD"), cancellable = true)
     public void charTyped(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(this.symbolSelectionPanel.charTyped(chr, modifiers)) {
+        if(symbolSelectionPanel != null && this.symbolSelectionPanel.charTyped(chr, modifiers)) {
             cir.setReturnValue(true);
         }
     }
     
     @Inject(method = "charTyped", at = @At("RETURN"))
     private void updateSuggestions(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        this.symbolSuggestor.refresh();
+        if(symbolSuggestor != null) this.symbolSuggestor.refresh();
     }
     @Inject(method = "keyPressed", at = @At("RETURN"))
     private void updateSuggestions(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        this.symbolSuggestor.refresh();
+        if(symbolSuggestor != null) this.symbolSuggestor.refresh();
     }
     @Inject(method = "mouseClicked", at = @At("RETURN"))
     private void updateSuggestions(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        this.symbolSuggestor.refresh();
+        if(symbolSuggestor != null) this.symbolSuggestor.refresh();
     }
 
     @Override

@@ -56,36 +56,36 @@ public class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implemen
 
     @Inject(method = "renderForeground", at = @At("RETURN"))
     protected void renderForeground(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        symbolSelectionPanel.render(matrices, mouseX, mouseY, delta);
-        symbolButtonWidget.render(matrices, mouseX, mouseY, delta);
+        if(symbolSelectionPanel != null) symbolSelectionPanel.render(matrices, mouseX, mouseY, delta);
+        if(symbolButtonWidget != null) symbolButtonWidget.render(matrices, mouseX, mouseY, delta);
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if(symbolSelectionPanel.mouseScrolled(mouseX,mouseY,amount)) return true;
+        if(symbolSelectionPanel != null && symbolSelectionPanel.mouseScrolled(mouseX,mouseY,amount)) return true;
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(symbolSelectionPanel.mouseClicked(mouseX,mouseY,button)) return true;
-        if(symbolButtonWidget.mouseClicked(mouseX,mouseY,button)) return true;
+        if(symbolSelectionPanel != null && symbolSelectionPanel.mouseClicked(mouseX,mouseY,button)) return true;
+        if(symbolButtonWidget != null && symbolButtonWidget.mouseClicked(mouseX,mouseY,button)) return true;
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers)) {
+        if(symbolSuggestor != null && this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers)) {
             cir.setReturnValue(true);
         }
-        if(this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers)) {
+        if(symbolSelectionPanel != null && this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers)) {
             cir.setReturnValue(true);
         }
     }
 
     @Override
     public boolean charTyped(char chr, int modifiers) {
-        if(this.symbolSelectionPanel.charTyped(chr, modifiers)) {
+        if(symbolSelectionPanel != null && this.symbolSelectionPanel.charTyped(chr, modifiers)) {
             return true;
         }
         return super.charTyped(chr, modifiers);
@@ -98,6 +98,7 @@ public class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implemen
 
     @Override
     public void insertSymbol(String symbol) {
+        if(nameField == null) return;
         if(this.nameField.isActive())
             this.nameField.write(symbol);
     }
