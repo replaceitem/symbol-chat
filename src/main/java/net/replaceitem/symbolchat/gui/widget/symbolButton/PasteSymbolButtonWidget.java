@@ -34,7 +34,7 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     }
 
     @Override
-    protected boolean isSelected() {
+    public boolean isSelected() {
         return this.isFocused();
     }
 

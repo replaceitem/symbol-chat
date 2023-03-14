@@ -124,7 +124,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
             return true;
         }
         this.setFocused(null);
-        this.searchBar.setTextFieldFocused(false);
+        this.searchBar.setFocused(false);
         return false;
     }
 

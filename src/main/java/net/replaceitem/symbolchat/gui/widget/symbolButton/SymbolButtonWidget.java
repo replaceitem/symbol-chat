@@ -52,12 +52,13 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
 
             MatrixStack textMatrices = new MatrixStack();
             textMatrices.translate(0.0, 0.0, 0 + 200.0f);
-            drawCenteredText(matrices, textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, argb);
+            drawCenteredTextWithShadow(matrices, textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, argb);
             matrices.pop();
         }
     }
 
-    protected boolean isSelected() {
+    @Override
+    public boolean isSelected() {
         return false;
     }
 
