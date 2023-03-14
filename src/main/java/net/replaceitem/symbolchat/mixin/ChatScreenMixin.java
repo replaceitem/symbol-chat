@@ -1,5 +1,6 @@
 package net.replaceitem.symbolchat.mixin;
 
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -17,6 +18,7 @@ import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SettingsButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -88,6 +90,12 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
             return true;
         }
         return super.charTyped(chr, modifiers);
+    }
+
+    @Override
+    public void setFocused(@Nullable Element focused) {
+        if(!(focused instanceof TextFieldWidget)) return;
+        super.setFocused(focused);
     }
 
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 1),require = 1)

@@ -17,6 +17,7 @@ import net.replaceitem.symbolchat.SymbolStorage;
 import net.replaceitem.symbolchat.gui.widget.SymbolSearchBar;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SwitchTabSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,6 +143,12 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
         return this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < this.x + WIDTH && mouseY < this.y + HEIGHT;
+    }
+
+    @Override
+    public void setFocused(@Nullable Element focused) {
+        if(focused != searchBar) return;
+        super.setFocused(focused);
     }
 
     @Override
