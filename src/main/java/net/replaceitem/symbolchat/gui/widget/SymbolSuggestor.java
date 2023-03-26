@@ -20,7 +20,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SymbolSuggestor extends AbstractParentElement implements Drawable, Selectable{
+public class SymbolSuggestor extends AbstractParentElement implements Drawable, Selectable {
     
     private final Screen screen;
     private final SymbolInsertable insertable;
@@ -66,12 +66,11 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
         this.x = Math.max(Math.min(this.x, this.screen.width - this.width), 0);
         
         visible = !symbols.isEmpty();
+        setFocused(visible && isFocused());
         
         for (int i = 0; i < elementCount; i++) {
             symbolButtons.add(new PasteSymbolButtonWidget(this.x+1+i*(SymbolButtonWidget.SYMBOL_SIZE+1), this.y+1, insertable, symbols.get(i)));
         }
-        
-        setFocusedElement(-1);
     }
     
     private void setFocusedElement(int focused) {
@@ -121,8 +120,9 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
             return true;
         }
         
-        if(keyCode == GLFW.GLFW_KEY_ENTER && this.getFocused() != null) {
-            this.symbolButtons.get(focusedElement).onClick(0,0);
+        if(keyCode == GLFW.GLFW_KEY_ENTER && this.getFocused() != null && focusedElement >= 0) {
+            int buttonIndex = MathHelper.clamp(focusedElement, 0, this.symbolButtons.size()-1);
+            this.symbolButtons.get(buttonIndex).onClick(0,0);
             return true;
         }
         
@@ -142,5 +142,9 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
     @Override
     public List<? extends Element> children() {
         return symbolButtons;
+    }
+
+    public boolean isVisible() {
+        return visible;
     }
 }
