@@ -147,13 +147,13 @@ public abstract class FontProcessor {
                 return "0ƖՇƐ߈ϛ9ㄥ86".substring(c-'0',c-'0'+1);
             }
             if(c >= 'A' && c <= 'Z') {
-                return "ⱯᗺƆᗡƎℲ⅁HIſʞ˥WuOԀῸᴚSʇ∩ΛMX⅄Z".substring(c-'A',c-'A'+1);
+                return "ⱯᗺƆᗡƎℲ⅁HIſꞰꞀWuOԀῸᴚS⟘∩ɅMX⅄Z".substring(c-'A',c-'A'+1);
             }
             if(c >= 'a' && c <= 'z') {
-                return "ɐqɔpǝɟɓɥᴉſʞๅɯuodbɹsʇnʌʍxʎz".substring(c-'a',c-'a'+1);
+                return "ɐqɔpǝɟɓɥᴉſʞꞁɯuodbɹsʇnʌʍxʎz".substring(c-'a',c-'a'+1);
             }
 
-            if(c=='!') return "i";
+            if(c=='!') return "¡";
             if(c==',') return "'";
             if(c=='.') return "˙";
             if(c=='?') return "¿";
