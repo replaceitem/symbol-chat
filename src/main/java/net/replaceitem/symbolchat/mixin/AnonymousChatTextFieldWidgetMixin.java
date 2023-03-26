@@ -5,7 +5,8 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
-import net.replaceitem.symbolchat.FontProcessor;
+import net.replaceitem.symbolchat.font.FontProcessor;
+import net.replaceitem.symbolchat.font.Fonts;
 import org.spongepowered.asm.mixin.Mixin;
 import net.replaceitem.symbolchat.FontProcessorAccessor;
 
@@ -26,7 +27,7 @@ public class AnonymousChatTextFieldWidgetMixin extends TextFieldWidget {
         FontProcessor processor = fontProcessorAccessor.getFontProcessor();
         if(processor != null) text = processor.convertString(text);
         super.write(text);
-        if(processor == FontProcessor.INVERSE) {
+        if(processor == Fonts.INVERSE) {
             int pos = this.getCursor()-1;
             this.setSelectionStart(pos);
             this.setSelectionEnd(pos);

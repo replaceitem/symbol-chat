@@ -1,7 +1,7 @@
 package net.replaceitem.symbolchat.gui.widget;
 
 import net.minecraft.client.util.math.MatrixStack;
-import net.replaceitem.symbolchat.FontProcessor;
+import net.replaceitem.symbolchat.font.FontProcessor;
 import net.replaceitem.symbolchat.SymbolChat;
 
 import java.util.List;

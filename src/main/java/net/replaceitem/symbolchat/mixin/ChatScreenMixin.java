@@ -5,12 +5,13 @@ import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
-import net.replaceitem.symbolchat.FontProcessor;
+import net.replaceitem.symbolchat.font.FontProcessor;
 import net.replaceitem.symbolchat.FontProcessorAccessor;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.config.ConfigProvider;
+import net.replaceitem.symbolchat.font.Fonts;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.widget.DropDownWidget;
 import net.replaceitem.symbolchat.gui.widget.FontSelectionDropDownWidget;
@@ -55,7 +56,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
         int hudX = SymbolChat.config.getHudPosition().getX(this.width);
         int hiddenOffset = (SymbolChat.config.getHideFontButton() && SymbolChat.config.getHudPosition().equals(ConfigProvider.HudPosition.RIGHT) ? 140 + 2 : 0);
 
-        this.fontSelectionDropDown = new FontSelectionDropDownWidget(hudX + ((SymbolChat.config.getHideSettingsButton() && SymbolChat.config.getHudPosition().equals(ConfigProvider.HudPosition.LEFT)) ? 0 : 15) + 2, 2, 140, 15, FontProcessor.fontProcessors, SymbolChat.selectedFont);
+        this.fontSelectionDropDown = new FontSelectionDropDownWidget(hudX + ((SymbolChat.config.getHideSettingsButton() && SymbolChat.config.getHudPosition().equals(ConfigProvider.HudPosition.LEFT)) ? 0 : 15) + 2, 2, 140, 15, Fonts.fontProcessors, SymbolChat.selectedFont);
         this.addDrawableChild(fontSelectionDropDown);
 
         if(!SymbolChat.config.getHideSettingsButton()) {
