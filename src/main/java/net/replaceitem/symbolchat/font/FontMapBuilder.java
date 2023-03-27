@@ -25,6 +25,17 @@ public class FontMapBuilder {
         return put(FontProcessor.stringFromCodePoint(from), FontProcessor.stringFromCodePoint(to));
     }
 
+    public FontMapBuilder putSeperated(String fromSequence, String... toStrings) {
+        int codePoints = FontProcessor.getCodePointCount(fromSequence);
+        if(codePoints != toStrings.length) throw new IllegalArgumentException("Mismatch in codepoint count");
+        for (int i = 0; i < codePoints; i++) {
+            String from = FontProcessor.stringFromCodePoint(fromSequence.codePointAt(i));
+            String to = toStrings[i];
+            map.put(from, to);
+        }
+        return this;
+    }
+
     public FontMapBuilder putAlphabetLower(String to) {
         assertCodePointCount(to, 26);
         return putSequence(to, 'a');
@@ -42,7 +53,7 @@ public class FontMapBuilder {
 
 
     public FontMapBuilder putSequence(String toSequence, int codePointStart) {
-        int codePoints = toSequence.codePointCount(0, toSequence.length());
+        int codePoints = FontProcessor.getCodePointCount(toSequence);
         for (int i = 0; i < codePoints; i++) {
             String from = FontProcessor.stringFromCodePoint(codePointStart + i);
             map.put(from, FontProcessor.stringFromCodePoint(toSequence.codePointAt(i)));
