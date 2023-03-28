@@ -28,7 +28,7 @@ public class AnonymousChatTextFieldWidgetMixin extends TextFieldWidget {
         if(processor != null) text = processor.convertString(text);
         super.write(text);
         if(processor == Fonts.INVERSE) {
-            int pos = this.getCursor()-1;
+            int pos = this.getCursor()-text.length();
             this.setSelectionStart(pos);
             this.setSelectionEnd(pos);
         }
