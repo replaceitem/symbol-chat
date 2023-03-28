@@ -1,5 +1,7 @@
 package net.replaceitem.symbolchat.font;
 
+import net.minecraft.client.resource.language.I18n;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -76,7 +78,7 @@ public class Fonts {
     ) {
         @Override
         public String getConvertedName() {
-            return new StringBuilder(super.getConvertedName()).reverse().toString();
+            return this.convertString(new StringBuilder(I18n.translate(this.nameKey)).reverse().toString());
         }
     };
 
