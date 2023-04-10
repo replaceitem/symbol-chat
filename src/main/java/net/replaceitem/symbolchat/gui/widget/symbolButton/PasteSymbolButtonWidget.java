@@ -43,6 +43,7 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
      * @return The provided string, with capitalization applied to the first character of each word.
      */
     private static String generateCapitalization(String string) {
+        if(string == null) string = "Unknown";
         StringBuilder newString = new StringBuilder();
         String lower = string.toLowerCase(Locale.ROOT);
         newString.append(string.charAt(0));
