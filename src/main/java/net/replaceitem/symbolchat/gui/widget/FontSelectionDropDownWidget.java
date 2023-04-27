@@ -1,5 +1,6 @@
 package net.replaceitem.symbolchat.gui.widget;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.replaceitem.symbolchat.font.FontProcessor;
 import net.replaceitem.symbolchat.SymbolChat;
@@ -12,9 +13,9 @@ public class FontSelectionDropDownWidget extends DropDownWidget<FontProcessor> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if(SymbolChat.config.getHideFontButton()) return;
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(drawContext, mouseX, mouseY, delta);
     }
 
     @Override

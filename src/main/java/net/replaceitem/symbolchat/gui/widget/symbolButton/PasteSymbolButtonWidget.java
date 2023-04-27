@@ -18,9 +18,12 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
         super(x, y, symbol);
         this.symbolInsertable = symbolInsertable;
         this.symbol = symbol;
-        String tooltipText = symbol.codePoints().mapToObj(operand -> generateCapitalization(Character.getName(operand))).collect(Collectors.joining(", "));
-        this.setTooltip(Tooltip.of(Text.of(tooltipText)));
+        this.setTooltip(Tooltip.of(Text.of(getTooltipText())));
         this.setTooltipDelay(SymbolChat.config.getSymbolTooltipMode().delay);
+    }
+
+    protected String getTooltipText() {
+        return symbol.codePoints().mapToObj(operand -> generateCapitalization(Character.getName(operand))).collect(Collectors.joining(", "));
     }
 
     public void placeInTabGrid(SymbolTab tab, int gx, int gy) {

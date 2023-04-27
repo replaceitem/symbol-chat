@@ -1,5 +1,6 @@
 package net.replaceitem.symbolchat.mixin;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.ForgingScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -55,9 +56,9 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     }
 
     @Inject(method = "renderForeground", at = @At("RETURN"))
-    protected void renderForeground(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if(symbolSelectionPanel != null) symbolSelectionPanel.render(matrices, mouseX, mouseY, delta);
-        if(symbolButtonWidget != null) symbolButtonWidget.render(matrices, mouseX, mouseY, delta);
+    protected void renderForeground(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        if(symbolSelectionPanel != null) symbolSelectionPanel.render(context, mouseX, mouseY, delta);
+        if(symbolButtonWidget != null) symbolButtonWidget.render(context, mouseX, mouseY, delta);
     }
 
     @Override

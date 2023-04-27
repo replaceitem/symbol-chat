@@ -1,10 +1,7 @@
 package net.replaceitem.symbolchat.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.AbstractParentElement;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -106,15 +103,15 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if(!this.visible) return;
         RenderSystem.disableDepthTest();
-        fill(matrices, this.x, this.y, this.x + WIDTH, this.y + HEIGHT, SymbolChat.config.getHudColor());
-        fill(matrices, this.x, this.y + HEIGHT - 2 - SymbolButtonWidget.SYMBOL_SIZE, this.x + WIDTH, this.y + HEIGHT, SymbolChat.config.getHudColor());
-        this.searchBar.render(matrices, mouseX, mouseY, delta);
-        this.getCurrentTab().render(matrices,mouseX,mouseY,delta);
+        drawContext.fill(this.x, this.y, this.x + WIDTH, this.y + HEIGHT, SymbolChat.config.getHudColor());
+        drawContext.fill(this.x, this.y + HEIGHT - 2 - SymbolButtonWidget.SYMBOL_SIZE, this.x + WIDTH, this.y + HEIGHT, SymbolChat.config.getHudColor());
+        this.searchBar.render(drawContext, mouseX, mouseY, delta);
+        this.getCurrentTab().render(drawContext,mouseX,mouseY,delta);
         for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
-            tab.getRight().render(matrices, mouseX, mouseY, delta);
+            tab.getRight().render(drawContext, mouseX, mouseY, delta);
         }
     }
 

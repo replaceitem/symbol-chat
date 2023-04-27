@@ -1,5 +1,7 @@
 package net.replaceitem.symbolchat.mixin;
 
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -13,6 +15,7 @@ import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.config.ConfigProvider;
 import net.replaceitem.symbolchat.font.Fonts;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
+import net.replaceitem.symbolchat.gui.UnicodeTableScreen;
 import net.replaceitem.symbolchat.gui.widget.DropDownWidget;
 import net.replaceitem.symbolchat.gui.widget.FontSelectionDropDownWidget;
 import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
@@ -20,6 +23,7 @@ import net.replaceitem.symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonW
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SettingsButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -77,6 +81,10 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if(keyCode == GLFW.GLFW_KEY_F3 && FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            this.client.setScreen(new UnicodeTableScreen());
+        }
+
         if(symbolSuggestor != null && this.symbolSuggestor.isVisible() && this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers)) {
             cir.setReturnValue(true);
         }

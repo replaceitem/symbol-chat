@@ -1,9 +1,6 @@
 package net.replaceitem.symbolchat.gui.widget;
 
-import net.minecraft.client.gui.AbstractParentElement;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.util.math.MatrixStack;
@@ -82,11 +79,11 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if(!visible) return;
-        fill(matrices, this.x, this.y, this.x+width, this.y+HEIGHT, SymbolChat.config.getHudColor());
+        drawContext.fill(this.x, this.y, this.x+width, this.y+HEIGHT, SymbolChat.config.getHudColor());
         for (Drawable drawable : symbolButtons) {
-            drawable.render(matrices, mouseX, mouseY, delta);
+            drawable.render(drawContext, mouseX, mouseY, delta);
         }
     }
 

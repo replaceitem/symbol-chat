@@ -1,6 +1,7 @@
 package net.replaceitem.symbolchat.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.util.SelectionManager;
@@ -49,8 +50,8 @@ public abstract class BookEditScreenMixin extends Screen implements SymbolInsert
         this.addDrawableChild(symbolSuggestor);
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V"))
-    private void resetRenderColor(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(Lnet/minecraft/client/gui/DrawContext;IIF)V"))
+    private void resetRenderColor(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         // reset render color to prevent symbol chat gui from rendering glitchy due to cursor blinking shader color not being reset
         RenderSystem.setShaderColor(1,1,1,1);
     }

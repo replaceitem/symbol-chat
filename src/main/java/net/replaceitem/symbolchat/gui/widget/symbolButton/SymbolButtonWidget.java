@@ -3,6 +3,7 @@ package net.replaceitem.symbolchat.gui.widget.symbolButton;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Narratable;
@@ -37,23 +38,23 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     }
 
     @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             RenderSystem.disableDepthTest();
             int backgroundColor = this.isSelected() ? SymbolChat.config.getButtonHoverColor() : SymbolChat.config.getButtonColor();
-            fill(matrices, this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, backgroundColor);
+            drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, backgroundColor);
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 
             int rgb = this.isHovered() ? 0xFFFFFF : 0xA0A0A0;
             int argb = rgb | MathHelper.ceil(this.alpha * 255.0F) << 24;
 
-            matrices.push();
-            matrices.translate(0.0, 0.0, 200.0f);
+            drawContext.getMatrices().push();
+            drawContext.getMatrices().translate(0.0, 0.0, 200.0f);
 
             MatrixStack textMatrices = new MatrixStack();
             textMatrices.translate(0.0, 0.0, 0 + 200.0f);
-            drawCenteredTextWithShadow(matrices, textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, argb);
-            matrices.pop();
+            drawContext.drawCenteredTextWithShadow(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, argb);
+            drawContext.getMatrices().pop();
         }
     }
 

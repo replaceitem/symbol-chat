@@ -26,8 +26,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class SignEditScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.SelectionManagerSymbolSuggestable {
     @Shadow private SelectionManager selectionManager;
     @Shadow private int currentRow;
-    @Shadow @Final protected String[] text;
-    @Shadow @Final protected SignBlockEntity blockEntity;
+    @Shadow @Final private String[] messages;
+    @Shadow @Final private SignBlockEntity blockEntity;
 
     @Shadow protected abstract Vector3f getTextScale();
 
@@ -106,7 +106,7 @@ public abstract class SignEditScreenMixin extends Screen implements SymbolInsert
 
     @Override
     public String getText() {
-        return this.text[currentRow];
+        return this.messages[currentRow];
     }
 
     @Override

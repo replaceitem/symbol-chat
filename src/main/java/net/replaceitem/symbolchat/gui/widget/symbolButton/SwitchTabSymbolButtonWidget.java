@@ -28,9 +28,4 @@ public class SwitchTabSymbolButtonWidget extends SymbolButtonWidget {
     public boolean isSelected() {
         return symbolSelectionPanel.selectedTab == index;
     }
-
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-    }
 }

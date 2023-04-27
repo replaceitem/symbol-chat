@@ -3,6 +3,7 @@ package net.replaceitem.symbolchat.gui;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.AbstractParentElement;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.util.math.MatrixStack;
@@ -104,23 +105,23 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if(symbolButtons.size() == 0) {
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
             Text text = SymbolChat.clothConfigEnabled ? NO_CUSTOM_SYMBOLS : NO_CLOTHCONFIG;
             List<OrderedText> orderedTexts = textRenderer.wrapLines(text, width - 4);
-            matrices.push();
-            matrices.translate(0,0,200);
+            drawContext.getMatrices().push();
+            drawContext.getMatrices().translate(0,0,200);
             for(int i = 0; i < orderedTexts.size(); i++) {
                 int dy = this.y + 2 + (i * textRenderer.fontHeight);
-                textRenderer.draw(matrices, orderedTexts.get(i), this.x + 2, dy, 0x66FFFFFF);
+                drawContext.drawText(textRenderer, orderedTexts.get(i), this.x + 2, dy, 0x66FFFFFF, false);
             }
-            matrices.pop();
+            drawContext.getMatrices().pop();
             return;
         }
 
         for (SymbolButtonWidget button : buttons()) {
-            button.render(matrices, mouseX, mouseY, delta);
+            button.render(drawContext, mouseX, mouseY, delta);
         }
     }
 
