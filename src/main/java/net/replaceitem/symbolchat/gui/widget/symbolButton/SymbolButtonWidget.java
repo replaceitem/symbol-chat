@@ -17,16 +17,41 @@ import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
 
 public abstract class SymbolButtonWidget extends ClickableWidget implements Drawable, Element, Narratable {
-
+    
+    // TODO - refactor this class so less subclasses are needed
+    
+    
     public static final int SYMBOL_SIZE = 12;
+    public static final int GRID_SPCAING = SYMBOL_SIZE + 1;
+    
+    private int backgroundColor;
+    private int hoverBackgroundColor;
 
 
     public SymbolButtonWidget(int x, int y, String symbol) {
         super(x, y, SYMBOL_SIZE, SYMBOL_SIZE, Text.literal(symbol));
+        hoverBackgroundColor = SymbolChat.config.getButtonHoverColor();
+        backgroundColor = SymbolChat.config.getButtonColor();
     }
 
     public SymbolButtonWidget(int x, int y, int w, int h, String symbol) {
         super(x, y, w, h, Text.literal(symbol));
+    }
+
+    public void setBackgroundColors(int hoverColor) {
+        this.hoverBackgroundColor = hoverColor;
+        int alpha = hoverColor & 0xFF000000;
+        int color = (
+                ((((hoverColor >> 16) & 0xFF) / 2) << 16) |
+                ((((hoverColor >> 8 ) & 0xFF) / 2) << 8 ) |
+                ((((hoverColor      ) & 0xFF) / 2)      )
+        );
+        this.backgroundColor = alpha | color;
+    }
+    
+    public void setBackgroundColors(int backgroundColor, int hoverBackgroundColor) {
+        this.backgroundColor = backgroundColor;
+        this.hoverBackgroundColor = hoverBackgroundColor;
     }
 
     @Override
@@ -41,8 +66,8 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             RenderSystem.disableDepthTest();
-            int backgroundColor = this.isSelected() ? SymbolChat.config.getButtonHoverColor() : SymbolChat.config.getButtonColor();
-            drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, backgroundColor);
+            int bg = this.isHovered() ? hoverBackgroundColor : backgroundColor;
+            drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bg);
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 
             int rgb = this.isHovered() ? 0xFFFFFF : 0xA0A0A0;
