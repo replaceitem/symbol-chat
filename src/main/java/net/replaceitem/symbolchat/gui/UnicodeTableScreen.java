@@ -75,7 +75,6 @@ public class UnicodeTableScreen extends Screen {
 
         searchTextField = new TextFieldWidget(this.textRenderer, widgetX, 2, 150, 12, Text.of(""));
         searchTextField.setChangedListener(s -> {
-            this.pageTextField.setText("");
             this.reloadSymbols();
         });
         this.addDrawableChild(searchTextField);
@@ -112,6 +111,11 @@ public class UnicodeTableScreen extends Screen {
         for (PasteSymbolButtonWidget widget : widgets) {
             widget.render(context, mouseX, mouseY, delta);
         }
+        int scrollbarRows = Math.max(MathHelper.ceilDiv(codePoints.size(), columns), screenRows);
+        double visibleRatio = (double) screenRows / scrollbarRows;
+        int scrollbarHeight = (int) (visibleRatio * (height +30));
+        int scrollbarY = 30 + (int) MathHelper.clampedMap(scroll, 0, scrollbarRows, 0, height);
+        context.fill(width-2, scrollbarY, width-1, scrollbarY+scrollbarHeight, 0xFFA0A0A0);
     }
 
     private void reloadSymbols() {
@@ -139,19 +143,16 @@ public class UnicodeTableScreen extends Screen {
             }
         } else {
             int codePoint = 0;
-            int max = columns*screenRows;
             while(Character.isValidCodePoint(codePoint)) {
                 String name = Character.getName(codePoint);
                 if(name != null && name.contains(search)) {
-                    int savedCodePoint = codePoint;
                     Character.UnicodeBlock newBlock = Character.UnicodeBlock.of(codePoint);
                     if (newBlock != currentBlock) {
                         blockCycleColorIndex = (blockCycleColorIndex + 1) % CYCLING_BLOCK_COLORS.length;
                         currentBlock = newBlock;
                     }
-                    codePoint |= blockCycleColorIndex << 24;
+                    int savedCodePoint = codePoint | (blockCycleColorIndex << 24);
                     codePoints.add(savedCodePoint);
-                    if(codePoints.size() > max) break;
                 }
                 codePoint++;
             }
@@ -160,7 +161,7 @@ public class UnicodeTableScreen extends Screen {
 
     private void refreshButtons() {
         this.columns = this.width / SymbolButtonWidget.GRID_SPCAING;
-        this.screenRows = this.height / SymbolButtonWidget.GRID_SPCAING;
+        this.screenRows = (this.height-30) / SymbolButtonWidget.GRID_SPCAING;
         scroll = MathHelper.clamp(scroll, 0, Math.max(MathHelper.ceilDiv(codePoints.size(), columns)-screenRows, 0));
         this.widgets.clear();
         int x = 0, y = 30;
