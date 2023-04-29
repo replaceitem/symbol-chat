@@ -11,7 +11,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.FontProcessorAccessor;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.config.ConfigProvider;
 import net.replaceitem.symbolchat.font.FontProcessor;
@@ -35,9 +34,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 @Mixin(ChatScreen.class)
-public class ChatScreenMixin extends Screen implements SymbolInsertable, FontProcessorAccessor, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
+public class ChatScreenMixin extends Screen implements Consumer<String>, FontProcessorAccessor, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
     @Shadow protected TextFieldWidget chatField;
 
     private SymbolSelectionPanel symbolSelectionPanel;
@@ -145,8 +145,8 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
     }
     
     @Override
-    public void insertSymbol(String symbol) {
-        this.chatField.write(symbol);
+    public void accept(String s) {
+        this.chatField.write(s);
     }
 
     @Override

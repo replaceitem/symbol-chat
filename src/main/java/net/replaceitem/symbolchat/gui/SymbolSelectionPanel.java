@@ -5,11 +5,9 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Pair;
 import net.replaceitem.symbolchat.SymbolCategory;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolStorage;
 import net.replaceitem.symbolchat.gui.widget.SymbolSearchBar;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SwitchTabSymbolButtonWidget;
@@ -18,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SymbolSelectionPanel extends AbstractParentElement implements Drawable, Selectable {
     private final List<Element> children;
@@ -33,21 +32,21 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     public boolean visible;
     public int selectedTab;
 
-    protected SymbolInsertable symbolInsertable;
+    protected Consumer<String> symbolInsertable;
 
     static {
         WIDTH = SymbolTab.width;
         HEIGHT = SEARCH_BAR_HEIGHT + SymbolTab.height + (SymbolButtonWidget.SYMBOL_SIZE + 2);
     }
 
-    public SymbolSelectionPanel(SymbolInsertable symbolInsertable, int x, int y) {
+    public SymbolSelectionPanel(Consumer<String> symbolConsumer, int x, int y) {
         this.tabs = new ArrayList<>();
         this.children = new ArrayList<>();
         this.x = x;
         this.y = y;
         this.visible = false;
         this.selectedTab = -1;
-        this.symbolInsertable = symbolInsertable;
+        this.symbolInsertable = symbolConsumer;
 
         this.searchBar = new SymbolSearchBar(this.x + 2 + SymbolButtonWidget.SYMBOL_SIZE, this.y + 1 + 2, WIDTH - 2 - SymbolButtonWidget.SYMBOL_SIZE - 10, SymbolButtonWidget.SYMBOL_SIZE - 2) {
             @Override
@@ -66,7 +65,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         addTab(SymbolStorage.kaomojis, i++);
         addTab(SymbolStorage.customSymbols, i);
 
-        searchTab = new SearchTab(symbolInsertable, SymbolStorage.all, this, this.x, this.y + SEARCH_BAR_HEIGHT);
+        searchTab = new SearchTab(symbolConsumer, SymbolStorage.all, this, this.x, this.y + SEARCH_BAR_HEIGHT);
         SwitchTabSymbolButtonWidget searchButtonWidget = new SwitchTabSymbolButtonWidget(this.x+1, this.y+1, -1, SymbolStorage.all, this);
         tabs.add(new Pair<>(searchTab,searchButtonWidget));
         this.children.add(searchButtonWidget);

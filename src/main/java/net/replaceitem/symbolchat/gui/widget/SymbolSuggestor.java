@@ -3,10 +3,8 @@ package net.replaceitem.symbolchat.gui.widget;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolStorage;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
@@ -16,11 +14,12 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SymbolSuggestor extends AbstractParentElement implements Drawable, Selectable {
     
     private final Screen screen;
-    private final SymbolInsertable insertable;
+    private final Consumer<String> symbolConsumer;
     private final SymbolSuggestable suggestable;
     
     public static final int HEIGHT = SymbolButtonWidget.SYMBOL_SIZE +2;
@@ -34,9 +33,9 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
     
     private final List<PasteSymbolButtonWidget> symbolButtons = new ArrayList<>();
 
-    public SymbolSuggestor(Screen screen, SymbolInsertable insertable, SymbolSuggestable suggestable) {
+    public SymbolSuggestor(Screen screen, Consumer<String> symbolConsumer, SymbolSuggestable suggestable) {
         this.screen = screen;
-        this.insertable = insertable;
+        this.symbolConsumer = symbolConsumer;
         this.suggestable = suggestable;
         this.elementCount = 0;
         this.focusedElement = -1;
@@ -66,7 +65,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
         setFocused(visible && isFocused());
         
         for (int i = 0; i < elementCount; i++) {
-            symbolButtons.add(new PasteSymbolButtonWidget(this.x+1+i*(SymbolButtonWidget.SYMBOL_SIZE+1), this.y+1, insertable, symbols.get(i)));
+            symbolButtons.add(new PasteSymbolButtonWidget(this.x+1+i*(SymbolButtonWidget.SYMBOL_SIZE+1), this.y+1, symbolConsumer, symbols.get(i)));
         }
     }
     
@@ -96,7 +95,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
             } else if(!this.symbolButtons.isEmpty()) {
                 focused = this.symbolButtons.get(0);
             } else return false;
-            focused.onClick(0,0);
+            focused.onClick(0);
             return true;
         }
         if(keyCode == GLFW.GLFW_KEY_UP && this.getFocused() == null && !this.symbolButtons.isEmpty()) {
@@ -119,7 +118,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
         
         if(keyCode == GLFW.GLFW_KEY_ENTER && this.getFocused() != null && focusedElement >= 0) {
             int buttonIndex = MathHelper.clamp(focusedElement, 0, this.symbolButtons.size()-1);
-            this.symbolButtons.get(buttonIndex).onClick(0,0);
+            this.symbolButtons.get(buttonIndex).onClick(0);
             return true;
         }
         

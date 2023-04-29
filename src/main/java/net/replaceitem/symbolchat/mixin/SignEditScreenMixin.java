@@ -6,7 +6,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.text.Text;
-import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
@@ -22,8 +21,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.function.Consumer;
+
 @Mixin(AbstractSignEditScreen.class)
-public abstract class SignEditScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.SelectionManagerSymbolSuggestable {
+public abstract class SignEditScreenMixin extends Screen implements Consumer<String>, SymbolSuggestable.SelectionManagerSymbolSuggestable {
     @Shadow private SelectionManager selectionManager;
     @Shadow private int currentRow;
     @Shadow @Final private String[] messages;
@@ -85,8 +86,8 @@ public abstract class SignEditScreenMixin extends Screen implements SymbolInsert
     
 
     @Override
-    public void insertSymbol(String symbol) {
-        this.selectionManager.insert(symbol);
+    public void accept(String s) {
+        this.selectionManager.insert(s);
     }
 
     @Override

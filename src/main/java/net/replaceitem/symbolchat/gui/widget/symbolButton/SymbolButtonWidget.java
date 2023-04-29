@@ -51,8 +51,9 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
 
     public abstract boolean onClick(int button);
 
+    // final, so the above is used instead
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public final void onClick(double mouseX, double mouseY) {
         super.onClick(mouseX, mouseY);
     }
 

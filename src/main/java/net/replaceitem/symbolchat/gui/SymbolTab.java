@@ -11,12 +11,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolCategory;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SymbolTab extends AbstractParentElement implements Drawable, Element {
 
@@ -47,9 +47,9 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
 
     protected int y;
 
-    protected SymbolInsertable symbolInsertable;
+    protected Consumer<String> symbolConsumer;
     
-    public static SymbolTab fromCategory(SymbolInsertable symbolInsertable, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
+    public static SymbolTab fromCategory(Consumer<String> symbolInsertable, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
         if(symbols.id.equals("kaomojis")) {
             return new KaomojiTab(symbolInsertable, symbols, symbolSelectionPanel, x, y);
         } else {
@@ -57,10 +57,10 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
         }
     }
 
-    public SymbolTab(SymbolInsertable symbolInsertable, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
+    public SymbolTab(Consumer<String> symbolConsumer, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
         this.x = x;
         this.y = y;
-        this.symbolInsertable = symbolInsertable;
+        this.symbolConsumer = symbolConsumer;
         this.symbolButtons = new ArrayList<>();
         this.symbolSelectionPanel = symbolSelectionPanel;
         this.scroll = 0;
@@ -77,7 +77,7 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
     }
 
     protected PasteSymbolButtonWidget createButton(int x, int y, String symbol) {
-        return new PasteSymbolButtonWidget(x, y, this.symbolInsertable, symbol);
+        return new PasteSymbolButtonWidget(x, y, this.symbolConsumer, symbol);
     }
 
     public void loadSymbols(SymbolCategory symbols) {

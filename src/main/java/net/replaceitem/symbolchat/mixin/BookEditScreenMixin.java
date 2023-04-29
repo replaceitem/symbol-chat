@@ -5,9 +5,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.util.SelectionManager;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
@@ -22,8 +20,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.function.Consumer;
+
 @Mixin(BookEditScreen.class)
-public abstract class BookEditScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.SelectionManagerSymbolSuggestable {
+public abstract class BookEditScreenMixin extends Screen implements Consumer<String>, SymbolSuggestable.SelectionManagerSymbolSuggestable {
     @Shadow @Final private SelectionManager currentPageSelectionManager;
     @Shadow protected abstract String getCurrentPageContent();
     @Shadow protected abstract BookEditScreen.PageContent getPageContent();
@@ -89,8 +89,8 @@ public abstract class BookEditScreenMixin extends Screen implements SymbolInsert
     }
 
     @Override
-    public void insertSymbol(String symbol) {
-        this.currentPageSelectionManager.insert(symbol);
+    public void accept(String s) {
+        this.currentPageSelectionManager.insert(s);
     }
 
     @Override

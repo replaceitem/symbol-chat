@@ -4,12 +4,10 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.ForgingScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
@@ -24,8 +22,10 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.function.Consumer;
+
 @Mixin(AnvilScreen.class)
-public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implements SymbolInsertable, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
+public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implements Consumer<String>, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
     @Shadow private TextFieldWidget nameField;
 
     private static final int ANVIL_SYMBOL_BUTTON_SIZE = SymbolButtonWidget.SYMBOL_SIZE + 2;
@@ -98,10 +98,10 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     }
 
     @Override
-    public void insertSymbol(String symbol) {
+    public void accept(String s) {
         if(nameField == null) return;
         if(this.nameField.isActive())
-            this.nameField.write(symbol);
+            this.nameField.write(s);
     }
 
     @Override
