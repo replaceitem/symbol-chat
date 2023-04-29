@@ -1,5 +1,7 @@
 package net.replaceitem.symbolchat.font;
 
+import net.replaceitem.symbolchat.Util;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,22 +16,22 @@ public class FontMapBuilder {
     }
 
     public FontMapBuilder put(String from, int to) {
-        return put(from, FontProcessor.stringFromCodePoint(to));
+        return put(from, Util.stringFromCodePoint(to));
     }
 
     public FontMapBuilder put(int from, String to) {
-        return put(FontProcessor.stringFromCodePoint(from), to);
+        return put(Util.stringFromCodePoint(from), to);
     }
 
     public FontMapBuilder put(int from, int to) {
-        return put(FontProcessor.stringFromCodePoint(from), FontProcessor.stringFromCodePoint(to));
+        return put(Util.stringFromCodePoint(from), Util.stringFromCodePoint(to));
     }
 
     public FontMapBuilder putSeperated(String fromSequence, String... toStrings) {
-        int codePoints = FontProcessor.getCodePointCount(fromSequence);
+        int codePoints = Util.getCodePointCount(fromSequence);
         if(codePoints != toStrings.length) throw new IllegalArgumentException("Mismatch in codepoint count");
         for (int i = 0; i < codePoints; i++) {
-            String from = FontProcessor.stringFromCodePoint(fromSequence.codePointAt(i));
+            String from = Util.stringFromCodePoint(fromSequence.codePointAt(i));
             String to = toStrings[i];
             map.put(from, to);
         }
@@ -53,10 +55,10 @@ public class FontMapBuilder {
 
 
     public FontMapBuilder putSequence(String toSequence, int codePointStart) {
-        int codePoints = FontProcessor.getCodePointCount(toSequence);
+        int codePoints = Util.getCodePointCount(toSequence);
         for (int i = 0; i < codePoints; i++) {
-            String from = FontProcessor.stringFromCodePoint(codePointStart + i);
-            map.put(from, FontProcessor.stringFromCodePoint(toSequence.codePointAt(i)));
+            String from = Util.stringFromCodePoint(codePointStart + i);
+            map.put(from, Util.stringFromCodePoint(toSequence.codePointAt(i)));
         }
         return this;
     }
@@ -78,16 +80,16 @@ public class FontMapBuilder {
         int shiftDiff = codePointShiftStart-codePointStart;
         for (int i = 0; i < sequenceLength; i++) {
             int fromCodePoint = codePointStart + i;
-            String from = FontProcessor.stringFromCodePoint(fromCodePoint);
-            String to = FontProcessor.stringFromCodePoint(fromCodePoint + shiftDiff);
+            String from = Util.stringFromCodePoint(fromCodePoint);
+            String to = Util.stringFromCodePoint(fromCodePoint + shiftDiff);
             map.put(from, to);
         }
         return this;
     }
 
     private void assertCodePointCount(String string, int count) {
-        if(FontProcessor.getCodePointCount(string) != count) {
-            throw new IllegalArgumentException("Expected " + count + " codepoints: \n" + string.codePoints().mapToObj(FontProcessor::stringFromCodePoint).collect(Collectors.joining("\n")));
+        if(Util.getCodePointCount(string) != count) {
+            throw new IllegalArgumentException("Expected " + count + " codepoints: \n" + string.codePoints().mapToObj(Util::stringFromCodePoint).collect(Collectors.joining("\n")));
         }
     }
 

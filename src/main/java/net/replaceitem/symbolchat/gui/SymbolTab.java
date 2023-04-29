@@ -6,7 +6,6 @@ import net.minecraft.client.gui.AbstractParentElement;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
@@ -99,7 +98,10 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
             PasteSymbolButtonWidget button = buttons().get(i);
             int row = i / getColumns() - scroll;
             int col = i % getColumns();
-            button.placeInTabGrid(this, col, row);
+            
+            button.setX(this.getX()+1+(col * (SymbolButtonWidget.SYMBOL_SIZE + 1)));
+            button.setY(this.getY()+1+(row * (SymbolButtonWidget.SYMBOL_SIZE + 1)));
+            
             button.visible = row >= 0 && row < rows;
         }
     }

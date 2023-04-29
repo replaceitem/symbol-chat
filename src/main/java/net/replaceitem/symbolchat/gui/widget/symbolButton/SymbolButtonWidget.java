@@ -8,7 +8,6 @@ import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Narratable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
@@ -17,10 +16,6 @@ import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
 
 public abstract class SymbolButtonWidget extends ClickableWidget implements Drawable, Element, Narratable {
-    
-    // TODO - refactor this class so less subclasses are needed
-    
-    
     public static final int SYMBOL_SIZE = 12;
     public static final int GRID_SPCAING = SYMBOL_SIZE + 1;
     
@@ -29,13 +24,13 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
 
 
     public SymbolButtonWidget(int x, int y, String symbol) {
-        super(x, y, SYMBOL_SIZE, SYMBOL_SIZE, Text.literal(symbol));
-        hoverBackgroundColor = SymbolChat.config.getButtonHoverColor();
-        backgroundColor = SymbolChat.config.getButtonColor();
+        this(x, y, SYMBOL_SIZE, SYMBOL_SIZE, symbol);
     }
 
     public SymbolButtonWidget(int x, int y, int w, int h, String symbol) {
         super(x, y, w, h, Text.literal(symbol));
+        hoverBackgroundColor = SymbolChat.config.getButtonHoverColor();
+        backgroundColor = SymbolChat.config.getButtonColor();
     }
 
     public void setBackgroundColors(int hoverColor) {
@@ -54,8 +49,24 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
         this.hoverBackgroundColor = hoverBackgroundColor;
     }
 
+    public abstract boolean onClick(int button);
+
     @Override
-    public abstract void onClick(double mouseX, double mouseY);
+    public void onClick(double mouseX, double mouseY) {
+        super.onClick(mouseX, mouseY);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!this.active || !this.visible) return false;
+        if (this.isValidClickButton(button) && this.clicked(mouseX, mouseY)) {
+            if(this.onClick(button)) {
+                this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+            }
+            return true;
+        }
+        return false;
+    }
 
     @Override
     protected MutableText getNarrationMessage() {
@@ -66,7 +77,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             RenderSystem.disableDepthTest();
-            int bg = this.isHovered() ? hoverBackgroundColor : backgroundColor;
+            int bg = (this.isHovered() || this.isSelected()) ? hoverBackgroundColor : backgroundColor;
             drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bg);
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 
@@ -99,6 +110,5 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     @Override
     public void appendClickableNarrations(NarrationMessageBuilder builder) {
         this.appendDefaultNarrations(builder);
-        builder.put(NarrationPart.HINT, "Symbol chat button");
     }
 }

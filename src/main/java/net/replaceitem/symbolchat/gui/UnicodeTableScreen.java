@@ -3,12 +3,13 @@ package net.replaceitem.symbolchat.gui;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
-import net.replaceitem.symbolchat.font.FontProcessor;
+import net.replaceitem.symbolchat.Util;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.lwjgl.glfw.GLFW;
@@ -169,18 +170,13 @@ public class UnicodeTableScreen extends Screen {
         while(index < codePoints.size()) {
             int value = codePoints.get(index);
             int codePoint = value & 0x00FFFFFF;
-            PasteSymbolButtonWidget button = new PasteSymbolButtonWidget(x, y, System.out::println, FontProcessor.stringFromCodePoint(codePoint)) {
-                @Override
-                protected String getTooltipText() {
-                    int codePoint = this.symbol.codePointAt(0);
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(Integer.toHexString(codePoint)).append('\n');
-                    sb.append(super.getTooltipText()).append('\n');
-                    Character.UnicodeBlock block = Character.UnicodeBlock.of(codePoint);
-                    sb.append(block == null ? "UNKNOWN BLOCK" : block.toString());
-                    return sb.toString();
-                }
-            };
+            
+            StringBuilder sb = new StringBuilder();
+            sb.append(Integer.toHexString(codePoint)).append('\n');
+            sb.append(Util.getCapitalizedSymbolName(codePoint)).append('\n');
+            Character.UnicodeBlock block = Character.UnicodeBlock.of(codePoint);
+            sb.append(block == null ? "UNKNOWN BLOCK" : block.toString());
+            PasteSymbolButtonWidget button = new PasteSymbolButtonWidget(x, y, System.out::println, Util.stringFromCodePoint(codePoint), Tooltip.of(Text.of(sb.toString())));
             if(showBlocksWidget.isChecked()) {
                 button.setBackgroundColors(CYCLING_BLOCK_COLORS[(value & 0xFF000000) >> 24]);
             }

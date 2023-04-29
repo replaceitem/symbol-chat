@@ -1,18 +1,20 @@
 package net.replaceitem.symbolchat.mixin;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.SharedConstants;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.replaceitem.symbolchat.font.FontProcessor;
 import net.replaceitem.symbolchat.FontProcessorAccessor;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.config.ConfigProvider;
+import net.replaceitem.symbolchat.font.FontProcessor;
 import net.replaceitem.symbolchat.font.Fonts;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.UnicodeTableScreen;
@@ -20,7 +22,6 @@ import net.replaceitem.symbolchat.gui.widget.DropDownWidget;
 import net.replaceitem.symbolchat.gui.widget.FontSelectionDropDownWidget;
 import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
-import net.replaceitem.symbolchat.gui.widget.symbolButton.SettingsButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -64,7 +65,22 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, FontPro
         this.addDrawableChild(fontSelectionDropDown);
 
         if(!SymbolChat.config.getHideSettingsButton()) {
-            SettingsButtonWidget settingsButtonWidget = new SettingsButtonWidget(this, hudX + hiddenOffset, 2);
+            SymbolButtonWidget settingsButtonWidget = new SymbolButtonWidget(hudX + hiddenOffset, 2, 15, 15, "⚙") {
+                @Override
+                public boolean onClick(int button) {
+                    if(SymbolChat.clothConfigEnabled) {
+                        MinecraftClient.getInstance().setScreen(SymbolChat.config.getConfigScreen(ChatScreenMixin.this));
+                        return true;
+                    }
+                    return false;
+                }
+
+                @Override
+                protected MutableText getNarrationMessage() {
+                    return Text.translatable("text.autoconfig.symbol-chat.title");
+                }
+            };
+            settingsButtonWidget.setTooltip(Tooltip.of(Text.translatable(SymbolChat.clothConfigEnabled ? "text.autoconfig.symbol-chat.title" : "symbolchat.no_clothconfig")));
             this.addDrawableChild(settingsButtonWidget);
         }
         

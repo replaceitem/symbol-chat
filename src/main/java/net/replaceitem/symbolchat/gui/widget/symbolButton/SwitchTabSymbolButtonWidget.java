@@ -1,7 +1,6 @@
 package net.replaceitem.symbolchat.gui.widget.symbolButton;
 
 import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.SymbolCategory;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
@@ -20,8 +19,9 @@ public class SwitchTabSymbolButtonWidget extends SymbolButtonWidget {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public boolean onClick(int button) {
         symbolSelectionPanel.setCurrentTab(index);
+        return true;
     }
 
     @Override

@@ -17,17 +17,13 @@ public class OpenSymbolPanelButtonWidget extends SymbolButtonWidget {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public boolean onClick(int button) {
         symbolSelectionPanel.visible = !symbolSelectionPanel.visible;
+        return true;
     }
 
     @Override
     public boolean isSelected() {
         return symbolSelectionPanel.visible;
-    }
-    
-    @Override
-    public boolean isHovered() {
-        return super.isHovered() || this.isSelected();
     }
 }

@@ -2,6 +2,7 @@ package net.replaceitem.symbolchat.font;
 
 
 import net.minecraft.client.resource.language.I18n;
+import net.replaceitem.symbolchat.Util;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ public class FontProcessor {
     }
 
     public String convertString(String string) {
-        return string.codePoints().mapToObj(FontProcessor::stringFromCodePoint).map(codePointConverter).collect(Collectors.joining());
+        return string.codePoints().mapToObj(Util::stringFromCodePoint).map(codePointConverter).collect(Collectors.joining());
     }
 
     public String getConvertedName() {
@@ -25,14 +26,5 @@ public class FontProcessor {
     @Override
     public String toString() {
         return getConvertedName();
-    }
-
-
-    public static String stringFromCodePoint(int num) {
-        return new String(Character.toChars(num));
-    }
-
-    public static int getCodePointCount(String string) {
-        return string.codePointCount(0, string.length());
     }
 }

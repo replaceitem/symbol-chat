@@ -4,7 +4,6 @@ import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.replaceitem.symbolchat.SymbolCategory;
 import net.replaceitem.symbolchat.SymbolInsertable;
-import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteKaomojiButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 
 public class KaomojiTab extends SymbolTab implements Drawable, Element {
@@ -16,7 +15,10 @@ public class KaomojiTab extends SymbolTab implements Drawable, Element {
 
     @Override
     protected PasteSymbolButtonWidget createButton(int x, int y, String symbol) {
-        return new PasteKaomojiButtonWidget(x, y, this.symbolInsertable, symbol);
+        PasteSymbolButtonWidget pasteSymbolButtonWidget = new PasteSymbolButtonWidget(x, y, this.symbolInsertable, symbol);
+        pasteSymbolButtonWidget.setWidth(SymbolTab.width - 2);
+        pasteSymbolButtonWidget.setTooltip(null);
+        return pasteSymbolButtonWidget;
     }
 
     @Override
