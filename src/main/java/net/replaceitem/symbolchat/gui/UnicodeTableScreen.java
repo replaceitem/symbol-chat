@@ -32,6 +32,8 @@ public class UnicodeTableScreen extends Screen {
     private int selectionEnd = -1;
     
     int page = 0;
+    
+    public static final int TOOLBAR_HEIGHT = 40;
 
     // leftmost byte shows the block color
     private final List<Integer> codePoints = new ArrayList<>();
@@ -51,16 +53,15 @@ public class UnicodeTableScreen extends Screen {
         this.columns = this.width / SymbolButtonWidget.GRID_SPCAING;
         this.screenRows = this.height / SymbolButtonWidget.GRID_SPCAING;
         
-        int widgetX = 2;
 
         TextWidget pageTextWidget = new TextWidget(Text.of("Page"), this.textRenderer);
-        pageTextWidget.setX(widgetX);
+        pageTextWidget.setX(2);
         pageTextWidget.setY(4);
         this.addDrawableChild(pageTextWidget);
-        widgetX += pageTextWidget.getWidth() + 2;
         
-        pageTextField = new TextFieldWidget(this.textRenderer, widgetX, 2, 40, 12, Text.empty());
+        pageTextField = new TextFieldWidget(this.textRenderer, 2 + pageTextWidget.getWidth() + 2, 2, 20, 12, Text.empty());
         pageTextField.setText("0");
+        pageTextField.setMaxLength(2);
         pageTextField.setChangedListener(s -> {
             try {
                 page = Integer.parseInt(this.pageTextField.getText());
@@ -70,22 +71,21 @@ public class UnicodeTableScreen extends Screen {
             this.reloadSymbols();
         });
         this.addDrawableChild(pageTextField);
-        widgetX += pageTextField.getWidth() + 2;
+        
+        
 
         TextWidget searchTextWidget = new TextWidget(Text.of("Search"), this.textRenderer);
-        searchTextWidget.setX(widgetX);
+        searchTextWidget.setX(80);
         searchTextWidget.setY(4);
         this.addDrawableChild(searchTextWidget);
-        widgetX += searchTextWidget.getWidth() + 2;
 
-        searchTextField = new TextFieldWidget(this.textRenderer, widgetX, 2, 150, 12, Text.of(""));
+        searchTextField = new TextFieldWidget(this.textRenderer, 80 + searchTextWidget.getWidth() + 2, 2, 150, 12, Text.of(""));
         searchTextField.setChangedListener(s -> {
             this.reloadSymbols();
         });
         this.addDrawableChild(searchTextField);
-        widgetX += searchTextField.getWidth() + 2;
 
-        showBlocksWidget = new CheckboxWidget(widgetX, 2, 100, 20, Text.of("Show Blocks"), false) {
+        showBlocksWidget = new CheckboxWidget(300, 2, 100, 20, Text.of("Show Blocks"), false) {
             @Override
             public void onPress() {
                 super.onPress();
@@ -93,11 +93,12 @@ public class UnicodeTableScreen extends Screen {
             }
         };
         this.addDrawableChild(showBlocksWidget);
-        widgetX += showBlocksWidget.getWidth() + 2;
 
-        ButtonWidget copySelectedButton = ButtonWidget.builder(Text.of("Copy selected"), button -> copySelected()).dimensions(widgetX, 2, 100, 20).build();
+        
+        
+        
+        ButtonWidget copySelectedButton = ButtonWidget.builder(Text.of("📋 Copy selected"), button -> copySelected()).dimensions(2, 18, 100, 20).build();
         this.addDrawableChild(copySelectedButton);
-        widgetX += copySelectedButton.getWidth() + 2;
         
         this.reloadSymbols();
     }
@@ -133,7 +134,7 @@ public class UnicodeTableScreen extends Screen {
         }
         int scrollbarRows = Math.max(MathHelper.ceilDiv(codePoints.size(), columns), screenRows);
         double visibleRatio = (double) screenRows / scrollbarRows;
-        int scrollbarHeight = (int) (visibleRatio * (height + 30));
+        int scrollbarHeight = (int) (visibleRatio * (height - TOOLBAR_HEIGHT));
         int scrollbarY = 30 + (int) MathHelper.clampedMap(scroll, 0, scrollbarRows-screenRows, 0, height - scrollbarHeight);
         context.fill(width-2, scrollbarY, width-1, scrollbarY+scrollbarHeight, 0xFFA0A0A0);
     }
@@ -191,10 +192,10 @@ public class UnicodeTableScreen extends Screen {
 
     private void refreshButtons() {
         this.columns = this.width / SymbolButtonWidget.GRID_SPCAING;
-        this.screenRows = (this.height-30) / SymbolButtonWidget.GRID_SPCAING;
+        this.screenRows = (this.height-TOOLBAR_HEIGHT) / SymbolButtonWidget.GRID_SPCAING;
         scroll = MathHelper.clamp(scroll, 0, Math.max(MathHelper.ceilDiv(codePoints.size(), columns)-screenRows, 0));
         this.widgets.clear();
-        int x = 1, y = 30;
+        int x = 1, y = TOOLBAR_HEIGHT;
         int index = scroll*columns;
         while(index < codePoints.size()) {
             int value = codePoints.get(index);
@@ -246,13 +247,20 @@ public class UnicodeTableScreen extends Screen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if(keyCode == GLFW.GLFW_KEY_C && Screen.hasControlDown() && selectionStart != -1) {
             copySelected();
+            return true;
+        }
+        if(keyCode == GLFW.GLFW_KEY_ESCAPE && selectionStart != -1) {
+            selectionStart = -1;
+            selectionEnd = -1;
+            refreshButtons();
+            return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        scroll -= ((int) amount * (Screen.hasControlDown()?16:1));
+        scroll -= ((int) amount * (Screen.hasControlDown() ? screenRows : 1));
         this.refreshButtons();
         return true;
     }
