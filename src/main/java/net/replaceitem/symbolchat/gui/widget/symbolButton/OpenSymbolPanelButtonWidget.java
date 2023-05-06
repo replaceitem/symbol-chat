@@ -24,6 +24,6 @@ public class OpenSymbolPanelButtonWidget extends SymbolButtonWidget {
 
     @Override
     public boolean isSelected() {
-        return symbolSelectionPanel.visible;
+        return super.isSelected() || symbolSelectionPanel.visible;
     }
 }

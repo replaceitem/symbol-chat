@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
@@ -26,6 +27,9 @@ public class UnicodeTableScreen extends Screen {
     private TextFieldWidget pageTextField;
     private TextFieldWidget searchTextField;
     private CheckboxWidget showBlocksWidget;
+    
+    private int selectionStart = -1;
+    private int selectionEnd = -1;
     
     int page = 0;
 
@@ -90,8 +94,23 @@ public class UnicodeTableScreen extends Screen {
         };
         this.addDrawableChild(showBlocksWidget);
         widgetX += showBlocksWidget.getWidth() + 2;
+
+        ButtonWidget copySelectedButton = ButtonWidget.builder(Text.of("Copy selected"), button -> copySelected()).dimensions(widgetX, 2, 100, 20).build();
+        this.addDrawableChild(copySelectedButton);
+        widgetX += copySelectedButton.getWidth() + 2;
         
         this.reloadSymbols();
+    }
+
+    private void copySelected() {
+        if(selectionStart == -1) return;
+        StringBuilder builder = new StringBuilder();
+        for(int i = selectionStart; i <= selectionEnd; i++) {
+            Integer codepoint = this.codePoints.get(i);
+            if(codepoint == null) return;
+            builder.append(Util.stringFromCodePoint(codepoint & 0x00FFFFFF));
+        }
+        MinecraftClient.getInstance().keyboard.setClipboard(builder.toString());
     }
 
     @Override
@@ -114,9 +133,17 @@ public class UnicodeTableScreen extends Screen {
         }
         int scrollbarRows = Math.max(MathHelper.ceilDiv(codePoints.size(), columns), screenRows);
         double visibleRatio = (double) screenRows / scrollbarRows;
-        int scrollbarHeight = (int) (visibleRatio * (height +30));
-        int scrollbarY = 30 + (int) MathHelper.clampedMap(scroll, 0, scrollbarRows, 0, height);
+        int scrollbarHeight = (int) (visibleRatio * (height + 30));
+        int scrollbarY = 30 + (int) MathHelper.clampedMap(scroll, 0, scrollbarRows-screenRows, 0, height - scrollbarHeight);
         context.fill(width-2, scrollbarY, width-1, scrollbarY+scrollbarHeight, 0xFFA0A0A0);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        for (PasteSymbolButtonWidget widget : widgets) {
+            if(widget.mouseClicked(mouseX, mouseY, button)) return true;
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     private void reloadSymbols() {
@@ -125,6 +152,8 @@ public class UnicodeTableScreen extends Screen {
     }
 
     private void searchCodePoints() {
+        selectionStart = -1;
+        selectionEnd = -1;
         codePoints.clear();
         Character.UnicodeBlock currentBlock = null;
         int blockCycleColorIndex = CYCLING_BLOCK_COLORS.length-1;
@@ -165,7 +194,7 @@ public class UnicodeTableScreen extends Screen {
         this.screenRows = (this.height-30) / SymbolButtonWidget.GRID_SPCAING;
         scroll = MathHelper.clamp(scroll, 0, Math.max(MathHelper.ceilDiv(codePoints.size(), columns)-screenRows, 0));
         this.widgets.clear();
-        int x = 0, y = 30;
+        int x = 1, y = 30;
         int index = scroll*columns;
         while(index < codePoints.size()) {
             int value = codePoints.get(index);
@@ -176,9 +205,31 @@ public class UnicodeTableScreen extends Screen {
             sb.append(Util.getCapitalizedSymbolName(codePoint)).append('\n');
             Character.UnicodeBlock block = Character.UnicodeBlock.of(codePoint);
             sb.append(block == null ? "UNKNOWN BLOCK" : block.toString());
-            PasteSymbolButtonWidget button = new PasteSymbolButtonWidget(x, y, System.out::println, Util.stringFromCodePoint(codePoint), Tooltip.of(Text.of(sb.toString())));
+            int finalIndex = index;
+            PasteSymbolButtonWidget button = new PasteSymbolButtonWidget(x, y, null, Util.stringFromCodePoint(codePoint), Tooltip.of(Text.of(sb.toString()))) {
+                
+                @Override
+                public boolean onClick(int button) {
+                    if(Screen.hasShiftDown() && selectionStart != -1) {
+                        if(selectionStart > finalIndex) {
+                            selectionEnd = selectionStart;
+                            selectionStart = finalIndex;
+                        } else {
+                            selectionEnd = finalIndex;
+                        }
+                    } else {
+                        selectionStart = finalIndex;
+                        selectionEnd = finalIndex;
+                    }
+                    refreshButtons();
+                    return true;
+                }
+            };
             if(showBlocksWidget.isChecked()) {
                 button.setBackgroundColors(CYCLING_BLOCK_COLORS[(value & 0xFF000000) >> 24]);
+            }
+            if(index >= selectionStart && index <= selectionEnd) {
+                button.setSelected(true);
             }
             this.widgets.add(button);
             x += SymbolButtonWidget.GRID_SPCAING;
@@ -191,23 +242,17 @@ public class UnicodeTableScreen extends Screen {
         }
     }
 
-    boolean ctrlPressed = false;
-
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if(keyCode == GLFW.GLFW_KEY_LEFT_CONTROL) ctrlPressed = true;
+        if(keyCode == GLFW.GLFW_KEY_C && Screen.hasControlDown() && selectionStart != -1) {
+            copySelected();
+        }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
-    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-        if(keyCode == GLFW.GLFW_KEY_LEFT_CONTROL) ctrlPressed = false;
-        return super.keyReleased(keyCode, scanCode, modifiers);
-    }
-
-    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        scroll -= ((int) amount * (ctrlPressed?16:1));
+        scroll -= ((int) amount * (Screen.hasControlDown()?16:1));
         this.refreshButtons();
         return true;
     }

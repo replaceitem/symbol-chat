@@ -15,7 +15,7 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     public PasteSymbolButtonWidget(int x, int y, Consumer<String> symbolConsumer, String symbol) {
         this(x, y, symbolConsumer, symbol, Tooltip.of(Text.of(Util.getCapitalizedSymbolName(symbol))));
     }
-    
+
     public PasteSymbolButtonWidget(int x, int y, Consumer<String> symbolConsumer, String symbol, Tooltip tooltip) {
         super(x, y, symbol);
         this.symbolConsumer = symbolConsumer;
@@ -23,10 +23,14 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
         this.setTooltip(tooltip);
         this.setTooltipDelay(SymbolChat.config.getSymbolTooltipMode().delay);
     }
-    
+
     @Override
     public boolean onClick(int button) {
-        this.symbolConsumer.accept(this.symbol);
+        if(this.symbolConsumer != null) this.symbolConsumer.accept(this.symbol);
         return true;
+    }
+
+    public String getSymbol() {
+        return symbol;
     }
 }

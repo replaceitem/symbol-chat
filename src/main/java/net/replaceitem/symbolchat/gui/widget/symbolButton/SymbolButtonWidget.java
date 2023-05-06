@@ -22,6 +22,8 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     private int backgroundColor;
     private int hoverBackgroundColor;
 
+    private boolean isSelected = false;
+
 
     public SymbolButtonWidget(int x, int y, String symbol) {
         this(x, y, SYMBOL_SIZE, SYMBOL_SIZE, symbol);
@@ -47,6 +49,11 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     public void setBackgroundColors(int backgroundColor, int hoverBackgroundColor) {
         this.backgroundColor = backgroundColor;
         this.hoverBackgroundColor = hoverBackgroundColor;
+    }
+
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public abstract boolean onClick(int button);
@@ -78,7 +85,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             RenderSystem.disableDepthTest();
-            int bg = (this.isHovered() || this.isSelected()) ? hoverBackgroundColor : backgroundColor;
+            int bg = this.isHovered() ? hoverBackgroundColor : backgroundColor;
             drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bg);
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 
@@ -91,13 +98,22 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
             MatrixStack textMatrices = new MatrixStack();
             textMatrices.translate(0.0, 0.0, 0 + 200.0f);
             drawContext.drawCenteredTextWithShadow(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, argb);
+            
+            if(this.isSelected()) {
+                drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()-1, 0xFFFFFFFF);
+                drawContext.drawVerticalLine(this.getX()-1, this.getY()-1, this.getY()+height, 0xFFFFFFFF);
+                
+                drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()+height, 0xFFFFFFFF);
+                drawContext.drawVerticalLine(this.getX()+width, this.getY()-1, this.getY()+height, 0xFFFFFFFF);
+            }
+            
             drawContext.getMatrices().pop();
         }
     }
 
     @Override
     public boolean isSelected() {
-        return false;
+        return isSelected;
     }
 
     /**
