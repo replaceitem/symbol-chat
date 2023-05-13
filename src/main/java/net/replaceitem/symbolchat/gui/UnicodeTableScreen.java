@@ -85,7 +85,7 @@ public class UnicodeTableScreen extends Screen {
         });
         this.addDrawableChild(searchTextField);
 
-        showBlocksWidget = new CheckboxWidget(300, 2, 100, 20, Text.of("Show Blocks"), false) {
+        showBlocksWidget = new CheckboxWidget(300, 2, 60, 20, Text.of("Blocks"), false) {
             @Override
             public void onPress() {
                 super.onPress();
@@ -135,7 +135,7 @@ public class UnicodeTableScreen extends Screen {
         int scrollbarRows = Math.max(MathHelper.ceilDiv(codePoints.size(), columns), screenRows);
         double visibleRatio = (double) screenRows / scrollbarRows;
         int scrollbarHeight = (int) (visibleRatio * (height - TOOLBAR_HEIGHT));
-        int scrollbarY = 30 + (int) MathHelper.clampedMap(scroll, 0, scrollbarRows-screenRows, 0, height - scrollbarHeight);
+        int scrollbarY = (int) MathHelper.clampedMap(scroll, 0, scrollbarRows-screenRows, TOOLBAR_HEIGHT, height - scrollbarHeight);
         context.fill(width-2, scrollbarY, width-1, scrollbarY+scrollbarHeight, 0xFFA0A0A0);
     }
 
@@ -188,7 +188,7 @@ public class UnicodeTableScreen extends Screen {
                 codePoint++;
             }
         }
-    } 
+    }
 
     private void refreshButtons() {
         this.columns = this.width / SymbolButtonWidget.GRID_SPCAING;
@@ -235,7 +235,7 @@ public class UnicodeTableScreen extends Screen {
             this.widgets.add(button);
             x += SymbolButtonWidget.GRID_SPCAING;
             if(x > width-SymbolButtonWidget.SYMBOL_SIZE) {
-                x = 0;
+                x = 1;
                 y += SymbolButtonWidget.GRID_SPCAING;
             }
             if(y >= height) break;
@@ -245,7 +245,7 @@ public class UnicodeTableScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if(keyCode == GLFW.GLFW_KEY_C && Screen.hasControlDown() && selectionStart != -1) {
+        if(Screen.isCopy(keyCode) && selectionStart != -1) {
             copySelected();
             return true;
         }
