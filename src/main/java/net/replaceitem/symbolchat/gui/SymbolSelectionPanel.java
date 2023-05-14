@@ -74,8 +74,8 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     
     private void addTab(SymbolCategory category, int index) {
         SymbolTab tab = SymbolTab.fromCategory(symbolInsertable, category, this, this.x, this.y + SEARCH_BAR_HEIGHT);
-        int buttonX = this.x+1+((SymbolButtonWidget.SYMBOL_SIZE +1)*index);
-        int buttonY = this.y + HEIGHT - 1 - SymbolButtonWidget.SYMBOL_SIZE;
+        int buttonX = this.x+1+((SymbolButtonWidget.GRID_SPCAING)*index);
+        int buttonY = this.y + HEIGHT - SymbolButtonWidget.GRID_SPCAING;
         SwitchTabSymbolButtonWidget buttonWidget = new SwitchTabSymbolButtonWidget(buttonX, buttonY, index, category, this);
         tabs.add(new Pair<>(tab,buttonWidget));
 

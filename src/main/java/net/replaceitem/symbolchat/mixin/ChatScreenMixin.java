@@ -48,8 +48,8 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, FontPro
 
     @Inject(method = "init", at = @At(value = "RETURN"))
     private void addSymbolChatComponents(CallbackInfo ci) {
-        int symbolButtonX = this.width-2- SymbolButtonWidget.SYMBOL_SIZE;
-        int symbolButtonY = this.height-2-SymbolButtonWidget.SYMBOL_SIZE;
+        int symbolButtonX = this.width - 2 - SymbolButtonWidget.SYMBOL_SIZE;
+        int symbolButtonY = this.height - 2 - SymbolButtonWidget.SYMBOL_SIZE;
         this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.WIDTH -2,symbolButtonY-2-SymbolSelectionPanel.HEIGHT);
         this.addDrawableChild(symbolSelectionPanel);
 

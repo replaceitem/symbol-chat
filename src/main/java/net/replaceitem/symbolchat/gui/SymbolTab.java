@@ -23,8 +23,8 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
     protected static int columns = 8;
     protected static int rows = 16;
 
-    public static int width = columns * (SymbolButtonWidget.SYMBOL_SIZE +1) + 1;
-    public static int height = rows * (SymbolButtonWidget.SYMBOL_SIZE +1);
+    public static int width = columns * (SymbolButtonWidget.GRID_SPCAING) + 1;
+    public static int height = rows * (SymbolButtonWidget.GRID_SPCAING);
     
     public static final Text NO_CUSTOM_SYMBOLS = Text.translatable("symbolchat.no_custom_symbols");
     public static final Text NO_CLOTHCONFIG = Text.translatable("symbolchat.no_clothconfig");
@@ -99,8 +99,8 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
             int row = i / getColumns() - scroll;
             int col = i % getColumns();
             
-            button.setX(this.getX()+1+(col * (SymbolButtonWidget.SYMBOL_SIZE + 1)));
-            button.setY(this.getY()+1+(row * (SymbolButtonWidget.SYMBOL_SIZE + 1)));
+            button.setX(this.getX()+1+(col * (SymbolButtonWidget.GRID_SPCAING)));
+            button.setY(this.getY()+1+(row * (SymbolButtonWidget.GRID_SPCAING)));
             
             button.visible = row >= 0 && row < rows;
         }

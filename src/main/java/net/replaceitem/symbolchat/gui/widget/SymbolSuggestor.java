@@ -22,7 +22,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
     private final Consumer<String> symbolConsumer;
     private final SymbolSuggestable suggestable;
     
-    public static final int HEIGHT = SymbolButtonWidget.SYMBOL_SIZE +2;
+    public static final int HEIGHT = SymbolButtonWidget.SYMBOL_SIZE + 2;
 
 
     private int x, y;
