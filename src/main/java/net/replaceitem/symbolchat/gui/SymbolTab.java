@@ -50,7 +50,7 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
     protected Consumer<String> symbolConsumer;
     
     public static SymbolTab fromCategory(Consumer<String> symbolInsertable, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
-        if(symbols.id.equals("kaomojis")) {
+        if(symbols.id.equals("kaomoji")) {
             return new KaomojiTab(symbolInsertable, symbols, symbolSelectionPanel, x, y);
         } else {
             return new SymbolTab(symbolInsertable, symbols, symbolSelectionPanel, x, y);

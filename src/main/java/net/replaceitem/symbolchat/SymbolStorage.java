@@ -1,6 +1,5 @@
 package net.replaceitem.symbolchat;
 
-import net.replaceitem.symbolchat.config.ClothConfig;
 import oshi.util.tuples.Pair;
 
 import java.util.ArrayList;
@@ -26,44 +25,96 @@ public class SymbolStorage {
     public static void load() {
         categories.clear();
         try {
-            addCategory(SymbolCategory.fromSymbolListFile(SymbolListFile.loadFromFile("people_nature")));
-            addCategory(SymbolCategory.fromSymbolListFile(SymbolListFile.loadFromFile("objects")));
-            addCategory(SymbolCategory.fromSymbolListFile(SymbolListFile.loadFromFile("arrows")));
-            addCategory(SymbolCategory.fromSymbolListFile(SymbolListFile.loadFromFile("symbols")));
-            addCategory(SymbolCategory.fromSymbolListFile(SymbolListFile.loadFromFile("shapes")));
-            addCategory(SymbolCategory.fromSymbolListFile(SymbolListFile.loadFromFile("numbers")));
+            addCategory(new SymbolCategory(
+                    "faces_people",
+                    "🙂",
+                    SymbolList.loadFromFile("faces", true),
+                    SymbolList.loadFromFile("hands", true),
+                    SymbolList.loadFromFile("people", true),
+                    SymbolList.loadFromFile("body", true)
+            ));
+            addCategory(new SymbolCategory(
+                    "nature_food",
+                    "🌷",
+                    SymbolList.loadFromFile("environment", true),
+                    SymbolList.loadFromFile("greenery", true),
+                    SymbolList.loadFromFile("animals", true),
+                    SymbolList.loadFromFile("food", true)
+            ));
+            addCategory(new SymbolCategory(
+                    "things",
+                    "🧰",
+                    SymbolList.loadFromFile("things", true),
+                    SymbolList.loadFromFile("clothes", true)
+            ));
+            addCategory(new SymbolCategory(
+                    "activities_transport_places",
+                    "🎮",
+                    SymbolList.loadFromFile("activities", true),
+                    SymbolList.loadFromFile("transport", true)
+            ));
+            addCategory(new SymbolCategory(
+                    "symbols",
+                    "🗹",
+                    SymbolList.loadFromFile("symbols", true),
+                    SymbolList.loadFromFile("misc", true)
+            ));
+            addCategory(new SymbolCategory(
+                    "shapes",
+                    "🖤",
+                    SymbolList.loadFromFile("shapes", true),
+                    SymbolList.loadFromFile("arrows", true),
+                    SymbolList.loadFromFile("numbers", true)
+            ));
         } catch (Exception e) {
             SymbolChat.LOGGER.error("Could not load symbols", e);
         }
-        try {
-            kaomojis = SymbolCategory.fromKaomojiListFile(SymbolListFile.loadFromFile("kaomojis"), SymbolChat.config.getCustomKaomojis());
-        } catch (Exception e) {
-            SymbolChat.LOGGER.error("Could not load kaomojis", e);
-        }
         
-        customSymbols = SymbolCategory.createCustom(SymbolChat.config.getCustomSymbols());
-        
+        reloadKaomojiList();
+        reloadCustomList();
+        reloadAllList();
+    }
+    
+    private static void reloadAllList() {
         List<String> allSymbols = new ArrayList<>();
         allSymbols.addAll(categories.stream().flatMap(category -> category.symbols.stream()).toList());
         allSymbols.addAll(customSymbols.symbols);
-        all = SymbolCategory.createAll(allSymbols);
+        all = new SymbolCategory(
+                "all",
+                "🔎",
+                new SymbolList("all", allSymbols)
+        );
     }
-
-    public static void reloadCustomLists(ClothConfig clothConfig) {
+    
+    private static void reloadKaomojiList() {
         try {
-            kaomojis = SymbolCategory.fromKaomojiListFile(SymbolListFile.loadFromFile("kaomojis"), clothConfig.custom_kaomojis);
+            kaomojis = new SymbolCategory(
+                    "kaomoji",
+                    "K",
+                    SymbolList.loadFromFile("kaomojis", false),
+                    new SymbolList("custom_kamojis", SymbolChat.config.getCustomKaomojis())
+            );
         } catch (Exception e) {
             SymbolChat.LOGGER.error("Could not load kaomojis", e);
         }
-
-        customSymbols = SymbolCategory.createCustom(clothConfig.custom_symbols);
-
-        List<String> allSymbols = new ArrayList<>();
-        allSymbols.addAll(categories.stream().flatMap(category -> category.symbols.stream()).toList());
-        allSymbols.addAll(customSymbols.symbols);
-        all = SymbolCategory.createAll(allSymbols);
+    }
+    
+    private static void reloadCustomList() {
+        customSymbols = new SymbolCategory(
+                "custom",
+                "✏",
+                new SymbolList("custom", List.of(SymbolChat.config.getCustomSymbols())).separateSymbols()
+        );
     }
 
+    public static void reloadCustomLists() {
+        reloadKaomojiList();
+        reloadCustomList();
+        reloadAllList();
+    }
+
+    
+    
     /**
      * 
      * @param symbol The symbol to determine the search order

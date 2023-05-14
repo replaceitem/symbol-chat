@@ -16,7 +16,7 @@ public class ClothConfigProvider extends ConfigProvider {
         AutoConfig.register(ClothConfig.class, GsonConfigSerializer::new);
         this.config = AutoConfig.getConfigHolder(ClothConfig.class).getConfig();
         AutoConfig.getConfigHolder(ClothConfig.class).registerSaveListener((configHolder, clothConfig) -> {
-            SymbolStorage.reloadCustomLists(clothConfig);
+            SymbolStorage.reloadCustomLists();
             return ActionResult.SUCCESS;
         });
     }
