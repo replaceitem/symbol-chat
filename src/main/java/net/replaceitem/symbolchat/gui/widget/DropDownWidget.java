@@ -10,7 +10,7 @@ import net.minecraft.client.gui.Narratable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
@@ -21,16 +21,21 @@ import java.util.List;
 public class DropDownWidget<T> extends ClickableWidget implements Drawable, Element, Narratable {
 
     public final List<DropDownElementWidget<T>> elements;
+    private final GridWidget gridWidget;
     public int selected;
     public boolean expanded;
 
     public DropDownWidget(int x, int y, int width, int height, List<T> elementList, int defaultSelection) {
         super(x, y, width, height, Text.empty());
         this.elements = new ArrayList<>();
+        this.gridWidget = new GridWidget(this.getX() + 1, this.getY()+this.getHeight()+1);
         for(int i = 0; i < elementList.size(); i++) {
-            int dy = this.getY() + this.height + 1 + i*(this.height+1);
-            this.elements.add(new DropDownElementWidget<>(this.getX() + 1, dy, this.width - 2, this.height, elementList.get(i), i, this));
+            DropDownElementWidget<T> element = new DropDownElementWidget<>(0, 0, this.width - 2, this.height, elementList.get(i), i, this);
+            this.elements.add(element);
+            this.gridWidget.add(element, i, 0);
         }
+        this.gridWidget.setRowSpacing(1);
+        this.gridWidget.refreshPositions();
         this.expanded = false;
         this.selected = defaultSelection;
     }
@@ -51,6 +56,20 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
                 }
             }
         }
+    }
+
+    @Override
+    public void setX(int x) {
+        super.setX(x);
+        this.gridWidget.setX(this.getX() + 1);
+        this.gridWidget.refreshPositions();
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y);
+        this.gridWidget.setY(this.getY()+this.getHeight()+1);
+        this.gridWidget.refreshPositions();
     }
 
     @Override

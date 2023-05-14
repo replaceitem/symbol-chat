@@ -47,6 +47,11 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
+    public boolean getHideTableButton() {
+        return config.hide_table_button;
+    }
+
+    @Override
     public int getMaxSymbolSuggestions() {
         return config.max_symbol_suggestions;
     }

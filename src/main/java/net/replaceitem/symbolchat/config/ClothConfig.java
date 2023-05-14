@@ -23,6 +23,9 @@ public class ClothConfig implements ConfigData {
 
     @ConfigEntry.Gui.Tooltip
     public boolean hide_settings_button = false;
+
+    @ConfigEntry.Gui.Tooltip
+    public boolean hide_table_button = false;
     
     @ConfigEntry.BoundedDiscrete(min = 0, max = 50)
     public int max_symbol_suggestions = 5;

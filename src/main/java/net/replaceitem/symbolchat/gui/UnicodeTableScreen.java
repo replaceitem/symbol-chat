@@ -20,9 +20,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class UnicodeTableScreen extends Screen {
-    public UnicodeTableScreen() {
+    public UnicodeTableScreen(Screen parent) {
         super(Text.of("Unicode Table"));
+        this.parent = parent;
     }
+
+    private final Screen parent;
 
     private TextFieldWidget pageTextField;
     private TextFieldWidget searchTextField;
@@ -80,9 +83,7 @@ public class UnicodeTableScreen extends Screen {
         this.addDrawableChild(searchTextWidget);
 
         searchTextField = new TextFieldWidget(this.textRenderer, 80 + searchTextWidget.getWidth() + 2, 2, 150, 12, Text.of(""));
-        searchTextField.setChangedListener(s -> {
-            this.reloadSymbols();
-        });
+        searchTextField.setChangedListener(s -> this.reloadSymbols());
         this.addDrawableChild(searchTextField);
 
         showBlocksWidget = new CheckboxWidget(300, 2, 60, 20, Text.of("Blocks"), false) {
@@ -241,6 +242,12 @@ public class UnicodeTableScreen extends Screen {
             if(y >= height) break;
             index++;
         }
+    }
+
+
+    @Override
+    public void close() {
+        this.client.setScreen(this.parent);
     }
 
     @Override

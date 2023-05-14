@@ -1,11 +1,11 @@
 package net.replaceitem.symbolchat.mixin;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -18,12 +18,10 @@ import net.replaceitem.symbolchat.font.Fonts;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.UnicodeTableScreen;
 import net.replaceitem.symbolchat.gui.widget.DropDownWidget;
-import net.replaceitem.symbolchat.gui.widget.FontSelectionDropDownWidget;
 import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -58,14 +56,22 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, FontPro
         SymbolButtonWidget symbolButtonWidget = new OpenSymbolPanelButtonWidget(symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
         this.addDrawableChild(symbolButtonWidget);
 
-        int hudX = SymbolChat.config.getHudPosition().getX(this.width);
-        int hiddenOffset = (SymbolChat.config.getHideFontButton() && SymbolChat.config.getHudPosition().equals(ConfigProvider.HudPosition.RIGHT) ? 140 + 2 : 0);
+        GridWidget gridWidget = new GridWidget(0, 2);
 
-        this.fontSelectionDropDown = new FontSelectionDropDownWidget(hudX + ((SymbolChat.config.getHideSettingsButton() && SymbolChat.config.getHudPosition().equals(ConfigProvider.HudPosition.LEFT)) ? 0 : 15) + 2, 2, 140, 15, Fonts.fontProcessors, SymbolChat.selectedFont);
-        this.addDrawableChild(fontSelectionDropDown);
+        gridWidget.setColumnSpacing(2);
+        
+        if(!SymbolChat.config.getHideFontButton()) {
+            this.fontSelectionDropDown = new DropDownWidget<>(0, 0, 140, 15, Fonts.fontProcessors, SymbolChat.selectedFont) {
+                @Override
+                public void onSelection(int index, FontProcessor element) {
+                    SymbolChat.selectedFont = index;
+                }
+            };
+            gridWidget.add(fontSelectionDropDown, 0, 2);
+        }
 
         if(!SymbolChat.config.getHideSettingsButton()) {
-            SymbolButtonWidget settingsButtonWidget = new SymbolButtonWidget(hudX + hiddenOffset, 2, 15, 15, "⚙") {
+            SymbolButtonWidget settingsButtonWidget = new SymbolButtonWidget(0, 0, 15, 15, "⚙") {
                 @Override
                 public boolean onClick(int button) {
                     if(SymbolChat.clothConfigEnabled) {
@@ -81,8 +87,27 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, FontPro
                 }
             };
             settingsButtonWidget.setTooltip(Tooltip.of(Text.translatable(SymbolChat.clothConfigEnabled ? "text.autoconfig.symbol-chat.title" : "symbolchat.no_clothconfig")));
-            this.addDrawableChild(settingsButtonWidget);
+            gridWidget.add(settingsButtonWidget, 0, 1);
         }
+        
+        if(!SymbolChat.config.getHideTableButton()) {
+            SymbolButtonWidget tableButtonWidget = new SymbolButtonWidget(0, 0, 15, 15, "⣿⣿") {
+                @Override
+                public boolean onClick(int button) {
+                    if(SymbolChat.clothConfigEnabled) {
+                        ChatScreenMixin.this.client.setScreen(new UnicodeTableScreen(ChatScreenMixin.this));
+                        return true;
+                    }
+                    return false;
+                }
+            };
+            gridWidget.add(tableButtonWidget, 0, 0);
+        }
+        
+        gridWidget.refreshPositions();
+        gridWidget.setX(SymbolChat.config.getHudPosition() == ConfigProvider.HudPosition.LEFT ? 2 : width - 2 - gridWidget.getWidth());
+        gridWidget.refreshPositions();
+        gridWidget.forEachChild(this::addDrawableChild);
         
         this.symbolSuggestor = new SymbolSuggestor(this, this::replaceSuggestion, this);
         this.addDrawableChild(symbolSuggestor);
@@ -97,10 +122,6 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, FontPro
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(keyCode == GLFW.GLFW_KEY_F3 && FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            this.client.setScreen(new UnicodeTableScreen());
-        }
-
         if(symbolSuggestor != null && this.symbolSuggestor.isVisible() && this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers)) {
             cir.setReturnValue(true);
         }

@@ -6,6 +6,8 @@
   "text.autoconfig.symbol-chat.option.hide_font_button": "Schriftartschaltfläche verstecken",
   "text.autoconfig.symbol-chat.option.hide_settings_button": "Einstellungsschaltfläche verstecken",
   "text.autoconfig.symbol-chat.option.hide_settings_button.@Tooltip": "Versteckt die Einstellungsschaltfläche, dass sie nur noch über Modmenu erreichbar ist",
+  "text.autoconfig.symbol-chat.option.hide_table_button": "Unicodetabellenschaltfläche verstecken",
+  "text.autoconfig.symbol-chat.option.hide_table_button.@Tooltip": "Versteckt die Unicodetabellenschaltfläche, mit welcher man alle unicode symbole durchsuchen kann",
   "text.autoconfig.symbol-chat.option.max_symbol_suggestions": "Maximale Symbol Vorschläge",
   "text.autoconfig.symbol-chat.option.symbol_tooltip_mode": "Symbol Kurzinfomodus",
   "text.autoconfig.symbol-chat.option.symbol_tooltip_mode.@Tooltip[0]": "OFF: Keine Kurzinfos anzeigen",
