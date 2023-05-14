@@ -48,7 +48,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         this.selectedTab = -1;
         this.symbolInsertable = symbolConsumer;
 
-        this.searchBar = new SymbolSearchBar(this.x + 2 + SymbolButtonWidget.SYMBOL_SIZE, this.y + 1 + 2, WIDTH - 2 - SymbolButtonWidget.SYMBOL_SIZE - 10, SymbolButtonWidget.SYMBOL_SIZE - 2) {
+        this.searchBar = new SymbolSearchBar(this.x + 3 + SymbolButtonWidget.SYMBOL_SIZE, this.y + 1 + 2, WIDTH - 2 - SymbolButtonWidget.SYMBOL_SIZE - 10, SymbolButtonWidget.SYMBOL_SIZE - 2) {
             @Override
             public void onClick(double mouseX, double mouseY) {
                 setCurrentTab(-1);
