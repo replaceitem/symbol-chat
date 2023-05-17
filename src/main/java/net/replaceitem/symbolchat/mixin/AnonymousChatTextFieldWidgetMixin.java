@@ -8,7 +8,7 @@ import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.font.FontProcessor;
 import net.replaceitem.symbolchat.font.Fonts;
 import org.spongepowered.asm.mixin.Mixin;
-import net.replaceitem.symbolchat.FontProcessorAccessor;
+import net.replaceitem.symbolchat.font.FontProcessorAccessor;
 
 @Mixin(targets="net/minecraft/client/gui/screen/ChatScreen$1")
 public class AnonymousChatTextFieldWidgetMixin extends TextFieldWidget {
