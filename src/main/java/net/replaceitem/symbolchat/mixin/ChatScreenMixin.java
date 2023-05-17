@@ -31,8 +31,9 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin extends Screen implements Consumer<String>, FontProcessorAccessor, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
@@ -188,12 +189,13 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, FontPro
     }
     
     
-    private static final List<String> messageCommands = List.of(
+    private static final Set<String> messageCommands = Set.of(
             "msg", "tell", "w",
             "say", "me",
             "teammsg", "tm"
-    );
+    ).stream().map(s -> "/" + s + " ").collect(Collectors.toSet());
+    
     private static boolean isSuggestingCommand(String text) {
-        return messageCommands.stream().anyMatch(s -> text.startsWith("/" + s + " "));
+        return messageCommands.contains(text);
     }
 }
