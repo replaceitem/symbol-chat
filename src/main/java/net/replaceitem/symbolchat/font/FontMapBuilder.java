@@ -28,10 +28,10 @@ public class FontMapBuilder {
     }
 
     public FontMapBuilder putSeperated(String fromSequence, String... toStrings) {
-        int codePoints = Util.getCodePointCount(fromSequence);
-        if(codePoints != toStrings.length) throw new IllegalArgumentException("Mismatch in codepoint count");
-        for (int i = 0; i < codePoints; i++) {
-            String from = Util.stringFromCodePoint(fromSequence.codePointAt(i));
+        String[] fromCodePoints = fromSequence.codePoints().mapToObj(Util::stringFromCodePoint).toArray(String[]::new);
+        if(fromCodePoints.length != toStrings.length) throw new IllegalArgumentException("Mismatch in codepoint count");
+        for (int i = 0; i < fromCodePoints.length; i++) {
+            String from = fromCodePoints[i];
             String to = toStrings[i];
             map.put(from, to);
         }
@@ -40,25 +40,26 @@ public class FontMapBuilder {
 
     public FontMapBuilder putAlphabetLower(String to) {
         assertCodePointCount(to, 26);
-        return putSequence(to, 'a');
+        return putSequence('a', to);
     }
 
     public FontMapBuilder putAlphabetUpper(String to) {
         assertCodePointCount(to, 26);
-        return putSequence(to, 'A');
+        return putSequence('A', to);
     }
 
     public FontMapBuilder putNumbers(String to) {
         assertCodePointCount(to, 10);
-        return putSequence(to, '0');
+        return putSequence('0', to);
     }
 
 
-    public FontMapBuilder putSequence(String toSequence, int codePointStart) {
-        int codePoints = Util.getCodePointCount(toSequence);
-        for (int i = 0; i < codePoints; i++) {
+    public FontMapBuilder putSequence(int codePointStart, String toSequence) {
+        String[] toCodePoints = toSequence.codePoints().mapToObj(Util::stringFromCodePoint).toArray(String[]::new);
+        for (int i = 0; i < toCodePoints.length; i++) {
             String from = Util.stringFromCodePoint(codePointStart + i);
-            map.put(from, Util.stringFromCodePoint(toSequence.codePointAt(i)));
+            String to = toCodePoints[i];
+            map.put(from, to);
         }
         return this;
     }
