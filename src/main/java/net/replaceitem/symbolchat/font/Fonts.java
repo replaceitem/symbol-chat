@@ -4,7 +4,6 @@ import net.minecraft.client.resource.language.I18n;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class Fonts {
 
@@ -13,8 +12,6 @@ public class Fonts {
 
 
     public static FontProcessor NORMAL = new FontProcessor("normal", s -> s);
-
-    public static FontProcessor CAPITALIZED = new FontProcessor("capitalized", s -> s.toUpperCase(Locale.ROOT));
 
     public static FontProcessor SUPERSCRIPT = new MappedFontProcessor("superscript",
             new FontMapBuilder()
@@ -119,7 +116,6 @@ public class Fonts {
     public static void registerFonts() {
         fontProcessors = new ArrayList<>();
         fontProcessors.add(NORMAL);
-        fontProcessors.add(CAPITALIZED);
         fontProcessors.add(SUPERSCRIPT);
         fontProcessors.add(SUBSCRIPT);
         fontProcessors.add(CIRCLED);
