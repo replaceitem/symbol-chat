@@ -15,8 +15,8 @@ public class Fonts {
 
     public static FontProcessor SUPERSCRIPT = new MappedFontProcessor("superscript",
             new FontMapBuilder()
-                    .putAlphabetUpper("ᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿˢᵀᵁⱽᵂˣʸᶻ")
-                    .putAlphabetLower("ᵃᵇᶜᵈᵉᶠᵍʰᶦʲᵏˡᵐⁿᵒᵖᑫʳˢᵗᵘᵛʷˣʸᶻ")
+                    .putAlphabetUpper("ᴬᴮᶜᴰᴱ\uA7F3ᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾ\uA7F4ᴿˢᵀᵁⱽᵂˣʸᶻ")
+                    .putAlphabetLower("ᵃᵇᶜᵈᵉᶠᵍʰ\uD838\uDC4Cʲᵏˡᵐ\uD838\uDC3Dᵒᵖ\uD801\uDFA5ʳˢᵗᵘᵛʷˣʸᶻ")
                     .putNumbers("⁰¹²³⁴⁵⁶⁷⁸⁹")
                     .put('+','⁺')
                     .put('-','⁻')
@@ -28,8 +28,8 @@ public class Fonts {
 
     public static FontProcessor SUBSCRIPT = new MappedFontProcessor("subscript",
             new FontMapBuilder()
-                    .putAlphabetUpper("ₐ₈CDₑբGhᵢⱼKLMNₒPQᵣSTᵤᵥWₓᵧZ")
-                    .putAlphabetLower("ₐ₆꜀ₔₑբ₉hᵢⱼklmnₒpqᵣstᵤᵥwₓᵧ₂")
+                    .putAlphabetUpper("ₐ\uD838\uDC53\uD838\uDC5EDₑբGₕᵢⱼ\uD838\uDC5Aₗₘ\uD838\uDC5D\uD838\uDC5CₚQᵣₛₜ\uD838\uDC62ᵥ\uD838\uDC64\uD838\uDC61\uD838\uDC5FZ")
+                    .putAlphabetLower("ₐ\uD838\uDC65\uD838\uDC5Eₔₑբ₉ₕᵢⱼₖₗₘₙₒₚqᵣₛₜᵤᵥ\uD838\uDC64ₓᵧ₂")
                     .putNumbers("₀₁₂₃₄₅₆₇₈₉")
                     .put('+','₊')
                     .put('-','₋')
