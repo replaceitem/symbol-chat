@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class FontProcessor {
     protected final String nameKey;
     protected final Function<String, String> codePointConverter;
+    protected String convertedName;
     public FontProcessor(String nameKey, Function<String, String> codePointConverter) {
         this.nameKey = "symbolchat.font." + nameKey;
         this.codePointConverter = codePointConverter;
@@ -25,6 +26,7 @@ public class FontProcessor {
 
     @Override
     public String toString() {
-        return getConvertedName();
+        if(convertedName == null) convertedName = getConvertedName();
+        return convertedName;
     }
 }
