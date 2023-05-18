@@ -57,7 +57,7 @@ public class Fonts {
     public static FontProcessor INVERSE = new MappedFontProcessor("inverse",
             new FontMapBuilder()
                     .putNumbers("0ƖՇƐ߈ϛ9ㄥ86")
-                    .putAlphabetUpper("ⱯᗺƆᗡƎℲ⅁HIſꞰꞀWuOԀῸᴚS⟘∩ɅMX⅄Z")
+                    .putAlphabetUpper("ⱯᗺƆᗡƎℲ⅁HIſꞰꞀWNOԀῸᴚS⟘∩ɅMX⅄Z")
                     .putAlphabetLower("ɐqɔpǝɟɓɥᴉſʞꞁɯuodbɹsʇnʌʍxʎz")
                     .put('!','¡')
                     .put(',','\'')
