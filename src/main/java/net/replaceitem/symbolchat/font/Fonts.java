@@ -92,7 +92,7 @@ public class Fonts {
     public static FontProcessor BRACKETS = new MappedFontProcessor("brackets",
             new FontMapBuilder()
                     .shiftSequence('1', 0x2474, 9)
-                    .shiftAlphabetUpper(0x249C)
+                    .shiftAlphabetUpper(0x1F110)
                     .shiftAlphabetLower(0x249C)
                     .build()
     );
