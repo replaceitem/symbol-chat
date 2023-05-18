@@ -109,8 +109,9 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if(symbolButtons.size() == 0) {
+            Text text = this.getNoSymbolsText();
+            if(text == null) return;
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-            Text text = SymbolChat.clothConfigEnabled ? NO_CUSTOM_SYMBOLS : NO_CLOTHCONFIG;
             List<OrderedText> orderedTexts = textRenderer.wrapLines(text, width - 4);
             drawContext.getMatrices().push();
             drawContext.getMatrices().translate(0,0,200);
@@ -125,6 +126,10 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
         for (SymbolButtonWidget button : buttons()) {
             button.render(drawContext, mouseX, mouseY, delta);
         }
+    }
+    
+    public Text getNoSymbolsText() {
+        return SymbolChat.clothConfigEnabled ? NO_CUSTOM_SYMBOLS : NO_CLOTHCONFIG;
     }
 
     protected List<? extends PasteSymbolButtonWidget> buttons() {

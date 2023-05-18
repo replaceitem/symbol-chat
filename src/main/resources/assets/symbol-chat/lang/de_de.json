@@ -21,6 +21,7 @@
 
   "symbolchat.no_custom_symbols": "Keine eigenen Symbole angegeben. Du kannst Symbole in der ClothConfig Konfiguration hinzufügen, die vom ModMenu Seite erreichbar ist.",
   "symbolchat.no_clothconfig": "Installiere ClothConfig um eigene Symbole hinzuzufügen.",
+  "symbolchat.no_search_results": "Keine Symbole gefunden.",
   "symbolchat.search": "Suche",
 
   "symbolchat.tab.faces_people": "Gesichter & Menschen",
