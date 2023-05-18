@@ -62,7 +62,7 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, FontPro
         gridWidget.setColumnSpacing(2);
         
         if(!SymbolChat.config.getHideFontButton()) {
-            this.fontSelectionDropDown = new DropDownWidget<>(0, 0, 140, 15, Fonts.fontProcessors, SymbolChat.selectedFont) {
+            this.fontSelectionDropDown = new DropDownWidget<>(0, 0, 180, 15, Fonts.fontProcessors, SymbolChat.selectedFont) {
                 @Override
                 public void onSelection(int index, FontProcessor element) {
                     SymbolChat.selectedFont = index;

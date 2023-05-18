@@ -53,6 +53,36 @@ public class Fonts {
                     .put('/','⊘')
                     .build()
     );
+
+    public static FontProcessor NEGATIVE_CIRCLED = new MappedFontProcessor("negative_circled",
+            new FontMapBuilder()
+                    .shiftAlphabetUpper(0x1F150)
+                    .shiftAlphabetLower(0x1F150)
+                    .shiftSequence('1', 0x278A, 9)
+                    .put('0', "⓿")
+                    .build()
+    );
+
+    public static FontProcessor SQUARED = new MappedFontProcessor("squared",
+            new FontMapBuilder()
+                    .shiftAlphabetUpper(0x1F130)
+                    .shiftAlphabetLower(0x1F130)
+                    .build()
+    );
+
+    public static FontProcessor NEGATIVE_SQUARED = new MappedFontProcessor("negative_squared",
+            new FontMapBuilder()
+                    .shiftAlphabetUpper(0x1F170)
+                    .shiftAlphabetLower(0x1F170)
+                    .build()
+    );
+
+    public static FontProcessor REGIONAL_INDICATOR = new MappedFontProcessor("regional_indicator",
+            new FontMapBuilder()
+                    .shiftAlphabetUpper(0x1F1E6)
+                    .shiftAlphabetLower(0x1F1E6)
+                    .build()
+    );
     
     public static FontProcessor INVERSE = new MappedFontProcessor("inverse",
             new FontMapBuilder()
@@ -119,6 +149,10 @@ public class Fonts {
         fontProcessors.add(SUPERSCRIPT);
         fontProcessors.add(SUBSCRIPT);
         fontProcessors.add(CIRCLED);
+        fontProcessors.add(NEGATIVE_CIRCLED);
+        fontProcessors.add(SQUARED);
+        fontProcessors.add(NEGATIVE_SQUARED);
+        fontProcessors.add(REGIONAL_INDICATOR);
         fontProcessors.add(INVERSE);
         fontProcessors.add(FULLWIDTH);
         fontProcessors.add(SMALL);
