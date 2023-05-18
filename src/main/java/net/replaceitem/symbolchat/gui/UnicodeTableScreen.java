@@ -177,7 +177,7 @@ public class UnicodeTableScreen extends Screen {
             int codePoint = 0;
             while(Character.isValidCodePoint(codePoint)) {
                 String name = Character.getName(codePoint);
-                if(name != null && name.contains(search)) {
+                if(name != null && isRelevant(name, search)) {
                     Character.UnicodeBlock newBlock = Character.UnicodeBlock.of(codePoint);
                     if (newBlock != currentBlock) {
                         blockCycleColorIndex = (blockCycleColorIndex + 1) % CYCLING_BLOCK_COLORS.length;
@@ -189,6 +189,13 @@ public class UnicodeTableScreen extends Screen {
                 codePoint++;
             }
         }
+    }
+    
+    private static boolean isRelevant(String name, String search) {
+        for (String s : search.split(" ")) {
+            if(!name.contains(s)) return false;
+        }
+        return true;
     }
 
     private void refreshButtons() {
