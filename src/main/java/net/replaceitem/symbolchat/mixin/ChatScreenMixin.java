@@ -159,6 +159,9 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, FontPro
         if(symbolSelectionPanel != null && symbolSelectionPanel.mouseScrolled(mouseX,mouseY,amount)) {
             cir.setReturnValue(true);
         }
+        if(fontSelectionDropDown != null && fontSelectionDropDown.mouseScrolled(mouseX,mouseY,amount)) {
+            cir.setReturnValue(true);
+        }
     }
     
     @Inject(method = "onChatFieldUpdate", at = @At("HEAD"))

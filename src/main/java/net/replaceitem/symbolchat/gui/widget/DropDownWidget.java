@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.GridWidget;
+import net.minecraft.client.gui.widget.ScrollableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
@@ -21,21 +22,20 @@ import java.util.List;
 public class DropDownWidget<T> extends ClickableWidget implements Drawable, Element, Narratable {
 
     public final List<DropDownElementWidget<T>> elements;
-    private final GridWidget gridWidget;
+    private final DropDownSelectionWidget selectionWidget;
     public int selected;
     public boolean expanded;
 
     public DropDownWidget(int x, int y, int width, int height, List<T> elementList, int defaultSelection) {
         super(x, y, width, height, Text.empty());
         this.elements = new ArrayList<>();
-        this.gridWidget = new GridWidget(this.getX() + 1, this.getY()+this.getHeight()+1);
+        this.selectionWidget = new DropDownSelectionWidget(this.getX(), this.getY()+this.getHeight(), this.width, 200);
         for(int i = 0; i < elementList.size(); i++) {
             DropDownElementWidget<T> element = new DropDownElementWidget<>(0, 0, this.width - 2, this.height, elementList.get(i), i, this);
             this.elements.add(element);
-            this.gridWidget.add(element, i, 0);
+            this.selectionWidget.add(element, i);
         }
-        this.gridWidget.setRowSpacing(1);
-        this.gridWidget.refreshPositions();
+        this.selectionWidget.refreshPositions();
         this.expanded = false;
         this.selected = defaultSelection;
     }
@@ -50,26 +50,29 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
             drawContext.drawCenteredTextWithShadow(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, z | MathHelper.ceil(this.alpha * 255.0F) << 24);
 
             if(this.expanded) {
-                drawContext.fill(this.getX(), this.getY()+this.height, this.getX() + this.width, this.getY() + this.height + 1 + this.elements.size()*(this.height+1), SymbolChat.config.getHudColor());
-                for(DropDownElementWidget<?> element : elements) {
-                    element.render(drawContext,mouseX,mouseY,delta);
-                }
+                this.selectionWidget.render(drawContext, mouseX, mouseY, delta);
             }
         }
     }
 
     @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if(this.selectionWidget.mouseScrolled(mouseX, mouseY, amount)) return true;
+        return super.mouseScrolled(mouseX, mouseY, amount);
+    }
+
+    @Override
     public void setX(int x) {
         super.setX(x);
-        this.gridWidget.setX(this.getX() + 1);
-        this.gridWidget.refreshPositions();
+        this.selectionWidget.setX(this.getX());
+        this.selectionWidget.refreshPositions();
     }
 
     @Override
     public void setY(int y) {
         super.setY(y);
-        this.gridWidget.setY(this.getY()+this.getHeight()+1);
-        this.gridWidget.refreshPositions();
+        this.selectionWidget.setY(this.getY()+this.getHeight());
+        this.selectionWidget.refreshPositions();
     }
 
     @Override
@@ -89,9 +92,7 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(this.expanded) {
-            for(DropDownElementWidget<?> element : elements) {
-                if(element.mouseClicked(mouseX,mouseY,button)) return true;
-            }
+            this.selectionWidget.mouseClicked(mouseX, mouseY, button);
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
@@ -111,5 +112,85 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
     }
     public T getSelection() {
         return this.elements.get(selected).getElement();
+    }
+    
+    
+    private class DropDownSelectionWidget extends ScrollableWidget {
+        
+        private final GridWidget gridWidget;
+
+        public DropDownSelectionWidget(int x, int y, int w, int h) {
+            super(x, y, w, h, Text.empty());
+            this.gridWidget = new GridWidget(x, y);
+            this.gridWidget.setRowSpacing(1);
+        }
+
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if(this.isWithinBounds(mouseX, mouseY)) {
+                this.gridWidget.forEachChild(clickableWidget -> clickableWidget.mouseClicked(mouseX, mouseY + getScrollY(), button));
+            }
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
+
+        @Override
+        protected int getContentsHeight() {
+            return gridWidget.getHeight();
+        }
+
+        @Override
+        protected boolean overflows() {
+            return this.getContentsHeight() > this.height;
+        }
+
+        @Override
+        protected double getDeltaYPerScroll() {
+            return 10;
+        }
+
+        @Override
+        protected void renderContents(DrawContext context, int mouseX, int mouseY, float delta) {
+            this.gridWidget.forEachChild(clickableWidget -> clickableWidget.render(context, mouseX, mouseY + (int) getScrollY(), delta));
+        }
+
+        @Override
+        protected void drawScrollbar(DrawContext context) {
+            int scrollbarHeight = this.getScrollbarThumbHeight();
+            int scrollbarX = this.getX() + this.width - 1;
+            int scrollbarY = Math.max(this.getY(), (int)this.getScrollY() * (this.height - scrollbarHeight) / this.getMaxScrollY() + this.getY());
+            context.fill(scrollbarX, scrollbarY, scrollbarX+1, scrollbarY + scrollbarHeight, 0xFFA0A0A0);
+        }
+
+        @Override
+        protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+
+        }
+
+        public void add(DropDownElementWidget<T> element, int i) {
+            this.gridWidget.add(element, i, 0);
+        }
+
+        @Override
+        public void setX(int x) {
+            super.setX(x);
+            this.gridWidget.setX(x);
+            this.refreshPositions();
+        }
+
+        @Override
+        public void setY(int y) {
+            super.setY(y);
+            this.gridWidget.setY(y);
+            this.refreshPositions();
+        }
+
+        public void refreshPositions() {
+            this.gridWidget.refreshPositions();
+        }
+
+        @Override
+        protected void drawBox(DrawContext context) {
+            context.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, SymbolChat.config.getHudColor());
+        }
     }
 }
