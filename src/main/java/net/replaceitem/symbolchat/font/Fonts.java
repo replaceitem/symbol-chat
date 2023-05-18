@@ -159,6 +159,14 @@ public class Fonts {
                     .build()
     );
 
+    public static FontProcessor MATHEMATICAL_SCRIPT = new MappedFontProcessor("mathematical_script",
+            new FontMapBuilder()
+                    .shiftAlphabetUpper("\uD835\uDC9C")
+                    .putAlphabetLower("𝒶𝒷𝒸𝒹𝑒𝒻𝑔𝒽𝒾𝒿𝓀𝓁𝓂𝓃𝑜𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏") // some are missing, using those from italic instead
+                    .shiftNumbers("\uD835\uDFE2")
+                    .build()
+    );
+
     public static FontProcessor MATHEMATICAL_BOLD_SCRIPT = new MappedFontProcessor("mathematical_bold_script",
             new FontMapBuilder()
                     .shiftAlphabetUpper("\uD835\uDCD0")
@@ -169,7 +177,7 @@ public class Fonts {
 
     public static FontProcessor MATHEMATICAL_DOUBLE_STRUCK = new MappedFontProcessor("mathematical_double_struck",
             new FontMapBuilder()
-                    .shiftAlphabetUpper("\uD835\uDD52") // identical to lower, since upper has some missing unifont chars
+                    .putAlphabetUpper("𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ") // identical to lower, since upper has some missing unifont chars
                     .shiftAlphabetLower("\uD835\uDD52")
                     .shiftNumbers("\uD835\uDFD8")
                     .build()
@@ -225,6 +233,7 @@ public class Fonts {
         fontProcessors.add(MATHEMATICAL_BOLD);
         fontProcessors.add(MATHEMATICAL_ITALIC);
         fontProcessors.add(MATHEMATICAL_BOLD_ITALIC);
+        fontProcessors.add(MATHEMATICAL_SCRIPT);
         fontProcessors.add(MATHEMATICAL_BOLD_SCRIPT);
         fontProcessors.add(MATHEMATICAL_DOUBLE_STRUCK);
         fontProcessors.add(MATHEMATICAL_BOLD_FRAKTUR);
