@@ -77,6 +77,18 @@ public class FontMapBuilder {
         return shiftSequence('0', to, 10);
     }
 
+    public FontMapBuilder shiftAlphabetLower(String to) {
+        return shiftSequence('a', to.codePoints().findFirst().orElseThrow(), 26);
+    }
+
+    public FontMapBuilder shiftAlphabetUpper(String to) {
+        return shiftSequence('A', to.codePoints().findFirst().orElseThrow(), 26);
+    }
+
+    public FontMapBuilder shiftNumbers(String to) {
+        return shiftSequence('0', to.codePoints().findFirst().orElseThrow(), 10);
+    }
+
     public FontMapBuilder shiftSequence(int codePointStart, int codePointShiftStart, int sequenceLength) {
         int shiftDiff = codePointShiftStart-codePointStart;
         for (int i = 0; i < sequenceLength; i++) {
