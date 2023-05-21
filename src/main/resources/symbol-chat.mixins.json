@@ -4,6 +4,10 @@
   "package": "net.replaceitem.symbolchat.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    
+  ],
+  "client": [
+    "ScreensMixin",
     "AnonymousChatTextFieldWidgetMixin",
     "AnvilScreenMixin",
     "BookEditScreenMixin",
@@ -11,9 +15,6 @@
     "PageContentAccessor",
     "AbstractSignEditScreenMixin",
     "TextFieldWidgetAccessor"
-  ],
-  "client": [
-    "ScreensMixin"
   ],
   "injectors": {
     "defaultRequire": 1
