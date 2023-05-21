@@ -6,11 +6,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.text.Text;
+import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolSuggestable;
-import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
-import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
-import net.replaceitem.symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
-import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.joml.Vector2i;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,25 +26,13 @@ public abstract class BookEditScreenMixin extends Screen implements Consumer<Str
     @Shadow protected abstract BookEditScreen.PageContent getPageContent();
     @Shadow protected abstract BookEditScreen.Position absolutePositionToScreenPosition(BookEditScreen.Position position);
 
-    private SymbolButtonWidget symbolButtonWidget;
-    private SymbolSelectionPanel symbolSelectionPanel;
-    private SymbolSuggestor symbolSuggestor;
-
     protected BookEditScreenMixin(Text title) {
         super(title);
     }
 
     @Inject(method = "init", at = @At(value = "HEAD"))
-    private void addSymbolButton(CallbackInfo ci) {
-        int symbolButtonX = this.width-SymbolButtonWidget.SYMBOL_SIZE;
-        int symbolButtonY = this.height-2-SymbolButtonWidget.SYMBOL_SIZE;
-        this.symbolSelectionPanel = new SymbolSelectionPanel(this,this.width-SymbolSelectionPanel.WIDTH -2,symbolButtonY-2-SymbolSelectionPanel.HEIGHT);
-        this.symbolButtonWidget = new OpenSymbolPanelButtonWidget(symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
-        this.addDrawableChild(symbolSelectionPanel);
-        this.addDrawableChild(symbolButtonWidget);
-
-        this.symbolSuggestor = new SymbolSuggestor(this, this::replaceSuggestion, this);
-        this.addDrawableChild(symbolSuggestor);
+    private void onInit(CallbackInfo ci) {
+        ((ScreenAccess) this).addSymbolChatComponents();
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(Lnet/minecraft/client/gui/DrawContext;IIF)V"))
@@ -58,34 +43,25 @@ public abstract class BookEditScreenMixin extends Screen implements Consumer<Str
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(symbolSuggestor != null && this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers)) {
-            cir.setReturnValue(true);
-            this.symbolSuggestor.refresh();
-            
-        }
-        if(symbolSelectionPanel != null && this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers)) {
-            cir.setReturnValue(true);
-        }
+        if(((ScreenAccess) this).onKeyPressed(keyCode, scanCode, modifiers)) cir.setReturnValue(true);
     }
 
     @Inject(method = "charTyped", at = @At("HEAD"), cancellable = true)
     public void charTyped(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(symbolSelectionPanel != null && this.symbolSelectionPanel.charTyped(chr, modifiers)) {
-            cir.setReturnValue(true);
-        }
+        if(((ScreenAccess) this).onCharTyped(chr, modifiers)) cir.setReturnValue(true);
     }
     
     @Inject(method = "charTyped", at = @At("RETURN"))
     private void updateSuggestions(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(symbolSuggestor != null) this.symbolSuggestor.refresh();
+        ((ScreenAccess) this).refreshSuggestions();
     }
     @Inject(method = "keyPressed", at = @At("RETURN"))
     private void updateSuggestions(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(symbolSuggestor != null) this.symbolSuggestor.refresh();
+        ((ScreenAccess) this).refreshSuggestions();
     }
     @Inject(method = "mouseClicked", at = @At("RETURN"))
     private void updateSuggestions(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if(symbolSuggestor != null) this.symbolSuggestor.refresh();
+        ((ScreenAccess) this).refreshSuggestions();
     }
 
     @Override

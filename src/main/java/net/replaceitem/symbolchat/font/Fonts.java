@@ -11,7 +11,12 @@ public class Fonts {
 
 
 
-    public static FontProcessor NORMAL = new FontProcessor("normal", s -> s);
+    public static FontProcessor NORMAL = new FontProcessor("normal", null) {
+        @Override
+        public String convertString(String string) {
+            return string;
+        }
+    };
 
     public static FontProcessor SUPERSCRIPT = new MappedFontProcessor("superscript",
             new FontMapBuilder()

@@ -57,7 +57,7 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if(this.selectionWidget.mouseScrolled(mouseX, mouseY, amount)) return true;
+        if(this.expanded && this.selectionWidget.mouseScrolled(mouseX, mouseY, amount)) return true;
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
 
@@ -82,6 +82,11 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
     
     public Text getTextForElement(T element) {
         return Text.literal(element.toString());
+    }
+
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        return super.isMouseOver(mouseX, mouseY) || (this.expanded && this.selectionWidget.isMouseOver(mouseX, mouseY));
     }
 
     @Override

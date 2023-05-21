@@ -70,10 +70,8 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
     }
     
     private void setFocusedElement(int focused) {
-        if(this.getFocused() != null) ((PasteSymbolButtonWidget) this.getFocused()).makeFocused(false);
         this.focusedElement = MathHelper.clamp(focused, 0, elementCount-1);
         PasteSymbolButtonWidget focus = focusedElement < 0 || focused < 0 ? null : this.symbolButtons.get(focusedElement);
-        if(focus != null) focus.makeFocused(true);
         this.setFocused(focus);
     }
 
@@ -96,6 +94,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
                 focused = this.symbolButtons.get(0);
             } else return false;
             focused.onClick(0);
+            this.visible = false;
             return true;
         }
         if(keyCode == GLFW.GLFW_KEY_UP && this.getFocused() == null && !this.symbolButtons.isEmpty()) {
@@ -119,6 +118,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
         if(keyCode == GLFW.GLFW_KEY_ENTER && this.getFocused() != null && focusedElement >= 0) {
             int buttonIndex = MathHelper.clamp(focusedElement, 0, this.symbolButtons.size()-1);
             this.symbolButtons.get(buttonIndex).onClick(0);
+            this.visible = false;
             return true;
         }
         

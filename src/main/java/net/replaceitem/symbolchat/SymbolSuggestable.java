@@ -4,11 +4,13 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.mixin.TextFieldWidgetAccessor;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import oshi.util.tuples.Pair;
 
 public interface SymbolSuggestable {
     Vector2i getCursorPosition();
+    @Nullable
     String getSuggestionTerm();
     void replaceSuggestion(String symbol);
     
@@ -36,7 +38,7 @@ public interface SymbolSuggestable {
         default void replaceSuggestion(String symbol) {
             TextFieldWidget textFieldWidget = this.getTextField();
             Pair<Integer, Integer> suggestionArea = SymbolSuggestable.getSuggestionArea(textFieldWidget);
-
+            if(suggestionArea == null) return;
             textFieldWidget.setSelectionStart(suggestionArea.getA());
             textFieldWidget.setSelectionEnd(suggestionArea.getB());
 
@@ -72,14 +74,21 @@ public interface SymbolSuggestable {
         SelectionManager getSelectionManager();
     }
 
+    @Nullable
     static Pair<Integer, Integer> getSuggestionArea(String text, int cursor) {
         int colonIndex = text.lastIndexOf(':', cursor-1);
-        if(colonIndex == -1 || (colonIndex > 0 && text.charAt(colonIndex-1) != ' ')) return null;
+        if(colonIndex == -1) return null;
+        if(colonIndex > 0) {
+            char beforeColon = text.charAt(colonIndex - 1);
+            if (!Character.isWhitespace(beforeColon) && beforeColon != '\n') return null;
+        }
         int spaceIndex = text.lastIndexOf(' ', cursor-1);
         if(spaceIndex >= colonIndex) return null;
         return new Pair<>(colonIndex, cursor);
     }
 
+
+    @Nullable
     static Pair<Integer, Integer> getSuggestionArea(TextFieldWidget textFieldWidget) {
         return getSuggestionArea(textFieldWidget.getText(), textFieldWidget.getCursor());
     }

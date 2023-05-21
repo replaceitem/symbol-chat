@@ -1,7 +1,10 @@
 package net.replaceitem.symbolchat.font;
 
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
+import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.Util;
 
 import java.util.function.Function;
@@ -28,5 +31,13 @@ public class FontProcessor {
     public String toString() {
         if(convertedName == null) convertedName = getConvertedName();
         return convertedName;
+    }
+    
+    public static FontProcessor getCurrentScreenFontProcessor() {
+        Screen screen = MinecraftClient.getInstance().currentScreen;
+        if (!(screen instanceof ScreenAccess screenAccess)) {
+            return Fonts.NORMAL;
+        }
+        return screenAccess.getFontProcessor();
     }
 }

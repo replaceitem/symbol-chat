@@ -9,10 +9,11 @@
     "BookEditScreenMixin",
     "ChatScreenMixin",
     "PageContentAccessor",
-    "SignEditScreenMixin",
+    "AbstractSignEditScreenMixin",
     "TextFieldWidgetAccessor"
   ],
   "client": [
+    "ScreensMixin"
   ],
   "injectors": {
     "defaultRequire": 1
