@@ -9,6 +9,7 @@ import net.replaceitem.symbolchat.SymbolStorage;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 
@@ -70,9 +71,16 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
     }
     
     private void setFocusedElement(int focused) {
-        this.focusedElement = MathHelper.clamp(focused, 0, elementCount-1);
-        PasteSymbolButtonWidget focus = focusedElement < 0 || focused < 0 ? null : this.symbolButtons.get(focusedElement);
+        this.focusedElement = MathHelper.clamp(focused, -1, elementCount-1);
+        PasteSymbolButtonWidget focus = focusedElement == -1 ? null : this.symbolButtons.get(focusedElement);
         this.setFocused(focus);
+    }
+
+    @Nullable
+    @Override
+    public Element getFocused() {
+        if(this.focusedElement < 0 || this.focusedElement >= this.symbolButtons.size()) return null;
+        return this.symbolButtons.get(this.focusedElement);
     }
 
     @Override
@@ -94,11 +102,11 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
                 focused = this.symbolButtons.get(0);
             } else return false;
             focused.onClick(0);
-            this.visible = false;
+            this.hide();
             return true;
         }
-        if(keyCode == GLFW.GLFW_KEY_UP && this.getFocused() == null && !this.symbolButtons.isEmpty()) {
-            this.setFocusedElement(0);
+        if(keyCode == GLFW.GLFW_KEY_UP) {
+            if(this.getFocused() == null && !this.symbolButtons.isEmpty()) this.setFocusedElement(0);
             return true;
         }
         
@@ -118,11 +126,16 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
         if(keyCode == GLFW.GLFW_KEY_ENTER && this.getFocused() != null && focusedElement >= 0) {
             int buttonIndex = MathHelper.clamp(focusedElement, 0, this.symbolButtons.size()-1);
             this.symbolButtons.get(buttonIndex).onClick(0);
-            this.visible = false;
+            this.hide();
             return true;
         }
         
         return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+    
+    private void hide() {
+        this.setFocusedElement(-1);
+        this.visible = false;
     }
 
     @Override
