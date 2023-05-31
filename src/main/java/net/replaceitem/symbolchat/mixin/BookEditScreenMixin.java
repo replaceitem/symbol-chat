@@ -8,16 +8,20 @@ import net.minecraft.client.util.SelectionManager;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolSuggestable;
+import net.replaceitem.symbolchat.gui.FontProcessingSelectionManager;
 import org.joml.Vector2i;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @Mixin(BookEditScreen.class)
 public abstract class BookEditScreenMixin extends Screen implements Consumer<String>, SymbolSuggestable.SelectionManagerSymbolSuggestable {
@@ -62,6 +66,11 @@ public abstract class BookEditScreenMixin extends Screen implements Consumer<Str
     @Inject(method = "mouseClicked", at = @At("RETURN"))
     private void updateSuggestions(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         ((ScreenAccess) this).refreshSuggestions();
+    }
+
+    @Redirect(method = "<init>", at = @At(value = "NEW", ordinal = 0, target = "net/minecraft/client/util/SelectionManager"))
+    private static SelectionManager constructSelectionManager(Supplier<String> stringGetter, Consumer<String> stringSetter, Supplier<String> clipboardGetter, Consumer<String> clipboardSetter, Predicate<String> stringFilter) {
+        return new FontProcessingSelectionManager(stringGetter, stringSetter, clipboardGetter, clipboardSetter, stringFilter);
     }
 
     @Override

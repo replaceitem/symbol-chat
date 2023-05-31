@@ -37,7 +37,7 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     
     
     @Redirect(method = "setup", at = @At(value = "NEW", target = "net/minecraft/client/gui/widget/TextFieldWidget"))
-    public TextFieldWidget constructTextFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, Text text) {
+    private TextFieldWidget constructTextFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, Text text) {
         return new TextFieldWidget(textRenderer, x, y, width, height, text) {
             @Override
             public void write(String text) {

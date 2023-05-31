@@ -4,3 +4,4 @@ accessible class net/minecraft/client/gui/screen/ingame/BookEditScreen$Position
 extendable method net/minecraft/client/gui/widget/ScrollableWidget drawBox (Lnet/minecraft/client/gui/DrawContext;)V
 accessible method net/minecraft/client/gui/widget/ScrollableWidget getScrollbarThumbHeight ()I
 extendable method net/minecraft/client/gui/widget/ScrollableWidget drawScrollbar (Lnet/minecraft/client/gui/DrawContext;)V
+extendable method net/minecraft/client/util/SelectionManager insert (Ljava/lang/String;Ljava/lang/String;)V

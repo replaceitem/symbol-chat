@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
 import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.Util;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -33,6 +34,7 @@ public class FontProcessor {
         return convertedName;
     }
     
+    @NotNull
     public static FontProcessor getCurrentScreenFontProcessor() {
         Screen screen = MinecraftClient.getInstance().currentScreen;
         if (!(screen instanceof ScreenAccess screenAccess)) {
