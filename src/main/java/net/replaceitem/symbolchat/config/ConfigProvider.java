@@ -21,6 +21,10 @@ public class ConfigProvider {
     public Screen getConfigScreen(Screen parent) {
         return null;
     }
+    
+    
+    
+    public void addCustomSymbol(String symbols) {}
 
 
     @SuppressWarnings("unused")

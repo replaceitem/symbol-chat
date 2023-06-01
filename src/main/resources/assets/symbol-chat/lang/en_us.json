@@ -23,6 +23,10 @@
   "symbolchat.no_clothconfig": "Install ClothConfig to add custom symbols.",
   "symbolchat.no_search_results": "No symbols found.",
   "symbolchat.search": "Search",
+  "symbolchat.page": "Page",
+  "symbolchat.show_blocks": "Show Blocks",
+  "symbolchat.copy_selected": "Copy selected",
+  "symbolchat.add_custom_symbol": "Add custom symbol",
   
   "symbolchat.tab.faces_people": "Faces & People",
   "symbolchat.tab.nature_food": "Nature & Food",

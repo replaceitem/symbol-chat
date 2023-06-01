@@ -78,4 +78,10 @@ public class ClothConfigProvider extends ConfigProvider {
     public Screen getConfigScreen(Screen parent) {
         return AutoConfig.getConfigScreen(ClothConfig.class, parent).get();
     }
+
+    @Override
+    public void addCustomSymbol(String symbols) {
+        this.config.custom_symbols += symbols;
+        AutoConfig.getConfigHolder(ClothConfig.class).save();
+    }
 }

@@ -23,6 +23,10 @@
   "symbolchat.no_clothconfig": "Installiere ClothConfig um eigene Symbole hinzuzufügen.",
   "symbolchat.no_search_results": "Keine Symbole gefunden.",
   "symbolchat.search": "Suche",
+  "symbolchat.page": "Seite",
+  "symbolchat.show_blocks": "Blöcke anzeigen",
+  "symbolchat.copy_selected": "Auswahl kopieren",
+  "symbolchat.add_custom_symbol": "Benutzerdefiniertes Symbol hinzufügen",
 
   "symbolchat.tab.faces_people": "Gesichter & Menschen",
   "symbolchat.tab.nature_food": "Natur & Lebensmittel",

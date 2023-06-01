@@ -91,11 +91,8 @@ public class ScreensMixin extends Screen implements ScreenAccess {
             SymbolButtonWidget tableButtonWidget = new SymbolButtonWidget(0, 0, 15, 15, "⣿⣿") {
                 @Override
                 public boolean onClick(int button) {
-                    if(SymbolChat.clothConfigEnabled) {
-                        if(ScreensMixin.this.client != null) ScreensMixin.this.client.setScreen(new UnicodeTableScreen(ScreensMixin.this));
-                        return true;
-                    }
-                    return false;
+                    if(ScreensMixin.this.client != null) ScreensMixin.this.client.setScreen(new UnicodeTableScreen(ScreensMixin.this));
+                    return true;
                 }
             };
             gridWidget.add(tableButtonWidget, 0, 0);

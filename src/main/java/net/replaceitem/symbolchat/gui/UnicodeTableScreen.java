@@ -6,10 +6,14 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
+import net.minecraft.client.gui.widget.EmptyWidget;
+import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
+import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.Util;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
@@ -55,14 +59,16 @@ public class UnicodeTableScreen extends Screen {
         super.init();
         this.columns = this.width / SymbolButtonWidget.GRID_SPCAING;
         this.screenRows = this.height / SymbolButtonWidget.GRID_SPCAING;
-        
 
-        TextWidget pageTextWidget = new TextWidget(Text.of("Page"), this.textRenderer);
-        pageTextWidget.setX(2);
-        pageTextWidget.setY(4);
-        this.addDrawableChild(pageTextWidget);
+        GridWidget gridWidget1 = new GridWidget(2,2);
+        gridWidget1.setColumnSpacing(2);
+
+        TextWidget pageTextWidget = new TextWidget(Text.translatable("symbolchat.page"), this.textRenderer);
+        pageTextWidget.setX(0);
+        pageTextWidget.setY(0);
+        gridWidget1.add(pageTextWidget, 0, 0);
         
-        pageTextField = new TextFieldWidget(this.textRenderer, 2 + pageTextWidget.getWidth() + 2, 2, 20, 12, Text.empty());
+        pageTextField = new TextFieldWidget(this.textRenderer, 0, 0, 20, 12, Text.empty());
         pageTextField.setText("0");
         pageTextField.setMaxLength(2);
         pageTextField.setChangedListener(s -> {
@@ -73,46 +79,70 @@ public class UnicodeTableScreen extends Screen {
             }
             this.reloadSymbols();
         });
-        this.addDrawableChild(pageTextField);
+        gridWidget1.add(pageTextField, 0, 1);
         
-        
+        gridWidget1.add(EmptyWidget.ofWidth(40), 0, 2);
 
-        TextWidget searchTextWidget = new TextWidget(Text.of("Search"), this.textRenderer);
-        searchTextWidget.setX(80);
-        searchTextWidget.setY(4);
-        this.addDrawableChild(searchTextWidget);
+        TextWidget searchTextWidget = new TextWidget(Text.translatable("symbolchat.search"), this.textRenderer);
+        searchTextWidget.setX(0);
+        searchTextWidget.setY(0);
+        gridWidget1.add(searchTextWidget, 0, 3);
 
-        searchTextField = new TextFieldWidget(this.textRenderer, 80 + searchTextWidget.getWidth() + 2, 2, 150, 12, Text.of(""));
+        searchTextField = new TextFieldWidget(this.textRenderer, 0, 0, 150, 12, Text.of(""));
         searchTextField.setChangedListener(s -> this.reloadSymbols());
-        this.addDrawableChild(searchTextField);
+        gridWidget1.add(searchTextField, 0, 4);
+        
+        gridWidget1.add(EmptyWidget.ofWidth(40), 0, 2);
 
-        showBlocksWidget = new CheckboxWidget(300, 2, 60, 20, Text.of("Blocks"), false) {
+        showBlocksWidget = new CheckboxWidget(0, 0, 60, 20, Text.translatable("symbolchat.show_blocks"), false) {
             @Override
             public void onPress() {
                 super.onPress();
                 refreshButtons();
             }
         };
-        this.addDrawableChild(showBlocksWidget);
+        gridWidget1.add(showBlocksWidget, 0, 5);
 
+        gridWidget1.refreshPositions();
+        gridWidget1.forEachChild(this::addDrawableChild);
+
+
+        GridWidget gridWidget2 = new GridWidget(2,18);
         
+        ButtonWidget copySelectedButton = ButtonWidget.builder(Text.literal("📋 ").append(Text.translatable("symbolchat.copy_selected")), button -> copySelected()).dimensions(0, 0, 100, 20).build();
+        gridWidget2.add(copySelectedButton, 0, 0);
+
+        ButtonWidget addCustomSymbolButton = ButtonWidget.builder(Text.literal("➕ ").append(Text.translatable("symbolchat.add_custom_symbol")), button -> addCustomSymbol()).dimensions(0, 0, 140, 20).build();
+        gridWidget2.add(addCustomSymbolButton, 0, 1);
+        if(!SymbolChat.clothConfigEnabled) {
+            addCustomSymbolButton.active = false;
+            addCustomSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.no_clothconfig")));
+        }
         
-        
-        ButtonWidget copySelectedButton = ButtonWidget.builder(Text.of("📋 Copy selected"), button -> copySelected()).dimensions(2, 18, 100, 20).build();
-        this.addDrawableChild(copySelectedButton);
+        gridWidget2.refreshPositions();
+        gridWidget2.forEachChild(this::addDrawableChild);
         
         this.reloadSymbols();
     }
 
-    private void copySelected() {
-        if(selectionStart == -1) return;
+    private String getSelectedSymbols() {
         StringBuilder builder = new StringBuilder();
         for(int i = selectionStart; i <= selectionEnd; i++) {
             Integer codepoint = this.codePoints.get(i);
-            if(codepoint == null) return;
+            if(codepoint == null) break;
             builder.append(Util.stringFromCodePoint(codepoint & 0x00FFFFFF));
         }
-        MinecraftClient.getInstance().keyboard.setClipboard(builder.toString());
+        return builder.toString();
+    }
+    
+    private void addCustomSymbol() {
+        if(selectionStart == -1) return;
+        SymbolChat.config.addCustomSymbol(getSelectedSymbols());
+    }
+
+    private void copySelected() {
+        if(selectionStart == -1) return;
+        MinecraftClient.getInstance().keyboard.setClipboard(getSelectedSymbols());
     }
 
     @Override
@@ -208,14 +238,17 @@ public class UnicodeTableScreen extends Screen {
         while(index < codePoints.size()) {
             int value = codePoints.get(index);
             int codePoint = value & 0x00FFFFFF;
-            
-            StringBuilder sb = new StringBuilder();
-            sb.append(Integer.toHexString(codePoint)).append('\n');
-            sb.append(Util.getCapitalizedSymbolName(codePoint)).append('\n');
+            int blockColor = CYCLING_BLOCK_COLORS[(value & 0xFF000000) >> 24];
+
             Character.UnicodeBlock block = Character.UnicodeBlock.of(codePoint);
-            sb.append(block == null ? "UNKNOWN BLOCK" : block.toString());
+            
+            Text tooltip = Text.empty()
+                    .append(Text.literal(Integer.toHexString(codePoint)))
+                    .append("\n\n" + Util.getCapitalizedSymbolName(codePoint) + "\n")
+                    .append(block == null ? Text.literal("UNKNOWN BLOCK").formatted(Formatting.GRAY) : Text.literal(block.toString()).styled(style -> style.withColor(blockColor)));
+                    
             int finalIndex = index;
-            PasteSymbolButtonWidget button = new PasteSymbolButtonWidget(x, y, null, Util.stringFromCodePoint(codePoint), Tooltip.of(Text.of(sb.toString()))) {
+            PasteSymbolButtonWidget button = new PasteSymbolButtonWidget(x, y, null, Util.stringFromCodePoint(codePoint), Tooltip.of(tooltip)) {
                 
                 @Override
                 public boolean onClick(int button) {
@@ -235,7 +268,7 @@ public class UnicodeTableScreen extends Screen {
                 }
             };
             if(showBlocksWidget.isChecked()) {
-                button.setBackgroundColors(CYCLING_BLOCK_COLORS[(value & 0xFF000000) >> 24]);
+                button.setBackgroundColors(blockColor);
             }
             if(index >= selectionStart && index <= selectionEnd) {
                 button.setSelected(true);
