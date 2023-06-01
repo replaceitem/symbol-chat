@@ -166,7 +166,7 @@ public class Fonts {
 
     public static FontProcessor MATHEMATICAL_SCRIPT = new MappedFontProcessor("mathematical_script",
             new FontMapBuilder()
-                    .shiftAlphabetUpper("\uD835\uDC9C")
+                    .putAlphabetUpper("𝒜\uD835\uDC35𝒞𝒟\uD835\uDC38\uD835\uDC39𝒢\uD835\uDC3B\uD835\uDC3C𝒥𝒦\uD835\uDC3F\uD835\uDC40𝒩𝒪𝒫𝒬\uD835\uDC45𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵")
                     .putAlphabetLower("𝒶𝒷𝒸𝒹𝑒𝒻𝑔𝒽𝒾𝒿𝓀𝓁𝓂𝓃𝑜𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏") // some are missing, using those from italic instead
                     .shiftNumbers("\uD835\uDFE2")
                     .build()
