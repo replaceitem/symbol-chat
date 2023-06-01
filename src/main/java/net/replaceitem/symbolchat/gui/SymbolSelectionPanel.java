@@ -105,7 +105,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if(!this.visible) return;
         drawContext.getMatrices().push();
-        drawContext.getMatrices().translate(0.0, 0.0, 1000.0f);
+        drawContext.getMatrices().translate(0.0, 0.0, 350.0);
         RenderSystem.disableDepthTest();
         drawContext.fill(this.x, this.y, this.x + WIDTH, this.y + HEIGHT, SymbolChat.config.getHudColor());
         drawContext.fill(this.x, this.y + HEIGHT - 2 - SymbolButtonWidget.SYMBOL_SIZE, this.x + WIDTH, this.y + HEIGHT, SymbolChat.config.getHudColor());

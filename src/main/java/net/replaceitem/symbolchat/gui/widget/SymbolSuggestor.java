@@ -87,7 +87,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if(!visible) return;
         drawContext.getMatrices().push();
-        drawContext.getMatrices().translate(0.0, 0.0, 1000.0f);
+        drawContext.getMatrices().translate(0.0, 0.0, 350.0);
         drawContext.fill(this.x, this.y, this.x+width, this.y+HEIGHT, SymbolChat.config.getHudColor());
         for (Drawable drawable : symbolButtons) {
             drawable.render(drawContext, mouseX, mouseY, delta);

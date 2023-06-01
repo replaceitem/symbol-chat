@@ -44,7 +44,7 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
     public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if(!this.visible) return;
         drawContext.getMatrices().push();
-        drawContext.getMatrices().translate(0.0, 0.0, 1000.0f);
+        drawContext.getMatrices().translate(0.0, 0.0, 350.0);
         RenderSystem.disableDepthTest();
         drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, SymbolChat.config.getButtonColor());
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
