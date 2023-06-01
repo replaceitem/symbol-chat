@@ -4,6 +4,7 @@ package net.replaceitem.symbolchat.mixin;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
+import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.ScreenAccess;
@@ -72,6 +73,7 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Cons
         this.selectionManager.insert(s);
     }
 
+    @SuppressWarnings("ConstantValue")
     @Override
     public Vector2i getCursorPosition() {
         Vector3f textScale = this.getTextScale();
@@ -84,6 +86,7 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Cons
         int x = cx - this.client.textRenderer.getWidth(string) / 2;
         x += this.width/2; // see translateForRender()
         y += 90;
+        if(((Object) this) instanceof HangingSignEditScreen) y += 35;
         return new Vector2i((int) (x * textScale.x), (int) (y * textScale.y));
     }
 
