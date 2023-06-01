@@ -9,7 +9,6 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Narratable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
@@ -92,18 +91,11 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
             int rgb = this.isHovered() ? 0xFFFFFF : 0xA0A0A0;
             int argb = rgb | MathHelper.ceil(this.alpha * 255.0F) << 24;
 
-            drawContext.getMatrices().push();
-            drawContext.getMatrices().translate(0.0, 0.0, 200.0f);
-
-            MatrixStack textMatrices = new MatrixStack();
-            textMatrices.translate(0.0, 0.0, 0 + 200.0f);
             drawContext.drawCenteredTextWithShadow(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, argb);
             
             if(this.isSelected() || this.isFocused()) {
                 this.drawOutline(drawContext);
             }
-            
-            drawContext.getMatrices().pop();
         }
     }
     

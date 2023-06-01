@@ -104,6 +104,8 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if(!this.visible) return;
+        drawContext.getMatrices().push();
+        drawContext.getMatrices().translate(0.0, 0.0, 1000.0f);
         RenderSystem.disableDepthTest();
         drawContext.fill(this.x, this.y, this.x + WIDTH, this.y + HEIGHT, SymbolChat.config.getHudColor());
         drawContext.fill(this.x, this.y + HEIGHT - 2 - SymbolButtonWidget.SYMBOL_SIZE, this.x + WIDTH, this.y + HEIGHT, SymbolChat.config.getHudColor());
@@ -112,6 +114,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         for(Pair<SymbolTab,SymbolButtonWidget> tab : tabs) {
             tab.getRight().render(drawContext, mouseX, mouseY, delta);
         }
+        drawContext.getMatrices().pop();
     }
 
     @Override
