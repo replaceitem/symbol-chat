@@ -29,6 +29,5 @@ which makes use of unicode characters to produce a more interesting looking text
 ## Preview
 
 ![Symbol menu](/images/symbol_menu.png)
-![Font menu](/images/font_menu.png)
-![All symbols](/images/symbol_list.png)
+![All symbols](/images/symbol_list.gif)
 ![Fonts](/images/fonts.png)

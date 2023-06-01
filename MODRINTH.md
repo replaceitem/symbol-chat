@@ -29,6 +29,5 @@ which makes use of unicode characters to produce a more interesting looking text
 ## Preview
 
 ![Symbol menu](https://raw.githubusercontent.com/replaceitem/symbol-chat/master/images/symbol_menu.png)
-![Font menu](https://raw.githubusercontent.com/replaceitem/symbol-chat/master/images/font_menu.png)
-![All symbols](https://raw.githubusercontent.com/replaceitem/symbol-chat/master/images/symbol_list.png)
+![All symbols](https://raw.githubusercontent.com/replaceitem/symbol-chat/master/images/symbol_list.gif)
 ![Fonts](https://raw.githubusercontent.com/replaceitem/symbol-chat/master/images/fonts.png)
