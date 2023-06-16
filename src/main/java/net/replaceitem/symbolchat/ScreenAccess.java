@@ -1,9 +1,11 @@
 package net.replaceitem.symbolchat;
 
 import net.replaceitem.symbolchat.font.FontProcessor;
+import org.jetbrains.annotations.NotNull;
 
 public interface ScreenAccess {
     void addSymbolChatComponents();
+    @NotNull
     FontProcessor getFontProcessor();
     void refreshSuggestions();
     boolean onKeyPressed(int keyCode, int scanCode, int modifiers);

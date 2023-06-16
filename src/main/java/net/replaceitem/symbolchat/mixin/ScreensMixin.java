@@ -23,6 +23,7 @@ import net.replaceitem.symbolchat.gui.widget.DropDownWidget;
 import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -108,9 +109,11 @@ public class ScreensMixin extends Screen implements ScreenAccess {
     }
 
     @Override
+    @NotNull
     public FontProcessor getFontProcessor() {
-        if(this.fontSelectionDropDown == null) return null;
-        return this.fontSelectionDropDown.getSelection();
+        if(this.fontSelectionDropDown == null) return Fonts.NORMAL;
+        FontProcessor selection = this.fontSelectionDropDown.getSelection();
+        return selection == null ? Fonts.NORMAL : selection;
     }
 
     @Override
