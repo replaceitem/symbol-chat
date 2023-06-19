@@ -62,11 +62,12 @@ public class UnicodeTableScreen extends Screen {
 
         GridWidget gridWidget1 = new GridWidget(2,2);
         gridWidget1.setColumnSpacing(2);
+        GridWidget.Adder adder1 = gridWidget1.createAdder(Integer.MAX_VALUE);
 
         TextWidget pageTextWidget = new TextWidget(Text.translatable("symbolchat.page"), this.textRenderer);
         pageTextWidget.setX(0);
         pageTextWidget.setY(0);
-        gridWidget1.add(pageTextWidget, 0, 0);
+        adder1.add(pageTextWidget);
         
         pageTextField = new TextFieldWidget(this.textRenderer, 0, 0, 20, 12, Text.empty());
         pageTextField.setText("0");
@@ -79,20 +80,20 @@ public class UnicodeTableScreen extends Screen {
             }
             this.reloadSymbols();
         });
-        gridWidget1.add(pageTextField, 0, 1);
+        adder1.add(pageTextField);
         
-        gridWidget1.add(EmptyWidget.ofWidth(40), 0, 2);
+        adder1.add(EmptyWidget.ofWidth(40));
 
         TextWidget searchTextWidget = new TextWidget(Text.translatable("symbolchat.search"), this.textRenderer);
         searchTextWidget.setX(0);
         searchTextWidget.setY(0);
-        gridWidget1.add(searchTextWidget, 0, 3);
+        adder1.add(searchTextWidget);
 
         searchTextField = new TextFieldWidget(this.textRenderer, 0, 0, 150, 12, Text.of(""));
         searchTextField.setChangedListener(s -> this.reloadSymbols());
-        gridWidget1.add(searchTextField, 0, 4);
+        adder1.add(searchTextField);
         
-        gridWidget1.add(EmptyWidget.ofWidth(40), 0, 2);
+        adder1.add(EmptyWidget.ofWidth(40));
 
         showBlocksWidget = new CheckboxWidget(0, 0, 60, 20, Text.translatable("symbolchat.show_blocks"), false) {
             @Override
@@ -101,19 +102,20 @@ public class UnicodeTableScreen extends Screen {
                 refreshButtons();
             }
         };
-        gridWidget1.add(showBlocksWidget, 0, 5);
+        adder1.add(showBlocksWidget);
 
         gridWidget1.refreshPositions();
         gridWidget1.forEachChild(this::addDrawableChild);
 
 
         GridWidget gridWidget2 = new GridWidget(2,18);
-        
+        GridWidget.Adder adder2 = gridWidget2.createAdder(Integer.MAX_VALUE);
+
         ButtonWidget copySelectedButton = ButtonWidget.builder(Text.literal("📋 ").append(Text.translatable("symbolchat.copy_selected")), button -> copySelected()).dimensions(0, 0, 100, 20).build();
-        gridWidget2.add(copySelectedButton, 0, 0);
+        adder2.add(copySelectedButton);
 
         ButtonWidget addCustomSymbolButton = ButtonWidget.builder(Text.literal("➕ ").append(Text.translatable("symbolchat.add_custom_symbol")), button -> addCustomSymbol()).dimensions(0, 0, 140, 20).build();
-        gridWidget2.add(addCustomSymbolButton, 0, 1);
+        adder2.add(addCustomSymbolButton);
         if(!SymbolChat.clothConfigEnabled) {
             addCustomSymbolButton.active = false;
             addCustomSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.no_clothconfig")));

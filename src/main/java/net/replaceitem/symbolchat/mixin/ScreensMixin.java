@@ -55,8 +55,8 @@ public class ScreensMixin extends Screen implements ScreenAccess {
         this.addDrawableChild(symbolButtonWidget);
 
         GridWidget gridWidget = new GridWidget(0, 2);
-
         gridWidget.setColumnSpacing(2);
+        GridWidget.Adder adder = gridWidget.createAdder(Integer.MAX_VALUE);
 
         if(!SymbolChat.config.getHideFontButton()) {
             this.fontSelectionDropDown = new DropDownWidget<>(0, 0, 180, 15, Fonts.fontProcessors, SymbolChat.selectedFont) {
@@ -65,7 +65,7 @@ public class ScreensMixin extends Screen implements ScreenAccess {
                     SymbolChat.selectedFont = index;
                 }
             };
-            gridWidget.add(fontSelectionDropDown, 0, 2);
+            adder.add(fontSelectionDropDown);
         }
 
         if(!SymbolChat.config.getHideSettingsButton()) {
@@ -85,7 +85,7 @@ public class ScreensMixin extends Screen implements ScreenAccess {
                 }
             };
             settingsButtonWidget.setTooltip(Tooltip.of(Text.translatable(SymbolChat.clothConfigEnabled ? "text.autoconfig.symbol-chat.title" : "symbolchat.no_clothconfig")));
-            gridWidget.add(settingsButtonWidget, 0, 1);
+            adder.add(settingsButtonWidget);
         }
 
         if(!SymbolChat.config.getHideTableButton()) {
@@ -96,7 +96,7 @@ public class ScreensMixin extends Screen implements ScreenAccess {
                     return true;
                 }
             };
-            gridWidget.add(tableButtonWidget, 0, 0);
+            adder.add(tableButtonWidget);
         }
 
         gridWidget.refreshPositions();

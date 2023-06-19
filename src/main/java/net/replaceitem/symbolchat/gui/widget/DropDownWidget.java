@@ -33,7 +33,7 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
         for(int i = 0; i < elementList.size(); i++) {
             DropDownElementWidget<T> element = new DropDownElementWidget<>(0, 0, this.width - 2, this.height, elementList.get(i), i, this);
             this.elements.add(element);
-            this.selectionWidget.add(element, i);
+            this.selectionWidget.add(element);
         }
         this.selectionWidget.refreshPositions();
         this.expanded = false;
@@ -125,11 +125,13 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
     private class DropDownSelectionWidget extends ScrollableWidget {
         
         private final GridWidget gridWidget;
+        private final GridWidget.Adder adder;
 
         public DropDownSelectionWidget(int x, int y, int w, int h) {
             super(x, y, w, h, Text.empty());
             this.gridWidget = new GridWidget(x, y);
             this.gridWidget.setRowSpacing(1);
+            this.adder = gridWidget.createAdder(1);
         }
 
         @Override
@@ -173,8 +175,8 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
 
         }
 
-        public void add(DropDownElementWidget<T> element, int i) {
-            this.gridWidget.add(element, i, 0);
+        public void add(DropDownElementWidget<T> element) {
+            this.adder.add(element);
         }
 
         @Override
