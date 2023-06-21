@@ -22,15 +22,13 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     public final int height;
 
     public static int WIDTH = SymbolTab.COLUMNS * (SymbolButtonWidget.GRID_SPCAING) + 1;
-    // TODO - make this configurable
-    public static final int HEIGHT = 245;
 
     public boolean visible;
 
     protected Consumer<String> symbolInsertable;
 
-    public SymbolSelectionPanel(Consumer<String> symbolConsumer, int x, int y) {
-        this.height = HEIGHT;
+    public SymbolSelectionPanel(Consumer<String> symbolConsumer, int x, int y, int height) {
+        this.height = height;
         this.tabs = new ArrayList<>();
         this.x = x;
         this.y = y;

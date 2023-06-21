@@ -52,6 +52,11 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
+    public int getSymbolPanelHeight() {
+        return config.symbol_panel_height;
+    }
+
+    @Override
     public int getMaxSymbolSuggestions() {
         return config.max_symbol_suggestions;
     }

@@ -48,7 +48,8 @@ public class ScreensMixin extends Screen implements ScreenAccess {
     public void addSymbolChatComponents() {
         int symbolButtonX = this.width - 2 - SymbolButtonWidget.SYMBOL_SIZE;
         int symbolButtonY = this.height - 2 - SymbolButtonWidget.SYMBOL_SIZE;
-        this.symbolSelectionPanel = new SymbolSelectionPanel(this::insertSymbol,this.width-SymbolSelectionPanel.WIDTH - 2,symbolButtonY-2-SymbolSelectionPanel.HEIGHT);
+        int panelHeight = SymbolChat.config.getSymbolPanelHeight();
+        this.symbolSelectionPanel = new SymbolSelectionPanel(this::insertSymbol,this.width-SymbolSelectionPanel.WIDTH - 2,symbolButtonY-2-panelHeight, panelHeight);
         this.addDrawableChild(symbolSelectionPanel);
 
         symbolButtonWidget = new OpenSymbolPanelButtonWidget(symbolButtonX, symbolButtonY, this.symbolSelectionPanel);

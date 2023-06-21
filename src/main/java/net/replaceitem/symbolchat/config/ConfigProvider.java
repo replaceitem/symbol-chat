@@ -11,6 +11,7 @@ public class ConfigProvider {
     public boolean getHideFontButton() {return false;}
     public boolean getHideSettingsButton() {return false;}
     public boolean getHideTableButton() {return false;}
+    public int getSymbolPanelHeight() {return 200;}
     public int getMaxSymbolSuggestions() {return 5;}
     public SymbolTooltipMode getSymbolTooltipMode() {return SymbolTooltipMode.DELAYED;}
     public HudPosition getHudPosition() {return HudPosition.RIGHT;}
