@@ -100,10 +100,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     }
     
     protected void drawOutline(DrawContext drawContext) {
-        drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()-1, 0xFFFFFFFF);
-        drawContext.drawVerticalLine(this.getX()-1, this.getY()-1, this.getY()+height, 0xFFFFFFFF);
-        drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()+height, 0xFFFFFFFF);
-        drawContext.drawVerticalLine(this.getX()+width, this.getY()-1, this.getY()+height, 0xFFFFFFFF);
+
     }
 
     @Override

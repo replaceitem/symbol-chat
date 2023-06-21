@@ -2,117 +2,91 @@ package net.replaceitem.symbolchat.gui;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.AbstractParentElement;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolCategory;
 import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.SymbolStorage;
+import net.replaceitem.symbolchat.gui.widget.ScrollableGridWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
-import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SymbolTab extends AbstractParentElement implements Drawable, Element {
+public class SymbolTab extends AbstractParentElement implements Widget, Drawable, Element {
 
-    protected static int columns = 8;
-    protected static int rows = 16;
-
-    public static int width = columns * (SymbolButtonWidget.GRID_SPCAING) + 1;
-    public static int height = rows * (SymbolButtonWidget.GRID_SPCAING);
+    protected static int COLUMNS = 9;
     
     public static final Text NO_CUSTOM_SYMBOLS = Text.translatable("symbolchat.no_custom_symbols");
     public static final Text NO_CLOTHCONFIG = Text.translatable("symbolchat.no_clothconfig");
 
     public SymbolSelectionPanel symbolSelectionPanel;
-    
-    protected int scroll;
-    protected int maxScroll;
 
-    protected List<PasteSymbolButtonWidget> symbolButtons;
-    protected int x;
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    protected int y;
+    protected List<Element> children;
+    protected int x, y;
+    private final int width;
+    private final int height;
 
     protected Consumer<String> symbolConsumer;
+
+    protected final ScrollableGridWidget scrollableGridWidget;
     
-    public static SymbolTab fromCategory(Consumer<String> symbolInsertable, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
-        if(symbols.id.equals("kaomoji")) {
-            return new KaomojiTab(symbolInsertable, symbols, symbolSelectionPanel, x, y);
+    public static SymbolTab fromCategory(Consumer<String> symbolInsertable, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y, int height) {
+        if(symbols == SymbolStorage.kaomojis) {
+            return new KaomojiTab(symbolInsertable, symbols, symbolSelectionPanel, x, y, height);
+        } else if(symbols == SymbolStorage.all) {
+            return new SearchTab(symbolInsertable, symbols, symbolSelectionPanel, x, y, height);
         } else {
-            return new SymbolTab(symbolInsertable, symbols, symbolSelectionPanel, x, y);
+            return new SymbolTab(symbolInsertable, symbols, symbolSelectionPanel, x, y, height);
         }
     }
 
-    public SymbolTab(Consumer<String> symbolConsumer, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y) {
+    public SymbolTab(Consumer<String> symbolConsumer, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y, int height) {
         this.x = x;
         this.y = y;
+        this.width = SymbolSelectionPanel.WIDTH;
+        this.height = height;
         this.symbolConsumer = symbolConsumer;
-        this.symbolButtons = new ArrayList<>();
+        this.children = new ArrayList<>();
         this.symbolSelectionPanel = symbolSelectionPanel;
-        this.scroll = 0;
-        init(symbols);
+        this.scrollableGridWidget = createScrollableGridWidget();
+
+        this.children.add(scrollableGridWidget);
+
+        this.refresh(symbols);
     }
 
-    protected void init(SymbolCategory symbols) {
-        this.loadSymbols(symbols);
-        this.arrangeButtons();
+    public void refresh(SymbolCategory symbolCategory) {
+        scrollableGridWidget.clearElements();
+        addSymbols(symbolCategory);
+        this.scrollableGridWidget.refreshPositions();
+    }
+
+    protected void addSymbols(SymbolCategory symbolCategory) {
+        for (String symbol : symbolCategory.symbols) {
+            this.scrollableGridWidget.add(createButton(symbol));
+        }
     }
     
-    protected int getColumns() {
-        return columns;
+    protected ScrollableGridWidget createScrollableGridWidget() {
+        return new ScrollableGridWidget(this.x, this.y, this.width, this.height, COLUMNS);
     }
 
-    protected PasteSymbolButtonWidget createButton(int x, int y, String symbol) {
+    protected PasteSymbolButtonWidget createButton(String symbol) {
         return new PasteSymbolButtonWidget(x, y, this.symbolConsumer, symbol);
-    }
-
-    public void loadSymbols(SymbolCategory symbols) {
-        symbolButtons.clear();
-        for(int i = 0; i < symbols.symbols.size(); i++) {
-            int widgetX = 0;
-            int widgetY = 0;
-            symbolButtons.add(createButton(widgetX, widgetY, symbols.symbols.get(i)));
-        }
-    }
-
-    protected void arrangeButtons() {
-        int count = this.buttons().size();
-        int totalRows = (count / getColumns()) + Math.min(count % getColumns(),1);
-        this.maxScroll = Math.max(totalRows - rows, 0);
-        this.scroll = MathHelper.clamp(this.scroll, 0, maxScroll);
-        for (int i = 0; i < buttons().size(); i++) {
-            PasteSymbolButtonWidget button = buttons().get(i);
-            int row = i / getColumns() - scroll;
-            int col = i % getColumns();
-            
-            button.setX(this.getX()+1+(col * (SymbolButtonWidget.GRID_SPCAING)));
-            button.setY(this.getY()+1+(row * (SymbolButtonWidget.GRID_SPCAING)));
-            
-            button.visible = row >= 0 && row < rows;
-        }
     }
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        if(symbolButtons.size() == 0) {
+        if(children.size() == 0) {
             Text text = this.getNoSymbolsText();
             if(text == null) return;
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-            List<OrderedText> orderedTexts = textRenderer.wrapLines(text, width - 4);
+            List<OrderedText> orderedTexts = textRenderer.wrapLines(text, SymbolSelectionPanel.WIDTH - 4);
             drawContext.getMatrices().push();
             drawContext.getMatrices().translate(0,0,200);
             for(int i = 0; i < orderedTexts.size(); i++) {
@@ -123,28 +97,16 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
             return;
         }
 
-        for (SymbolButtonWidget button : buttons()) {
-            button.render(drawContext, mouseX, mouseY, delta);
-        }
+        this.scrollableGridWidget.render(drawContext, mouseX, mouseY, delta);
     }
     
     public Text getNoSymbolsText() {
         return SymbolChat.clothConfigEnabled ? NO_CUSTOM_SYMBOLS : NO_CLOTHCONFIG;
     }
 
-    protected List<? extends PasteSymbolButtonWidget> buttons() {
-        return this.symbolButtons;
-    }
-
     @Override
     public List<? extends Element> children() {
-        return buttons();
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(this.symbolSelectionPanel.getCurrentTab() != this || !this.isMouseOver(mouseX, mouseY)) return false;
-        return super.mouseClicked(mouseX, mouseY, button);
+        return this.children;
     }
 
     @Override
@@ -153,10 +115,44 @@ public class SymbolTab extends AbstractParentElement implements Drawable, Elemen
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if(!this.isMouseOver(mouseX,mouseY)) return false;
-        this.scroll -= amount;
-        arrangeButtons();
-        return true;
+    public void setX(int x) {
+        this.x = x;
+        scrollableGridWidget.refreshPositions();
+    }
+
+    @Override
+    public void setY(int y) {
+        this.y = y;
+        scrollableGridWidget.refreshPositions();
+    }
+
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public int getHeight() {
+        return this.height;
+    }
+
+    @Override
+    public void forEachChild(Consumer<ClickableWidget> consumer) {
+        this.scrollableGridWidget.forEachChild(consumer);
+    }
+
+    @Override
+    public ScreenRect getNavigationFocus() {
+        return new ScreenRect(new ScreenPos(x, y), width, height);
     }
 }

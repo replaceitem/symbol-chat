@@ -140,12 +140,12 @@ public class SymbolStorage {
         return 2 - ((double) index) / (nameLength-searchLength); // range of 1 (appears at the start of the name) to 2 (at the end)
     }
 
-    public static Stream<String> performSearch(String search) {
+    public static Stream<String> performSearch(SymbolCategory category, String search) {
         if(search == null) return Stream.of();
-        if(search.isBlank()) return all.symbols.stream();
+        if(search.isBlank()) return category.symbols.stream();
         String upperSearch = search.toUpperCase();
         List<String> searchWords = Arrays.stream(upperSearch.split(" ")).toList();
-        return all.symbols.stream()
+        return category.symbols.stream()
                 .map(symbol -> new Pair<>(
                         symbol,
                         getSearchOrder(symbol, upperSearch, searchWords)

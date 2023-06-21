@@ -55,7 +55,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
         int shownSymbols = Math.min(fittingSymbols, SymbolChat.config.getMaxSymbolSuggestions());
         
         symbolButtons.clear();
-        List<String> symbols = SymbolStorage.performSearch(search).limit(shownSymbols).toList();
+        List<String> symbols = SymbolStorage.performSearch(SymbolStorage.all, search).limit(shownSymbols).toList();
         
         elementCount = symbols.size();
 
