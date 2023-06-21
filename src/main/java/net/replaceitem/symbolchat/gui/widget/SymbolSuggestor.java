@@ -16,6 +16,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class SymbolSuggestor extends AbstractParentElement implements Drawable, Selectable {
     
@@ -55,19 +56,21 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
         int shownSymbols = Math.min(fittingSymbols, SymbolChat.config.getMaxSymbolSuggestions());
         
         symbolButtons.clear();
-        List<String> symbols = SymbolStorage.performSearch(SymbolStorage.all, search).limit(shownSymbols).toList();
-        
-        elementCount = symbols.size();
 
-        this.width = 1 + (SymbolButtonWidget.SYMBOL_SIZE + 1) * elementCount;
-        this.x = Math.max(Math.min(this.x, this.screen.width - this.width), 0);
-        
-        visible = !symbols.isEmpty();
-        setFocused(visible && isFocused());
-        
-        for (int i = 0; i < elementCount; i++) {
-            symbolButtons.add(new PasteSymbolButtonWidget(this.x+1+i*(SymbolButtonWidget.SYMBOL_SIZE+1), this.y+1, symbolConsumer, symbols.get(i)));
+        if(search == null) {
+            elementCount = 0;
+        } else {
+            Stream<String> searchStream = search.isBlank() ? SymbolStorage.customSymbols.stream() : SymbolStorage.performSearch(SymbolStorage.all, search);
+            List<String> symbols = searchStream.limit(shownSymbols).toList();
+            elementCount = symbols.size();
+            this.width = 1 + (SymbolButtonWidget.SYMBOL_SIZE + 1) * elementCount;
+            this.x = Math.max(Math.min(this.x, this.screen.width - this.width), 0);
+            for (int i = 0; i < elementCount; i++) {
+                symbolButtons.add(new PasteSymbolButtonWidget(this.x+1+i*(SymbolButtonWidget.SYMBOL_SIZE+1), this.y+1, symbolConsumer, symbols.get(i)));
+            }
         }
+        visible = elementCount != 0;
+        setFocused(visible && isFocused());
     }
     
     private void setFocusedElement(int focused) {

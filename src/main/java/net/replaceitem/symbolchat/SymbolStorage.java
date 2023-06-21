@@ -142,10 +142,10 @@ public class SymbolStorage {
 
     public static Stream<String> performSearch(SymbolCategory category, String search) {
         if(search == null) return Stream.of();
-        if(search.isBlank()) return category.symbols.stream();
+        if(search.isBlank()) return category.stream();
         String upperSearch = search.toUpperCase();
         List<String> searchWords = Arrays.stream(upperSearch.split(" ")).toList();
-        return category.symbols.stream()
+        return category.stream()
                 .map(symbol -> new Pair<>(
                         symbol,
                         getSearchOrder(symbol, upperSearch, searchWords)
