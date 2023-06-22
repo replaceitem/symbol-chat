@@ -93,14 +93,17 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
 
             drawContext.drawCenteredTextWithShadow(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, argb);
             
-            if(this.isSelected() || this.isFocused()) {
+            if(this.isSelected()) {
                 this.drawOutline(drawContext);
             }
         }
     }
     
     protected void drawOutline(DrawContext drawContext) {
-
+        drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()-1, 0xFFFFFFFF);
+        drawContext.drawVerticalLine(this.getX()-1, this.getY()-1, this.getY()+height, 0xFFFFFFFF);
+        drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()+height, 0xFFFFFFFF);
+        drawContext.drawVerticalLine(this.getX()+width, this.getY()-1, this.getY()+height, 0xFFFFFFFF);
     }
 
     @Override
