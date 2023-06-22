@@ -92,9 +92,12 @@ public class SymbolTab extends AbstractParentElement implements Widget, Drawable
             List<OrderedText> orderedTexts = textRenderer.wrapLines(text, SymbolSelectionPanel.WIDTH - 4);
             drawContext.getMatrices().push();
             drawContext.getMatrices().translate(0,0,200);
+            int startY = this.y + (this.height/2) - (orderedTexts.size()*textRenderer.fontHeight/2);
+            int centerX = this.x + this.width/2;
             for(int i = 0; i < orderedTexts.size(); i++) {
-                int dy = this.y + 2 + (i * textRenderer.fontHeight);
-                drawContext.drawText(textRenderer, orderedTexts.get(i), this.x + 2, dy, 0x66FFFFFF, false);
+                OrderedText orderedText = orderedTexts.get(i);
+                int dy = startY + (i * textRenderer.fontHeight);
+                drawContext.drawText(textRenderer, orderedText, centerX - textRenderer.getWidth(orderedText) / 2, dy, 0x66FFFFFF, false);
             }
             drawContext.getMatrices().pop();
             return;
