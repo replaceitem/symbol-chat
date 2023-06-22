@@ -21,7 +21,7 @@ public class SymbolTab extends AbstractParentElement implements Widget, Drawable
 
     protected static int COLUMNS = 9;
     
-    public static final Text NO_CUSTOM_SYMBOLS = Text.translatable("symbolchat.no_custom_symbols");
+    public static final Text NO_FAVORITE_SYMBOLS = Text.translatable("symbolchat.no_favorite_symbols");
     public static final Text NO_CLOTHCONFIG = Text.translatable("symbolchat.no_clothconfig");
 
     public SymbolSelectionPanel symbolSelectionPanel;
@@ -30,6 +30,8 @@ public class SymbolTab extends AbstractParentElement implements Widget, Drawable
     protected int x, y;
     private final int width;
     private final int height;
+    
+    protected boolean isEmpty = false;
 
     protected Consumer<String> symbolConsumer;
 
@@ -70,6 +72,7 @@ public class SymbolTab extends AbstractParentElement implements Widget, Drawable
         for (String symbol : symbolCategory.getSymbols()) {
             this.scrollableGridWidget.add(createButton(symbol));
         }
+        this.isEmpty = symbolCategory.getSymbols().isEmpty();
     }
     
     protected ScrollableGridWidget createScrollableGridWidget() {
@@ -82,7 +85,7 @@ public class SymbolTab extends AbstractParentElement implements Widget, Drawable
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        if(children.size() == 0) {
+        if(this.isEmpty) {
             Text text = this.getNoSymbolsText();
             if(text == null) return;
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
@@ -101,7 +104,7 @@ public class SymbolTab extends AbstractParentElement implements Widget, Drawable
     }
     
     public Text getNoSymbolsText() {
-        return SymbolChat.clothConfigEnabled ? NO_CUSTOM_SYMBOLS : NO_CLOTHCONFIG;
+        return SymbolChat.clothConfigEnabled ? NO_FAVORITE_SYMBOLS : NO_CLOTHCONFIG;
     }
 
     @Override

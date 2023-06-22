@@ -70,7 +70,8 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
-    public String getCustomSymbols() {
+    public String getFavoriteSymbols() {
+        // TODO - change name to favorite_symbols on next big update, or migrate somehow
         return config.custom_symbols;
     }
 
@@ -85,7 +86,7 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
-    public void addCustomSymbol(String symbols) {
+    public void addFavoriteSymbol(String symbols) {
         this.config.custom_symbols += symbols;
         AutoConfig.getConfigHolder(ClothConfig.class).save();
     }

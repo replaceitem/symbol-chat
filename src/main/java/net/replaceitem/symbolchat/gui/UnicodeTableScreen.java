@@ -114,11 +114,11 @@ public class UnicodeTableScreen extends Screen {
         ButtonWidget copySelectedButton = ButtonWidget.builder(Text.literal("📋 ").append(Text.translatable("symbolchat.copy_selected")), button -> copySelected()).dimensions(0, 0, 100, 20).build();
         adder2.add(copySelectedButton);
 
-        ButtonWidget addCustomSymbolButton = ButtonWidget.builder(Text.literal("➕ ").append(Text.translatable("symbolchat.add_custom_symbol")), button -> addCustomSymbol()).dimensions(0, 0, 140, 20).build();
-        adder2.add(addCustomSymbolButton);
+        ButtonWidget favoriteSymbolButton = ButtonWidget.builder(Text.literal("✩ ").append(Text.translatable("symbolchat.favorite_symbol")), button -> favoriteSymbols()).dimensions(0, 0, 140, 20).build();
+        adder2.add(favoriteSymbolButton);
         if(!SymbolChat.clothConfigEnabled) {
-            addCustomSymbolButton.active = false;
-            addCustomSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.no_clothconfig")));
+            favoriteSymbolButton.active = false;
+            favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.no_clothconfig")));
         }
         
         gridWidget2.refreshPositions();
@@ -137,9 +137,9 @@ public class UnicodeTableScreen extends Screen {
         return builder.toString();
     }
     
-    private void addCustomSymbol() {
+    private void favoriteSymbols() {
         if(selectionStart == -1) return;
-        SymbolChat.config.addCustomSymbol(getSelectedSymbols());
+        SymbolChat.config.addFavoriteSymbol(getSelectedSymbols());
     }
 
     private void copySelected() {

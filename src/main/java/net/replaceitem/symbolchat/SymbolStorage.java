@@ -1,17 +1,16 @@
 package net.replaceitem.symbolchat;
 
-import oshi.util.tuples.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SymbolStorage {
     public static List<SymbolCategory> categories = new ArrayList<>();
-    public static SymbolCategory customSymbols;
+    public static SymbolCategory favoriteSymbols;
     public static SymbolCategory kaomojis;
     
     public static SymbolCategory all;
@@ -71,14 +70,14 @@ public class SymbolStorage {
         }
         
         reloadKaomojiList();
-        reloadCustomList();
+        reloadFavoritesList();
         reloadAllList();
     }
     
     private static void reloadAllList() {
         List<String> allSymbols = new ArrayList<>();
         allSymbols.addAll(categories.stream().flatMap(category -> category.symbols.stream()).toList());
-        allSymbols.addAll(customSymbols.symbols);
+        allSymbols.addAll(favoriteSymbols.symbols);
         all = new SymbolCategory(
                 "all",
                 "🔎",
@@ -99,17 +98,17 @@ public class SymbolStorage {
         }
     }
     
-    private static void reloadCustomList() {
-        customSymbols = new SymbolCategory(
-                "custom",
-                "✏",
-                new SymbolList("custom", List.of(SymbolChat.config.getCustomSymbols())).separateSymbols()
+    private static void reloadFavoritesList() {
+        favoriteSymbols = new SymbolCategory(
+                "favorites",
+                "✩",
+                new SymbolList("favorites", List.of(SymbolChat.config.getFavoriteSymbols())).separateSymbols()
         );
     }
 
     public static void reloadCustomLists() {
         reloadKaomojiList();
-        reloadCustomList();
+        reloadFavoritesList();
         reloadAllList();
     }
 
@@ -146,12 +145,19 @@ public class SymbolStorage {
         String upperSearch = search.toUpperCase();
         List<String> searchWords = Arrays.stream(upperSearch.split(" ")).toList();
         return category.stream()
-                .map(symbol -> new Pair<>(
+                .map(symbol -> new CachedPriorityComparable<>(
                         symbol,
                         getSearchOrder(symbol, upperSearch, searchWords)
                 ))
-                .filter(stringIntegerPair -> stringIntegerPair.getB() >= 0)
-                .sorted(Comparator.comparingDouble(stringDoublePair -> -stringDoublePair.getB()))
-                .map(Pair::getA);
+                .filter(item -> item.priority() >= 0)
+                .sorted()
+                .map(CachedPriorityComparable::element);
+    }
+
+    private record CachedPriorityComparable<T>(T element, double priority) implements Comparable<CachedPriorityComparable<?>> {
+        @Override
+        public int compareTo(@NotNull SymbolStorage.CachedPriorityComparable other) {
+            return Double.compare(other.priority, priority);
+        }
     }
 }

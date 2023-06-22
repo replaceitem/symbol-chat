@@ -15,7 +15,7 @@ public class ConfigProvider {
     public int getMaxSymbolSuggestions() {return 5;}
     public SymbolTooltipMode getSymbolTooltipMode() {return SymbolTooltipMode.DELAYED;}
     public HudPosition getHudPosition() {return HudPosition.RIGHT;}
-    public String getCustomSymbols() {return "";}
+    public String getFavoriteSymbols() {return "";}
 
     public List<String> getCustomKaomojis() {return List.of();}
 
@@ -25,7 +25,7 @@ public class ConfigProvider {
     
     
     
-    public void addCustomSymbol(String symbols) {}
+    public void addFavoriteSymbol(String symbols) {}
 
 
     @SuppressWarnings("unused")

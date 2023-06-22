@@ -60,7 +60,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
         if(search == null) {
             elementCount = 0;
         } else {
-            Stream<String> searchStream = search.isBlank() ? SymbolStorage.customSymbols.stream() : SymbolStorage.performSearch(SymbolStorage.all, search);
+            Stream<String> searchStream = search.isBlank() ? SymbolStorage.favoriteSymbols.stream() : SymbolStorage.performSearch(SymbolStorage.all, search);
             List<String> symbols = searchStream.limit(shownSymbols).toList();
             elementCount = symbols.size();
             this.width = 1 + (SymbolButtonWidget.SYMBOL_SIZE + 1) * elementCount;

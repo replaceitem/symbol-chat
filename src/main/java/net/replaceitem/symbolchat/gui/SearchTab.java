@@ -10,6 +10,7 @@ import net.replaceitem.symbolchat.gui.widget.SymbolSearchBar;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class SearchTab extends SymbolTab {
@@ -42,7 +43,9 @@ public class SearchTab extends SymbolTab {
     @Override
     protected void addSymbols(SymbolCategory symbolCategory) {
         String search = searchBar == null ? "" : searchBar.getText();
-        SymbolStorage.performSearch(symbolCategory, search).map(s -> new PasteSymbolButtonWidget(0, 0, this.symbolConsumer, s)).forEachOrdered(scrollableGridWidget::add);
+        List<String> searchResults = SymbolStorage.performSearch(symbolCategory, search).toList();
+        searchResults.stream().map(s -> new PasteSymbolButtonWidget(0, 0, this.symbolConsumer, s)).forEachOrdered(scrollableGridWidget::add);
+        this.isEmpty = searchResults.isEmpty();
     }
 
     @Override

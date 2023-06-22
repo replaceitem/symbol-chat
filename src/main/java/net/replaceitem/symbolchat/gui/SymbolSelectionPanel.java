@@ -39,7 +39,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         addTab(SymbolStorage.all);
         SymbolStorage.categories.forEach(this::addTab);
         addTab(SymbolStorage.kaomojis);
-        addTab(SymbolStorage.customSymbols);
+        addTab(SymbolStorage.favoriteSymbols);
 
         tabSelectionWidget.refreshPositions();
     }
