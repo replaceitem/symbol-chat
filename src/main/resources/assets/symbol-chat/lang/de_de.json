@@ -3,6 +3,7 @@
   "text.autoconfig.symbol-chat.option.hud_color": "Hintergrundfarbe",
   "text.autoconfig.symbol-chat.option.button_color": "Schaltflächenfarbe",
   "text.autoconfig.symbol-chat.option.button_active_color": "Aktive Schaltflächenfarbe",
+  "text.autoconfig.symbol-chat.option.favorite_color": "Favoritenfarbe",
   "text.autoconfig.symbol-chat.option.hide_font_button": "Schriftartschaltfläche verstecken",
   "text.autoconfig.symbol-chat.option.hide_settings_button": "Einstellungsschaltfläche verstecken",
   "text.autoconfig.symbol-chat.option.hide_settings_button.@Tooltip": "Versteckt die Einstellungsschaltfläche, dass sie nur noch über Modmenu erreichbar ist",

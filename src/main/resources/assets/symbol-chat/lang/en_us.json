@@ -3,6 +3,7 @@
   "text.autoconfig.symbol-chat.option.hud_color": "HUD color",
   "text.autoconfig.symbol-chat.option.button_color": "Button color",
   "text.autoconfig.symbol-chat.option.button_active_color": "Active button color",
+  "text.autoconfig.symbol-chat.option.favorite_color": "Favorite color",
   "text.autoconfig.symbol-chat.option.hide_font_button": "Hide font button",
   "text.autoconfig.symbol-chat.option.hide_settings_button": "Hide settings button",
   "text.autoconfig.symbol-chat.option.hide_settings_button.@Tooltip": "Hides the settings button, only allowing you to access the config from Modmenu",

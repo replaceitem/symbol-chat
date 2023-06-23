@@ -37,6 +37,11 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
+    public int getFavoriteColor() {
+        return config.favorite_color;
+    }
+
+    @Override
     public boolean getHideFontButton() {
         return config.hide_font_button;
     }

@@ -35,18 +35,18 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     }
 
     protected void drawCorners(DrawContext drawContext) {
-        int yellow = 0xFFFFFF00;
+        int cornerColor = SymbolChat.config.getFavoriteColor();
         int lastX = this.getX()+SYMBOL_SIZE-1;
         int lastY = this.getY()+SYMBOL_SIZE-1;
         for(int i = 0; i < 2; i++) {
             int offset = i*(SYMBOL_SIZE-1);
             int x = this.getX() + offset;
             int y = this.getY() + offset;
-            drawContext.drawHorizontalLine(getX(), getX()+1, y, yellow);
-            drawContext.drawHorizontalLine(lastX-1, lastX, y, yellow);
+            drawContext.drawHorizontalLine(getX(), getX()+1, y, cornerColor);
+            drawContext.drawHorizontalLine(lastX-1, lastX, y, cornerColor);
             // why does drawVertical work differently -_-
-            drawContext.drawVerticalLine(x, getY()-1, getY()+2, yellow);
-            drawContext.drawVerticalLine(x, lastY-2, lastY+1, yellow);
+            drawContext.drawVerticalLine(x, getY()-1, getY()+2, cornerColor);
+            drawContext.drawVerticalLine(x, lastY-2, lastY+1, cornerColor);
         }
     }
 
