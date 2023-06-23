@@ -70,7 +70,9 @@ public class SymbolTab extends AbstractParentElement implements Widget, Drawable
 
     protected void addSymbols(SymbolCategory symbolCategory) {
         for (String symbol : symbolCategory.getSymbols()) {
-            this.scrollableGridWidget.add(createButton(symbol));
+            PasteSymbolButtonWidget button = createButton(symbol);
+            if(symbolCategory == SymbolStorage.favoriteSymbols) button.setFavorite(false);
+            this.scrollableGridWidget.add(button);
         }
         this.isEmpty = symbolCategory.getSymbols().isEmpty();
     }

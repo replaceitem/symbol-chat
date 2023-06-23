@@ -140,6 +140,7 @@ public class UnicodeTableScreen extends Screen {
     private void favoriteSymbols() {
         if(selectionStart == -1) return;
         SymbolChat.config.addFavoriteSymbol(getSelectedSymbols());
+        refreshButtons();
     }
 
     private void copySelected() {

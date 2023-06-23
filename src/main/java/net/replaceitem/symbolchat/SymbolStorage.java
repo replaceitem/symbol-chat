@@ -1,5 +1,6 @@
 package net.replaceitem.symbolchat;
 
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -12,8 +13,9 @@ public class SymbolStorage {
     public static List<SymbolCategory> categories = new ArrayList<>();
     public static SymbolCategory favoriteSymbols;
     public static SymbolCategory kaomojis;
-    
     public static SymbolCategory all;
+    
+    private static final IntOpenHashSet favoriteSet = new IntOpenHashSet();
     
     
     private static void addCategory(SymbolCategory category) {
@@ -104,6 +106,8 @@ public class SymbolStorage {
                 "✩",
                 new SymbolList("favorites", List.of(SymbolChat.config.getFavoriteSymbols())).separateSymbols()
         );
+        favoriteSet.clear();
+        favoriteSymbols.stream().mapToInt(value -> value.codePoints().findFirst().orElse(-1)).forEach(favoriteSet::add);
     }
 
     public static void reloadCustomLists() {
@@ -112,7 +116,11 @@ public class SymbolStorage {
         reloadAllList();
     }
 
-    
+
+
+    public static boolean isFavorite(int codepoint) {
+        return favoriteSet.contains(codepoint);
+    }
     
     /**
      * 

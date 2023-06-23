@@ -92,10 +92,13 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
             int argb = rgb | MathHelper.ceil(this.alpha * 255.0F) << 24;
 
             drawContext.drawCenteredTextWithShadow(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, argb);
-            
-            if(this.isSelected()) {
-                this.drawOutline(drawContext);
-            }
+            this.renderOverlay(drawContext);
+        }
+    }
+    
+    protected void renderOverlay(DrawContext drawContext) {
+        if(this.isSelected()) {
+            this.drawOutline(drawContext);
         }
     }
     
