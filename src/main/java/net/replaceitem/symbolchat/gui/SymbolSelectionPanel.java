@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.replaceitem.symbolchat.SymbolCategory;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolStorage;
+import net.replaceitem.symbolchat.gui.tab.SymbolTab;
 import net.replaceitem.symbolchat.gui.widget.TabSelectionWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 
@@ -34,7 +35,12 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         this.y = y;
         this.visible = false;
         this.symbolInsertable = symbolConsumer;
-        this.tabSelectionWidget = new TabSelectionWidget(this.x, this.y + 1, WIDTH);
+        this.tabSelectionWidget = new TabSelectionWidget(this.x, this.y + 1, WIDTH) {
+            @Override
+            protected void onTabSwitched() {
+                getCurrentTab().refresh();
+            }
+        };
 
         addTab(SymbolStorage.all);
         SymbolStorage.categories.forEach(this::addTab);

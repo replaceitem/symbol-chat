@@ -1,15 +1,20 @@
-package net.replaceitem.symbolchat.gui;
+package net.replaceitem.symbolchat.gui.tab;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.AbstractParentElement;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.ScreenPos;
+import net.minecraft.client.gui.ScreenRect;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.SymbolCategory;
-import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolStorage;
+import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.widget.ScrollableGridWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 
@@ -19,10 +24,7 @@ import java.util.function.Consumer;
 
 public class SymbolTab extends AbstractParentElement implements Widget, Drawable, Element {
 
-    protected static int COLUMNS = 9;
-    
-    public static final Text NO_FAVORITE_SYMBOLS = Text.translatable("symbolchat.no_favorite_symbols");
-    public static final Text NO_CLOTHCONFIG = Text.translatable("symbolchat.no_clothconfig");
+    public static int COLUMNS = 9;
 
     public SymbolSelectionPanel symbolSelectionPanel;
 
@@ -31,7 +33,7 @@ public class SymbolTab extends AbstractParentElement implements Widget, Drawable
     private final int width;
     private final int height;
     
-    protected boolean isEmpty = false;
+    protected final SymbolCategory category;
 
     protected Consumer<String> symbolConsumer;
 
@@ -42,12 +44,14 @@ public class SymbolTab extends AbstractParentElement implements Widget, Drawable
             return new KaomojiTab(symbolInsertable, symbols, symbolSelectionPanel, x, y, height);
         } else if(symbols == SymbolStorage.all) {
             return new SearchTab(symbolInsertable, symbols, symbolSelectionPanel, x, y, height);
+        } else if(symbols == SymbolStorage.favoriteSymbols) {
+            return new FavoritesTab(symbolInsertable, symbols, symbolSelectionPanel, x, y, height);
         } else {
             return new SymbolTab(symbolInsertable, symbols, symbolSelectionPanel, x, y, height);
         }
     }
 
-    public SymbolTab(Consumer<String> symbolConsumer, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y, int height) {
+    public SymbolTab(Consumer<String> symbolConsumer, SymbolCategory symbolCategory, SymbolSelectionPanel symbolSelectionPanel, int x, int y, int height) {
         this.x = x;
         this.y = y;
         this.width = SymbolSelectionPanel.WIDTH;
@@ -56,25 +60,22 @@ public class SymbolTab extends AbstractParentElement implements Widget, Drawable
         this.children = new ArrayList<>();
         this.symbolSelectionPanel = symbolSelectionPanel;
         this.scrollableGridWidget = createScrollableGridWidget();
+        this.category = symbolCategory;
 
         this.children.add(scrollableGridWidget);
-
-        this.refresh(symbols);
+        this.refresh();
     }
 
-    public void refresh(SymbolCategory symbolCategory) {
+    public void refresh() {
         scrollableGridWidget.clearElements();
-        addSymbols(symbolCategory);
+        addSymbols();
         this.scrollableGridWidget.refreshPositions();
     }
 
-    protected void addSymbols(SymbolCategory symbolCategory) {
-        for (String symbol : symbolCategory.getSymbols()) {
-            PasteSymbolButtonWidget button = createButton(symbol);
-            if(symbolCategory == SymbolStorage.favoriteSymbols) button.setFavorite(false);
-            this.scrollableGridWidget.add(button);
+    protected void addSymbols() {
+        for (String symbol : this.category.getSymbols()) {
+            this.scrollableGridWidget.add(createButton(symbol));
         }
-        this.isEmpty = symbolCategory.getSymbols().isEmpty();
     }
     
     protected ScrollableGridWidget createScrollableGridWidget() {
@@ -87,29 +88,26 @@ public class SymbolTab extends AbstractParentElement implements Widget, Drawable
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        if(this.isEmpty) {
-            Text text = this.getNoSymbolsText();
-            if(text == null) return;
+        this.scrollableGridWidget.render(drawContext, mouseX, mouseY, delta);
+        Text text = this.getNoSymbolsText();
+        if(text != null) {
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
             List<OrderedText> orderedTexts = textRenderer.wrapLines(text, SymbolSelectionPanel.WIDTH - 4);
             drawContext.getMatrices().push();
-            drawContext.getMatrices().translate(0,0,200);
-            int startY = this.y + (this.height/2) - (orderedTexts.size()*textRenderer.fontHeight/2);
-            int centerX = this.x + this.width/2;
-            for(int i = 0; i < orderedTexts.size(); i++) {
+            drawContext.getMatrices().translate(0, 0, 200);
+            int startY = this.y + (this.getHeight() / 2) - (orderedTexts.size() * textRenderer.fontHeight / 2);
+            int centerX = this.x + this.getWidth() / 2;
+            for (int i = 0; i < orderedTexts.size(); i++) {
                 OrderedText orderedText = orderedTexts.get(i);
                 int dy = startY + (i * textRenderer.fontHeight);
                 drawContext.drawText(textRenderer, orderedText, centerX - textRenderer.getWidth(orderedText) / 2, dy, 0x66FFFFFF, false);
             }
             drawContext.getMatrices().pop();
-            return;
         }
-
-        this.scrollableGridWidget.render(drawContext, mouseX, mouseY, delta);
     }
     
     public Text getNoSymbolsText() {
-        return SymbolChat.clothConfigEnabled ? NO_FAVORITE_SYMBOLS : NO_CLOTHCONFIG;
+        return null;
     }
 
     @Override

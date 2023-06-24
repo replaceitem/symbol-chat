@@ -6,6 +6,7 @@ import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolStorage;
 import net.replaceitem.symbolchat.Util;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
@@ -52,8 +53,16 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
 
     @Override
     public boolean onClick(int button) {
-        if(this.symbolConsumer != null) this.symbolConsumer.accept(this.getSymbol());
+        if(button == GLFW.GLFW_MOUSE_BUTTON_1 && this.symbolConsumer != null) this.symbolConsumer.accept(this.getSymbol());
+        if(button == GLFW.GLFW_MOUSE_BUTTON_2) onRightClick();
         return true;
+    }
+    
+    protected void onRightClick() {
+        boolean currentlyFavorite = SymbolStorage.isFavorite(this.codepoint);
+        if(currentlyFavorite) SymbolChat.config.removeFavorite(this.getSymbol());
+        else SymbolChat.config.addFavorite(this.getSymbol());
+        this.isFavorite = !currentlyFavorite;
     }
 
     public void setFavorite(boolean favorite) {

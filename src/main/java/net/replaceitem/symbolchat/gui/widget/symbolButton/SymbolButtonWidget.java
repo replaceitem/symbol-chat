@@ -13,6 +13,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
+import org.lwjgl.glfw.GLFW;
 
 public abstract class SymbolButtonWidget extends ClickableWidget implements Drawable, Element, Narratable {
     public static final int SYMBOL_SIZE = 12;
@@ -73,6 +74,11 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected boolean isValidClickButton(int button) {
+        return super.isValidClickButton(button) || button == GLFW.GLFW_MOUSE_BUTTON_2;
     }
 
     @Override

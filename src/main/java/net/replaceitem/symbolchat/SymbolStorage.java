@@ -11,9 +11,18 @@ import java.util.stream.Stream;
 
 public class SymbolStorage {
     public static List<SymbolCategory> categories = new ArrayList<>();
-    public static SymbolCategory favoriteSymbols;
-    public static SymbolCategory kaomojis;
-    public static SymbolCategory all;
+    public static final SymbolCategory favoriteSymbols = new SymbolCategory(
+        "favorites",
+        "✩"
+    );
+    public static final SymbolCategory kaomojis = new SymbolCategory(
+            "kaomoji",
+            "K"
+    );
+    public static final SymbolCategory all = new SymbolCategory(
+            "all",
+            "🔎"
+    );
     
     private static final IntOpenHashSet favoriteSet = new IntOpenHashSet();
     
@@ -80,18 +89,12 @@ public class SymbolStorage {
         List<String> allSymbols = new ArrayList<>();
         allSymbols.addAll(categories.stream().flatMap(category -> category.symbols.stream()).toList());
         allSymbols.addAll(favoriteSymbols.symbols);
-        all = new SymbolCategory(
-                "all",
-                "🔎",
-                new SymbolList("all", allSymbols)
-        );
+        all.assignSymbols(new SymbolList("all", allSymbols));
     }
     
     private static void reloadKaomojiList() {
         try {
-            kaomojis = new SymbolCategory(
-                    "kaomoji",
-                    "K",
+            kaomojis.assignSymbols(
                     SymbolList.loadFromFile("kaomojis", false),
                     new SymbolList("custom_kamojis", SymbolChat.config.getCustomKaomojis())
             );
@@ -101,9 +104,7 @@ public class SymbolStorage {
     }
     
     private static void reloadFavoritesList() {
-        favoriteSymbols = new SymbolCategory(
-                "favorites",
-                "✩",
+        favoriteSymbols.assignSymbols(
                 new SymbolList("favorites", List.of(SymbolChat.config.getFavoriteSymbols())).separateSymbols()
         );
         favoriteSet.clear();

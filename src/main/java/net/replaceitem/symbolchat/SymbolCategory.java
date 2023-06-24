@@ -19,6 +19,13 @@ public class SymbolCategory {
             this.symbols.addAll(symbolFile.lines);
         }
     }
+    
+    public void assignSymbols(SymbolList... symbolLists) {
+        this.symbols.clear();
+        for (SymbolList symbolFile : symbolLists) {
+            this.symbols.addAll(symbolFile.lines);
+        }
+    }
 
     public List<String> getSymbols() {
         return symbols;

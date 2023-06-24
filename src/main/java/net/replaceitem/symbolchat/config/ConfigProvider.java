@@ -26,7 +26,8 @@ public class ConfigProvider {
     
     
     
-    public void addFavoriteSymbol(String symbols) {}
+    public void addFavorite(String symbols) {}
+    public void removeFavorite(String symbol) {}
 
 
     @SuppressWarnings("unused")

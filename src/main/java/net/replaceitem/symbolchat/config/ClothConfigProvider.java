@@ -91,8 +91,14 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
-    public void addFavoriteSymbol(String symbols) {
+    public void addFavorite(String symbols) {
         this.config.custom_symbols += symbols;
+        AutoConfig.getConfigHolder(ClothConfig.class).save();
+    }
+
+    @Override
+    public void removeFavorite(String symbol) {
+        this.config.custom_symbols = this.config.custom_symbols.replace(symbol, "");
         AutoConfig.getConfigHolder(ClothConfig.class).save();
     }
 }

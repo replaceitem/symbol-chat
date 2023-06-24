@@ -1,8 +1,9 @@
-package net.replaceitem.symbolchat.gui;
+package net.replaceitem.symbolchat.gui.tab;
 
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.replaceitem.symbolchat.SymbolCategory;
+import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.widget.ScrollableGridWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 
@@ -17,7 +18,16 @@ public class KaomojiTab extends SymbolTab implements Drawable, Element {
 
     @Override
     protected PasteSymbolButtonWidget createButton(String symbol) {
-        PasteSymbolButtonWidget pasteSymbolButtonWidget = new PasteSymbolButtonWidget(x, y, this.symbolConsumer, symbol);
+        PasteSymbolButtonWidget pasteSymbolButtonWidget = new PasteSymbolButtonWidget(x, y, this.symbolConsumer, symbol) {
+            @Override
+            protected void onRightClick() {}
+
+            @Override
+            public String getSymbol() {
+                return symbol;
+            }
+        };
+        pasteSymbolButtonWidget.setFavorite(false);
         pasteSymbolButtonWidget.setWidth(this.getWidth() - 2);
         pasteSymbolButtonWidget.setTooltip(null);
         return pasteSymbolButtonWidget;

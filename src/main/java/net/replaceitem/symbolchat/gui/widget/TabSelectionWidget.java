@@ -49,12 +49,16 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
     }
 
     public void setTab(int tab) {
+        int previousTab = this.getSelectedTab();
         this.selectedTab = MathHelper.clamp(tab, 0, this.tabButtons.size()-1);
         for (SymbolButtonWidget child : this.tabButtons) {
             child.setY(y);
         }
         this.tabButtons.get(selectedTab).setY(y+1);
+        if(previousTab != this.selectedTab) this.onTabSwitched();
     }
+
+    protected void onTabSwitched() {}
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {

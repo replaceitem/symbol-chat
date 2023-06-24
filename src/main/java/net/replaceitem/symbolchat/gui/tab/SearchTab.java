@@ -1,10 +1,11 @@
-package net.replaceitem.symbolchat.gui;
+package net.replaceitem.symbolchat.gui.tab;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.SymbolCategory;
 import net.replaceitem.symbolchat.SymbolStorage;
+import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.widget.ScrollableGridWidget;
 import net.replaceitem.symbolchat.gui.widget.SymbolSearchBar;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
@@ -17,6 +18,7 @@ public class SearchTab extends SymbolTab {
     
     public static final Text NO_RESULTS = Text.translatable("symbolchat.no_search_results");
     private final SymbolSearchBar searchBar;
+    private boolean isEmpty;
 
     private static final int SEARCH_BAR_HEIGHT = 10;
 
@@ -24,7 +26,7 @@ public class SearchTab extends SymbolTab {
         super(symbolConsumer, symbols, symbolSelectionPanel, x, y, height);
 
         this.searchBar = new SymbolSearchBar(this.x + 2, this.y + 1, getWidth() - 4, SEARCH_BAR_HEIGHT);
-        this.searchBar.setChangedListener(s -> refresh(SymbolStorage.all));
+        this.searchBar.setChangedListener(s -> refresh());
         this.children.add(this.searchBar);
     }
 
@@ -41,9 +43,9 @@ public class SearchTab extends SymbolTab {
     }
 
     @Override
-    protected void addSymbols(SymbolCategory symbolCategory) {
+    protected void addSymbols() {
         String search = searchBar == null ? "" : searchBar.getText();
-        List<String> searchResults = SymbolStorage.performSearch(symbolCategory, search).toList();
+        List<String> searchResults = SymbolStorage.performSearch(this.category, search).toList();
         searchResults.stream().map(s -> new PasteSymbolButtonWidget(0, 0, this.symbolConsumer, s)).forEachOrdered(scrollableGridWidget::add);
         this.isEmpty = searchResults.isEmpty();
     }
@@ -56,6 +58,6 @@ public class SearchTab extends SymbolTab {
 
     @Override
     public Text getNoSymbolsText() {
-        return NO_RESULTS;
+        return isEmpty ? NO_RESULTS : null;
     }
 }
