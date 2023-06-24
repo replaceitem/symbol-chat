@@ -1,12 +1,16 @@
 package net.replaceitem.symbolchat.config;
 
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ActionResult;
 import net.replaceitem.symbolchat.SymbolStorage;
+import net.replaceitem.symbolchat.Util;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class ClothConfigProvider extends ConfigProvider {
     
@@ -91,14 +95,25 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
-    public void addFavorite(String symbols) {
-        this.config.custom_symbols += symbols;
+    public void addFavorite(String symbol) {
+        this.config.custom_symbols += symbol;
         AutoConfig.getConfigHolder(ClothConfig.class).save();
     }
 
     @Override
     public void removeFavorite(String symbol) {
         this.config.custom_symbols = this.config.custom_symbols.replace(symbol, "");
+        AutoConfig.getConfigHolder(ClothConfig.class).save();
+    }
+
+    @Override
+    public void toggleFavorite(IntStream codepoints) {
+        IntStream customSymbolsStream = this.config.custom_symbols.codePoints();
+        int[] ints = codepoints.toArray();
+        IntOpenHashSet forRemoval = new IntOpenHashSet();
+        Arrays.stream(ints).filter(SymbolStorage::isFavorite).forEach(forRemoval::add);
+        customSymbolsStream = IntStream.concat(customSymbolsStream.filter(k -> !forRemoval.contains(k)), Arrays.stream(ints).filter(value -> !SymbolStorage.isFavorite(value)));
+        this.config.custom_symbols = Util.stringFromCodePoints(customSymbolsStream);
         AutoConfig.getConfigHolder(ClothConfig.class).save();
     }
 }

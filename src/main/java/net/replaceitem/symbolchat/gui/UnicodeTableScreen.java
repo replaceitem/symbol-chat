@@ -22,6 +22,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.IntStream;
 
 public class UnicodeTableScreen extends Screen {
     public UnicodeTableScreen(Screen parent) {
@@ -127,25 +128,26 @@ public class UnicodeTableScreen extends Screen {
         this.reloadSymbols();
     }
 
-    private String getSelectedSymbols() {
-        StringBuilder builder = new StringBuilder();
+    private IntStream getSelectedSymbols() {
+        IntStream.Builder intStreamBuilder = IntStream.builder();
         for(int i = selectionStart; i <= selectionEnd; i++) {
             Integer codepoint = this.codePoints.get(i);
             if(codepoint == null) break;
-            builder.append(Util.stringFromCodePoint(codepoint & 0x00FFFFFF));
+            intStreamBuilder.add(codepoint & 0x00FFFFFF);
         }
-        return builder.toString();
+        return intStreamBuilder.build();
     }
     
     private void favoriteSymbols() {
         if(selectionStart == -1) return;
-        SymbolChat.config.addFavorite(getSelectedSymbols());
+        IntStream selectedSymbols = getSelectedSymbols();
+        SymbolChat.config.toggleFavorite(selectedSymbols);
         refreshButtons();
     }
 
     private void copySelected() {
         if(selectionStart == -1) return;
-        MinecraftClient.getInstance().keyboard.setClipboard(getSelectedSymbols());
+        MinecraftClient.getInstance().keyboard.setClipboard(Util.stringFromCodePoints(getSelectedSymbols()));
     }
 
     @Override

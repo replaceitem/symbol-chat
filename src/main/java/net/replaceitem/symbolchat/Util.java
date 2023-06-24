@@ -2,6 +2,7 @@ package net.replaceitem.symbolchat;
 
 import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Util {
 
@@ -23,6 +24,10 @@ public class Util {
 
     public static String stringFromCodePoint(int num) {
         return new String(Character.toChars(num));
+    }
+
+    public static String stringFromCodePoints(IntStream codepoints) {
+        return codepoints.mapToObj(Util::stringFromCodePoint).collect(Collectors.joining());
     }
 
     public static int getCodePointCount(String string) {

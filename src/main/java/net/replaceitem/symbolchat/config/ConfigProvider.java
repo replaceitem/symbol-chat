@@ -3,6 +3,7 @@ package net.replaceitem.symbolchat.config;
 import net.minecraft.client.gui.screen.Screen;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class ConfigProvider {
     public int getHudColor() {return 0x80000000;}
@@ -28,6 +29,7 @@ public class ConfigProvider {
     
     public void addFavorite(String symbols) {}
     public void removeFavorite(String symbol) {}
+    public void toggleFavorite(IntStream codepoints) {}
 
 
     @SuppressWarnings("unused")
