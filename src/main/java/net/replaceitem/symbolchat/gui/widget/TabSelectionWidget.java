@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolCategory;
+import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
 
     public TabSelectionWidget(int x, int y, int width) {
         this.tabButtons = new ArrayList<>();
-        this.selectedTab = 0;
+        this.selectedTab = SymbolChat.selectedTab;
         this.x = x;
         this.y = y;
         this.width = width;
@@ -51,6 +52,7 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
     public void setTab(int tab) {
         int previousTab = this.getSelectedTab();
         this.selectedTab = MathHelper.clamp(tab, 0, this.tabButtons.size()-1);
+        SymbolChat.selectedTab = this.selectedTab;
         for (SymbolButtonWidget child : this.tabButtons) {
             child.setY(y);
         }
