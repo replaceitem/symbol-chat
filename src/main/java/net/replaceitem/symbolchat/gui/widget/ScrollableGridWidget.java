@@ -1,6 +1,7 @@
 package net.replaceitem.symbolchat.gui.widget;
 
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.ScrollableWidget;
@@ -82,7 +83,7 @@ public class ScrollableGridWidget extends ScrollableWidget {
 
     @Override
     protected double getDeltaYPerScroll() {
-        return 7;
+        return Screen.hasControlDown() ? 50 : 7;
     }
 
     // overriding just to not crop scissor by 1px
