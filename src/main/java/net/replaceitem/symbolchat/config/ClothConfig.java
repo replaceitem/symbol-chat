@@ -43,6 +43,8 @@ public class ClothConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public ConfigProvider.HudPosition hud_position = ConfigProvider.HudPosition.RIGHT;
+    
+    public boolean keep_panel_open = false;
 
     @ConfigEntry.Gui.Tooltip
     public String custom_symbols = "";

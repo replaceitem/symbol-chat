@@ -17,6 +17,7 @@ public class ConfigProvider {
     public int getMaxSymbolSuggestions() {return 5;}
     public SymbolTooltipMode getSymbolTooltipMode() {return SymbolTooltipMode.DELAYED;}
     public HudPosition getHudPosition() {return HudPosition.RIGHT;}
+    public boolean getKeepPanelOpen() {return false;}
     public String getFavoriteSymbols() {return "";}
 
     public List<String> getCustomKaomojis() {return List.of();}

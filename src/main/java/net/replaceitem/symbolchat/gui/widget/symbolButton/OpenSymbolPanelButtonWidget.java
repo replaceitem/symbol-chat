@@ -13,12 +13,12 @@ public class OpenSymbolPanelButtonWidget extends SymbolButtonWidget {
 
     @Override
     public boolean onClick(int button) {
-        symbolSelectionPanel.visible = !symbolSelectionPanel.visible;
+        symbolSelectionPanel.toggleVisible();
         return true;
     }
 
     @Override
     public boolean isSelected() {
-        return super.isSelected() || symbolSelectionPanel.visible;
+        return super.isSelected() || symbolSelectionPanel.isVisible();
     }
 }

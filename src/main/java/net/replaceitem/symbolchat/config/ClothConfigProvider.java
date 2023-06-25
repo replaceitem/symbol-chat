@@ -79,6 +79,11 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
+    public boolean getKeepPanelOpen() {
+        return config.keep_panel_open;
+    }
+
+    @Override
     public String getFavoriteSymbols() {
         // TODO - change name to favorite_symbols on next big update, or migrate somehow
         return config.custom_symbols;

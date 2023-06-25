@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 public class SymbolChat implements ClientModInitializer {
     public static Logger LOGGER;
     public static int selectedFont = 0;
+    public static boolean isPanelOpen = false;
     public static ConfigProvider config;
     public static boolean clothConfigEnabled;
 
