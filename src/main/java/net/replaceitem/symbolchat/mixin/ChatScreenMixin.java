@@ -12,6 +12,7 @@ import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -97,14 +98,16 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, SymbolS
     public TextFieldWidget getTextField() {
         return chatField;
     }
-    
-    
+
+
+    @Unique
     private static final Set<String> messageCommands = Set.of(
             "msg", "tell", "w",
             "say", "me",
             "teammsg", "tm"
     ).stream().map(s -> "/" + s + " ").collect(Collectors.toSet());
     
+    @Unique
     private static boolean isSuggestingCommand(String text) {
         return messageCommands.contains(text);
     }

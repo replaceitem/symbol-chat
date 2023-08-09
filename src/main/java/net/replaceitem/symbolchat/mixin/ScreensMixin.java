@@ -27,6 +27,7 @@ import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.function.Consumer;
 
@@ -37,12 +38,16 @@ public class ScreensMixin extends Screen implements ScreenAccess {
         super(title);
     }
     
+    @Unique
     @Nullable
     private SymbolSelectionPanel symbolSelectionPanel;
+    @Unique
     @Nullable
     private SymbolButtonWidget symbolButtonWidget;
+    @Unique
     @Nullable
     private SymbolSuggestor symbolSuggestor;
+    @Unique
     @Nullable
     private DropDownWidget<FontProcessor> fontSelectionDropDown;
 
@@ -138,17 +143,19 @@ public class ScreensMixin extends Screen implements ScreenAccess {
     public boolean onKeyPressed(int keyCode, int scanCode, int modifiers) {
         return this.symbolSelectionPanel != null && this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers) || this.symbolSuggestor != null && this.symbolSuggestor.isVisible() && this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers);
     }
-
+    
     @Override
     public boolean onCharTyped(char chr, int modifiers) {
         return this.symbolSelectionPanel != null && this.symbolSelectionPanel.charTyped(chr, modifiers);
     }
 
+    @Unique
     @SuppressWarnings("unchecked")
     public void insertSymbol(String s) {
         ((Consumer<String>) this).accept(s);
     }
 
+    @Unique
     private void onSymbolReplaced(String s) {
         ((SymbolSuggestable) this).replaceSuggestion(s);
     }
