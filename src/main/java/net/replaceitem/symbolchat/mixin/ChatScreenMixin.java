@@ -49,8 +49,7 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, SymbolS
 
     @Override
     public void setFocused(@Nullable Element focused) {
-        if(focused != this.chatField) return;
-        super.setFocused(focused);
+        if (!((ScreenAccess) this).isSymbolChatWidget(focused)) super.setFocused(focused);
     }
 
     @Override
@@ -60,7 +59,7 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, SymbolS
         while(tempPath instanceof GuiNavigationPath.IntermediaryNode intermediaryNode && intermediaryNode != intermediaryNode.childPath()) {
             tempPath = intermediaryNode.childPath();
         }
-        if(tempPath.component() == this.chatField) super.switchFocus(path);
+        if(!((ScreenAccess) this).isSymbolChatWidget(this.chatField)) super.switchFocus(path);
     }
 
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 1),require = 1)

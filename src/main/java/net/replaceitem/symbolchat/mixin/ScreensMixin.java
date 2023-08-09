@@ -2,6 +2,7 @@ package net.replaceitem.symbolchat.mixin;
 
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
@@ -107,6 +108,14 @@ public class ScreensMixin extends Screen implements ScreenAccess {
 
         this.symbolSuggestor = new SymbolSuggestor(this, this::onSymbolReplaced, (SymbolSuggestable) this);
         this.addDrawableChild(symbolSuggestor);
+    }
+
+    @Override
+    public boolean isSymbolChatWidget(Element element) {
+        return element == symbolSelectionPanel ||
+                element == symbolButtonWidget ||
+                element == symbolSuggestor ||
+                element == fontSelectionDropDown;
     }
 
     @Override
