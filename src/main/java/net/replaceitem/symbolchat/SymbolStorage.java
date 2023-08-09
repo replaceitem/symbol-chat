@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SymbolStorage {
-    public static List<SymbolCategory> categories = new ArrayList<>();
+    public static final List<SymbolCategory> categories = new ArrayList<>();
     public static final SymbolCategory favoriteSymbols = new SymbolCategory(
         "favorites",
         "✩"

@@ -4,7 +4,7 @@ import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 
 public class OpenSymbolPanelButtonWidget extends SymbolButtonWidget {
 
-    protected SymbolSelectionPanel symbolSelectionPanel;
+    protected final SymbolSelectionPanel symbolSelectionPanel;
 
     public OpenSymbolPanelButtonWidget(int x, int y, SymbolSelectionPanel symbolSelectionPanel) {
         super(x, y, "☺");

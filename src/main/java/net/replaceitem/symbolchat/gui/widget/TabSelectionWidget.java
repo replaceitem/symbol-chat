@@ -132,7 +132,7 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
 
     protected class SwitchTabButton extends SymbolButtonWidget {
 
-        protected int index;
+        protected final int index;
 
         public SwitchTabButton(int x, int y, int index, SymbolCategory category) {
             super(x, y, category.icon);

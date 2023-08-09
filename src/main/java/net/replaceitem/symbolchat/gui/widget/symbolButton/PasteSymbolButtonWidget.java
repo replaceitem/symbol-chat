@@ -11,9 +11,9 @@ import org.lwjgl.glfw.GLFW;
 import java.util.function.Consumer;
 
 public class PasteSymbolButtonWidget extends SymbolButtonWidget {
-    protected Consumer<String> symbolConsumer;
+    protected final Consumer<String> symbolConsumer;
 
-    protected int codepoint;
+    protected final int codepoint;
     private boolean isFavorite;
 
     public PasteSymbolButtonWidget(int x, int y, Consumer<String> symbolConsumer, String symbol) {

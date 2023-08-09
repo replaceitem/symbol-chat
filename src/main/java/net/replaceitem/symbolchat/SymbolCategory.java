@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class SymbolCategory {
-    public String id;
-    public String icon;
-    public String nameKey;
-    protected List<String> symbols;
+    public final String id;
+    public final String icon;
+    public final String nameKey;
+    protected final List<String> symbols;
 
     public SymbolCategory(String id, String icon, SymbolList... symbolLists) {
         this.id = id;

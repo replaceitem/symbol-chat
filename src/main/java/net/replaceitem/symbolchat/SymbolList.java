@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class SymbolList {
-    public String id;
+    public final String id;
     public List<String> lines;
 
     public SymbolList(String id, List<String> lines) {

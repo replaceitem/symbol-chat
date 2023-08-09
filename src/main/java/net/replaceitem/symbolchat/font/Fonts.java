@@ -11,14 +11,14 @@ public class Fonts {
 
 
 
-    public static FontProcessor NORMAL = new FontProcessor("normal", null) {
+    public static final FontProcessor NORMAL = new FontProcessor("normal", null) {
         @Override
         public String convertString(String string) {
             return string;
         }
     };
 
-    public static FontProcessor SUPERSCRIPT = new MappedFontProcessor("superscript",
+    public static final FontProcessor SUPERSCRIPT = new MappedFontProcessor("superscript",
             new FontMapBuilder()
                     .putAlphabetUpper("ᴬᴮᶜᴰᴱꟳᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾꟴᴿˢᵀᵁⱽᵂˣʸᶻ")
                     .putAlphabetLower("ᵃᵇᶜᵈᵉᶠᵍʰ𞁌ʲᵏˡᵐ𞀽ᵒᵖ𐞥ʳˢᵗᵘᵛʷˣʸᶻ")
@@ -31,7 +31,7 @@ public class Fonts {
                     .build()
     );
 
-    public static FontProcessor SUBSCRIPT = new MappedFontProcessor("subscript",
+    public static final FontProcessor SUBSCRIPT = new MappedFontProcessor("subscript",
             new FontMapBuilder()
                     .putAlphabetUpper("ₐ𞁓𞁞DₑբGₕᵢⱼ𞁚ₗₘ𞁝𞁜ₚQᵣₛₜ𞁢ᵥ𞁤𞁡𞁟Z")
                     .putAlphabetLower("ₐ𞁥𞁞ₔₑբ₉ₕᵢⱼₖₗₘₙₒₚqᵣₛₜᵤᵥ𞁤ₓᵧ₂")
@@ -45,7 +45,7 @@ public class Fonts {
     );
 
 
-    public static FontProcessor CIRCLED = new MappedFontProcessor("circled",
+    public static final FontProcessor CIRCLED = new MappedFontProcessor("circled",
             new FontMapBuilder()
                     .shiftSequence('1', 0x2460, 9)
                     .put('0', 0x24EA)
@@ -59,7 +59,7 @@ public class Fonts {
                     .build()
     );
 
-    public static FontProcessor NEGATIVE_CIRCLED = new MappedFontProcessor("negative_circled",
+    public static final FontProcessor NEGATIVE_CIRCLED = new MappedFontProcessor("negative_circled",
             new FontMapBuilder()
                     .shiftAlphabetUpper(0x1F150)
                     .shiftAlphabetLower(0x1F150)
@@ -68,28 +68,28 @@ public class Fonts {
                     .build()
     );
 
-    public static FontProcessor SQUARED = new MappedFontProcessor("squared",
+    public static final FontProcessor SQUARED = new MappedFontProcessor("squared",
             new FontMapBuilder()
                     .shiftAlphabetUpper(0x1F130)
                     .shiftAlphabetLower(0x1F130)
                     .build()
     );
 
-    public static FontProcessor NEGATIVE_SQUARED = new MappedFontProcessor("negative_squared",
+    public static final FontProcessor NEGATIVE_SQUARED = new MappedFontProcessor("negative_squared",
             new FontMapBuilder()
                     .shiftAlphabetUpper(0x1F170)
                     .shiftAlphabetLower(0x1F170)
                     .build()
     );
 
-    public static FontProcessor REGIONAL_INDICATOR = new MappedFontProcessor("regional_indicator",
+    public static final FontProcessor REGIONAL_INDICATOR = new MappedFontProcessor("regional_indicator",
             new FontMapBuilder()
                     .shiftAlphabetUpper(0x1F1E6)
                     .shiftAlphabetLower(0x1F1E6)
                     .build()
     );
     
-    public static FontProcessor INVERSE = new MappedFontProcessor("inverse",
+    public static final FontProcessor INVERSE = new MappedFontProcessor("inverse",
             new FontMapBuilder()
                     .putNumbers("0ƖՇƐ߈ϛ9ㄥ86")
                     .putAlphabetUpper("ⱯᗺƆᗡƎℲ⅁HIſꞰꞀWNOԀῸᴚS⟘∩ɅMX⅄Z")
@@ -110,13 +110,13 @@ public class Fonts {
         }
     };
 
-    public static FontProcessor FULLWIDTH = new MappedFontProcessor("fullwidth",
+    public static final FontProcessor FULLWIDTH = new MappedFontProcessor("fullwidth",
             new FontMapBuilder()
                     .shiftSequence('!', 0xFF01, '~'-'!'+1)
                     .build()
     );
 
-    public static FontProcessor SMALL = new MappedFontProcessor("small",
+    public static final FontProcessor SMALL = new MappedFontProcessor("small",
             new FontMapBuilder()
                     .putAlphabetUpper("ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀꜱᴛᴜᴠᴡxʏᴢ")
                     .putAlphabetLower("ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀꜱᴛᴜᴠᴡxʏᴢ")
@@ -124,7 +124,7 @@ public class Fonts {
     );
 
 
-    public static FontProcessor BRACKETS = new MappedFontProcessor("brackets",
+    public static final FontProcessor BRACKETS = new MappedFontProcessor("brackets",
             new FontMapBuilder()
                     .shiftSequence('1', 0x2474, 9)
                     .shiftAlphabetUpper(0x1F110)
@@ -132,7 +132,7 @@ public class Fonts {
                     .build()
     );
 
-    public static FontProcessor MATHEMATICAL = new MappedFontProcessor("mathematical",
+    public static final FontProcessor MATHEMATICAL = new MappedFontProcessor("mathematical",
             new FontMapBuilder()
                     .shiftAlphabetUpper("\uD835\uDDA0")
                     .shiftAlphabetLower("\uD835\uDDBA")
@@ -140,7 +140,7 @@ public class Fonts {
                     .build()
     );
 
-    public static FontProcessor MATHEMATICAL_BOLD = new MappedFontProcessor("mathematical_bold",
+    public static final FontProcessor MATHEMATICAL_BOLD = new MappedFontProcessor("mathematical_bold",
             new FontMapBuilder()
                     .shiftAlphabetUpper("\uD835\uDDD4")
                     .shiftAlphabetLower("\uD835\uDDEE")
@@ -148,7 +148,7 @@ public class Fonts {
                     .build()
     );
 
-    public static FontProcessor MATHEMATICAL_ITALIC = new MappedFontProcessor("mathematical_italic",
+    public static final FontProcessor MATHEMATICAL_ITALIC = new MappedFontProcessor("mathematical_italic",
             new FontMapBuilder()
                     .shiftAlphabetUpper("\uD835\uDE08")
                     .shiftAlphabetLower("\uD835\uDE22")
@@ -156,7 +156,7 @@ public class Fonts {
                     .build()
     );
 
-    public static FontProcessor MATHEMATICAL_BOLD_ITALIC = new MappedFontProcessor("mathematical_bold_italic",
+    public static final FontProcessor MATHEMATICAL_BOLD_ITALIC = new MappedFontProcessor("mathematical_bold_italic",
             new FontMapBuilder()
                     .shiftAlphabetUpper("\uD835\uDE3C")
                     .shiftAlphabetLower("\uD835\uDE56")
@@ -164,7 +164,7 @@ public class Fonts {
                     .build()
     );
 
-    public static FontProcessor MATHEMATICAL_SCRIPT = new MappedFontProcessor("mathematical_script",
+    public static final FontProcessor MATHEMATICAL_SCRIPT = new MappedFontProcessor("mathematical_script",
             new FontMapBuilder()
                     .putAlphabetUpper("𝒜\uD835\uDC35𝒞𝒟\uD835\uDC38\uD835\uDC39𝒢\uD835\uDC3B\uD835\uDC3C𝒥𝒦\uD835\uDC3F\uD835\uDC40𝒩𝒪𝒫𝒬\uD835\uDC45𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵")
                     .putAlphabetLower("𝒶𝒷𝒸𝒹𝑒𝒻𝑔𝒽𝒾𝒿𝓀𝓁𝓂𝓃𝑜𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏") // some are missing, using those from italic instead
@@ -172,7 +172,7 @@ public class Fonts {
                     .build()
     );
 
-    public static FontProcessor MATHEMATICAL_BOLD_SCRIPT = new MappedFontProcessor("mathematical_bold_script",
+    public static final FontProcessor MATHEMATICAL_BOLD_SCRIPT = new MappedFontProcessor("mathematical_bold_script",
             new FontMapBuilder()
                     .shiftAlphabetUpper("\uD835\uDCD0")
                     .shiftAlphabetLower("\uD835\uDCEA")
@@ -180,7 +180,7 @@ public class Fonts {
                     .build()
     );
 
-    public static FontProcessor MATHEMATICAL_DOUBLE_STRUCK = new MappedFontProcessor("mathematical_double_struck",
+    public static final FontProcessor MATHEMATICAL_DOUBLE_STRUCK = new MappedFontProcessor("mathematical_double_struck",
             new FontMapBuilder()
                     .putAlphabetUpper("𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ") // identical to lower, since upper has some missing unifont chars
                     .shiftAlphabetLower("\uD835\uDD52")
@@ -188,7 +188,7 @@ public class Fonts {
                     .build()
     );
 
-    public static FontProcessor MATHEMATICAL_BOLD_FRAKTUR = new MappedFontProcessor("mathematical_bold_fraktur",
+    public static final FontProcessor MATHEMATICAL_BOLD_FRAKTUR = new MappedFontProcessor("mathematical_bold_fraktur",
             new FontMapBuilder()
                     .shiftAlphabetUpper("\uD835\uDD6C")
                     .shiftAlphabetLower("\uD835\uDD86")
@@ -196,7 +196,7 @@ public class Fonts {
                     .build()
     );
 
-    public static FontProcessor MATHEMATICAL_MONOSPACE = new MappedFontProcessor("mathematical_monospace",
+    public static final FontProcessor MATHEMATICAL_MONOSPACE = new MappedFontProcessor("mathematical_monospace",
             new FontMapBuilder()
                     .shiftAlphabetUpper("\uD835\uDE70")
                     .shiftAlphabetLower("\uD835\uDE8A")
@@ -205,14 +205,14 @@ public class Fonts {
     );
 
 
-    public static FontProcessor SCRIBBLE = new MappedFontProcessor("scribble",
+    public static final FontProcessor SCRIBBLE = new MappedFontProcessor("scribble",
             new FontMapBuilder()
                     .putAlphabetUpper("ᗩᗷᑢᗫᘿᖴᏩᕼᓰℐᏦᒪℳℕℴᕵℚᖇᏕτᑘᐺᘺ᙭ᖻℤ")
                     .putAlphabetLower("αϬᏨȡℯƒℊℎᎥℑҡℓᗰℵℴᕵᕴℜᏕᖶ∪Ꮙѡ᙭௶Ꮓ")
                     .build()
     );
 
-    public static FontProcessor BIG_SCRIBBLE = new MappedFontProcessor("big_scribble",
+    public static final FontProcessor BIG_SCRIBBLE = new MappedFontProcessor("big_scribble",
             new FontMapBuilder()
                     .putAlphabetUpper("卂乃匚ᗪ乇千Ꮆ卄丨ﾌҜㄥ爪几ㄖ卩Ɋ尺丂ㄒㄩᐯ山乂ㄚ乙")
                     .putAlphabetLower("卂乃匚ᗪ乇千Ꮆ卄丨ﾌҜㄥ爪几ㄖ卩Ɋ尺丂ㄒㄩᐯ山乂ㄚ乙")
