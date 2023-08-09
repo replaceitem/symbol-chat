@@ -18,6 +18,8 @@
   "text.autoconfig.symbol-chat.option.hud_position": "HUD Position",
   "text.autoconfig.symbol-chat.option.hud_position.@Tooltip": "Position of the font selection and settings button",
   "text.autoconfig.symbol-chat.option.keep_panel_open": "Keep panel open",
+  "text.autoconfig.symbol-chat.option.chat_suggestion_regex": "Chat Suggestion Regex",
+  "text.autoconfig.symbol-chat.option.chat_suggestion_regex.@Tooltip": "This regex must be matched for symbols to be suggested in chat",
   "text.autoconfig.symbol-chat.option.custom_symbols": "Favorite symbols",
   "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "You can paste custom symbols here, which will appear in the favorites symbols tab",
   "text.autoconfig.symbol-chat.option.custom_kaomojis": "Custom kaomojis",

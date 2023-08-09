@@ -18,6 +18,7 @@ public class ConfigProvider {
     public SymbolTooltipMode getSymbolTooltipMode() {return SymbolTooltipMode.DELAYED;}
     public HudPosition getHudPosition() {return HudPosition.RIGHT;}
     public boolean getKeepPanelOpen() {return false;}
+    public String getChatSuggestionRegex() {return "^(/(msg|tell|w|say|me|teammsg|tm) |[^/]).*";}
     public String getFavoriteSymbols() {return "";}
 
     public List<String> getCustomKaomojis() {return List.of();}

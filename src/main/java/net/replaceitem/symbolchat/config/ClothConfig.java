@@ -47,6 +47,9 @@ public class ClothConfig implements ConfigData {
     public boolean keep_panel_open = false;
 
     @ConfigEntry.Gui.Tooltip
+    public String chat_suggestion_regex = "^(/(msg|tell|w|say|me|teammsg|tm) |[^/]).*";
+
+    @ConfigEntry.Gui.Tooltip
     public String custom_symbols = "";
 
     public List<String> custom_kaomojis = new ArrayList<>();

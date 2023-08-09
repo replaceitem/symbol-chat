@@ -18,6 +18,8 @@
   "text.autoconfig.symbol-chat.option.hud_position": "Schaltflächenposition",
   "text.autoconfig.symbol-chat.option.hud_position.@Tooltip": "Position der Einstellungs- und Schriftartschaltfläche",
   "text.autoconfig.symbol-chat.option.keep_panel_open": "Panel offen lassen",
+  "text.autoconfig.symbol-chat.option.chat_suggestion_regex": "Regulärer Ausdruck für Vorschläge im Chat",
+  "text.autoconfig.symbol-chat.option.chat_suggestion_regex.@Tooltip": "Regulärer Ausdruck der übereinstimmen muss für Symbolvorschläge in der Chatbox",
   "text.autoconfig.symbol-chat.option.custom_symbols": "Favorisierte symbole",
   "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Hier kannst du eine Symbole einfügen, welche dann in dem tab für favorisierte Symbole erscheinen.",
   "text.autoconfig.symbol-chat.option.custom_kaomojis": "Eigene Kaomojis",

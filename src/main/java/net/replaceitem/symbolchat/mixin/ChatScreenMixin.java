@@ -7,12 +7,12 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.ScreenAccess;
+import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,9 +20,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Set;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.regex.PatternSyntaxException;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin extends Screen implements Consumer<String>, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
@@ -91,24 +90,16 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, SymbolS
     @Override
     public boolean disabled() {
         String text = this.chatField.getText();
-        return text.startsWith("/") && !(isSuggestingCommand(text));
+        try {
+            return !text.matches(SymbolChat.config.getChatSuggestionRegex());
+        } catch (PatternSyntaxException e) {
+            SymbolChat.LOGGER.error("Invalid regex provided as the Chat Suggestion Regex", e);
+            return false;
+        }
     }
 
     @Override
     public TextFieldWidget getTextField() {
         return chatField;
-    }
-
-
-    @Unique
-    private static final Set<String> messageCommands = Set.of(
-            "msg", "tell", "w",
-            "say", "me",
-            "teammsg", "tm"
-    ).stream().map(s -> "/" + s + " ").collect(Collectors.toSet());
-    
-    @Unique
-    private static boolean isSuggestingCommand(String text) {
-        return messageCommands.contains(text);
     }
 }

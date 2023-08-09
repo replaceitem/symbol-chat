@@ -84,6 +84,11 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
+    public String getChatSuggestionRegex() {
+        return config.chat_suggestion_regex;
+    }
+
+    @Override
     public String getFavoriteSymbols() {
         // TODO - change name to favorite_symbols on next big update, or migrate somehow
         return config.custom_symbols;
