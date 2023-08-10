@@ -50,6 +50,13 @@ public class ScreensMixin extends Screen implements ScreenAccess {
     @Unique
     @Nullable
     private DropDownWidget<FontProcessor> fontSelectionDropDown;
+    @Unique
+    @Nullable
+    private SymbolButtonWidget settingsButtonWidget;
+    @Unique
+    @Nullable
+    private SymbolButtonWidget tableButtonWidget;
+
 
     public void addSymbolChatComponents() {
         int symbolButtonX = this.width - 2 - SymbolButtonWidget.SYMBOL_SIZE;
@@ -76,7 +83,7 @@ public class ScreensMixin extends Screen implements ScreenAccess {
         }
 
         if(!SymbolChat.config.getHideSettingsButton()) {
-            SymbolButtonWidget settingsButtonWidget = new SymbolButtonWidget(0, 0, 15, 15, "⚙") {
+            settingsButtonWidget = new SymbolButtonWidget(0, 0, 15, 15, "⚙") {
                 @Override
                 public boolean onClick(int button) {
                     if(SymbolChat.clothConfigEnabled) {
@@ -96,7 +103,7 @@ public class ScreensMixin extends Screen implements ScreenAccess {
         }
 
         if(!SymbolChat.config.getHideTableButton()) {
-            SymbolButtonWidget tableButtonWidget = new SymbolButtonWidget(0, 0, 15, 15, "⣿⣿") {
+            tableButtonWidget = new SymbolButtonWidget(0, 0, 15, 15, "⣿⣿") {
                 @Override
                 public boolean onClick(int button) {
                     if(ScreensMixin.this.client != null) ScreensMixin.this.client.setScreen(new UnicodeTableScreen(ScreensMixin.this));
@@ -120,7 +127,9 @@ public class ScreensMixin extends Screen implements ScreenAccess {
         return element == symbolSelectionPanel ||
                 element == symbolButtonWidget ||
                 element == symbolSuggestor ||
-                element == fontSelectionDropDown;
+                element == fontSelectionDropDown ||
+                element == settingsButtonWidget ||
+                element == tableButtonWidget;
     }
 
     @Override

@@ -59,7 +59,7 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, SymbolS
         while(tempPath instanceof GuiNavigationPath.IntermediaryNode intermediaryNode && intermediaryNode != intermediaryNode.childPath()) {
             tempPath = intermediaryNode.childPath();
         }
-        if(!((ScreenAccess) this).isSymbolChatWidget(this.chatField)) super.switchFocus(path);
+        if(!((ScreenAccess) this).isSymbolChatWidget(tempPath.component())) super.switchFocus(path);
     }
 
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 1),require = 1)
