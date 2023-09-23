@@ -32,6 +32,7 @@ public class ScrollableGridWidget extends ScrollableWidget {
 
     public void refreshPositions() {
         this.gridWidget.refreshPositions();
+        this.setScrollY(getScrollY());
     }
 
     @Override
