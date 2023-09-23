@@ -163,7 +163,7 @@ public class UnicodeTableScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context);
+        this.renderBackground(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
         for (PasteSymbolButtonWidget widget : widgets) {
             widget.render(context, mouseX, mouseY, delta);
@@ -311,14 +311,14 @@ public class UnicodeTableScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        scroll -= ((int) amount * (Screen.hasControlDown() ? screenRows : 1));
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        scroll -= ((int) verticalAmount * (Screen.hasControlDown() ? screenRows : 1));
         this.refreshButtons();
         return true;
     }
 
     @Override
-    public void renderBackground(DrawContext context) {
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
         context.fill(0, 0, this.width, this.height, 0xFF101010);
     }
 }

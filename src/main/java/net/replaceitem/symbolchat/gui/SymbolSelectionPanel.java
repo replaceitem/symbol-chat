@@ -103,9 +103,9 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         if(!visible) return false;
-        return this.getCurrentTab().mouseScrolled(mouseX, mouseY, amount);
+        return this.getCurrentTab().mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
     @Override

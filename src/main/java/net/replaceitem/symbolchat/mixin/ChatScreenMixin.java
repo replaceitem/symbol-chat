@@ -72,8 +72,8 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, SymbolS
     }
 
     @Inject(method = "mouseScrolled", at = @At(value = "HEAD"), cancellable = true)
-    public void onMouseScrolled(double mouseX, double mouseY, double amount, CallbackInfoReturnable<Boolean> cir) {
-        if(super.mouseScrolled(mouseX, mouseY, amount)) cir.setReturnValue(true);
+    public void onMouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount, CallbackInfoReturnable<Boolean> cir) {
+        if(super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)) cir.setReturnValue(true);
     }
     
     @Inject(method = "onChatFieldUpdate", at = @At("HEAD"))

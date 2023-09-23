@@ -43,11 +43,11 @@ public class ScrollableGridWidget extends ScrollableWidget {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         if(this.isWithinBounds(mouseX, mouseY)) {
-            this.gridWidget.forEachChild(clickableWidget -> clickableWidget.mouseScrolled(mouseX, mouseY + getScrollY(), amount));
+            this.gridWidget.forEachChild(clickableWidget -> clickableWidget.mouseScrolled(mouseX, mouseY + getScrollY(), horizontalAmount, verticalAmount));
         }
-        return super.mouseScrolled(mouseX, mouseY, amount);
+        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
     @Override
