@@ -35,6 +35,8 @@ public class UnicodeTableScreen extends Screen {
     private TextFieldWidget pageTextField;
     private TextFieldWidget searchTextField;
     private CheckboxWidget showBlocksWidget;
+    private ButtonWidget copySelectedButton;
+    private ButtonWidget favoriteSymbolButton;
     
     private int selectionStart = -1;
     private int selectionEnd = -1;
@@ -112,10 +114,10 @@ public class UnicodeTableScreen extends Screen {
         GridWidget gridWidget2 = new GridWidget(2,18);
         GridWidget.Adder adder2 = gridWidget2.createAdder(Integer.MAX_VALUE);
 
-        ButtonWidget copySelectedButton = ButtonWidget.builder(Text.literal("📋 ").append(Text.translatable("symbolchat.copy_selected")), button -> copySelected()).dimensions(0, 0, 100, 20).build();
+        copySelectedButton = ButtonWidget.builder(Text.literal("📋 ").append(Text.translatable("symbolchat.copy_selected")), button -> copySelected()).dimensions(0, 0, 100, 20).build();
         adder2.add(copySelectedButton);
 
-        ButtonWidget favoriteSymbolButton = ButtonWidget.builder(Text.literal("✩ ").append(Text.translatable("symbolchat.favorite_symbol")), button -> favoriteSymbols()).dimensions(0, 0, 140, 20).build();
+        favoriteSymbolButton = ButtonWidget.builder(Text.literal("✩ ").append(Text.translatable("symbolchat.favorite_symbol")), button -> favoriteSymbols()).dimensions(0, 0, 140, 20).build();
         adder2.add(favoriteSymbolButton);
         if(!SymbolChat.clothConfigEnabled) {
             favoriteSymbolButton.active = false;
@@ -195,6 +197,7 @@ public class UnicodeTableScreen extends Screen {
         Character.UnicodeBlock currentBlock = null;
         int blockCycleColorIndex = CYCLING_BLOCK_COLORS.length-1;
         String search = searchTextField.getText().toUpperCase(Locale.ROOT);
+        // TODO - refactor this into one, while keeping an eye on performance. Then use the (half) newly added TextRendererMixin to check and filter (checkbox) missing ones
         if(search.isBlank()) {
             int pageMask = page << 16;
             for (int i = 0; i <= 0xFFFF; i++) {
@@ -287,6 +290,10 @@ public class UnicodeTableScreen extends Screen {
             if(y >= height) break;
             index++;
         }
+        
+        boolean buttonsActive = this.selectionStart != -1;
+        this.copySelectedButton.active = buttonsActive;
+        this.favoriteSymbolButton.active = buttonsActive;
     }
 
 
