@@ -12,10 +12,13 @@ import net.minecraft.client.gui.widget.EmptyWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.TextRendererAccess;
 import net.replaceitem.symbolchat.Util;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
@@ -37,6 +40,7 @@ public class UnicodeTableScreen extends Screen {
     private TextFieldWidget pageTextField;
     private TextFieldWidget searchTextField;
     private CheckboxWidget showBlocksWidget;
+    private CheckboxWidget hideMissingGlyphs;
     private ButtonWidget copySelectedButton;
     private ButtonWidget favoriteSymbolButton;
     
@@ -65,14 +69,14 @@ public class UnicodeTableScreen extends Screen {
         this.columns = this.width / SymbolButtonWidget.GRID_SPCAING;
         this.screenRows = this.height / SymbolButtonWidget.GRID_SPCAING;
 
-        GridWidget gridWidget1 = new GridWidget(2,2);
-        gridWidget1.setColumnSpacing(2);
-        GridWidget.Adder adder1 = gridWidget1.createAdder(Integer.MAX_VALUE);
+        GridWidget topRowGridWidget = new GridWidget(2,2);
+        topRowGridWidget.setColumnSpacing(2);
+        GridWidget.Adder topRowAdder = topRowGridWidget.createAdder(Integer.MAX_VALUE);
 
         TextWidget pageTextWidget = new TextWidget(Text.translatable("symbolchat.page"), this.textRenderer);
         pageTextWidget.setX(0);
         pageTextWidget.setY(0);
-        adder1.add(pageTextWidget);
+        topRowAdder.add(pageTextWidget);
         
         pageTextField = new TextFieldWidget(this.textRenderer, 0, 0, 20, 12, Text.empty());
         pageTextField.setText("0");
@@ -85,49 +89,62 @@ public class UnicodeTableScreen extends Screen {
             }
             this.reloadSymbols();
         });
-        adder1.add(pageTextField);
+        topRowAdder.add(pageTextField);
         
-        adder1.add(EmptyWidget.ofWidth(40));
+        topRowAdder.add(EmptyWidget.ofWidth(10));
 
         TextWidget searchTextWidget = new TextWidget(Text.translatable("symbolchat.search"), this.textRenderer);
         searchTextWidget.setX(0);
         searchTextWidget.setY(0);
-        adder1.add(searchTextWidget);
+        topRowAdder.add(searchTextWidget);
 
         searchTextField = new TextFieldWidget(this.textRenderer, 0, 0, 150, 12, Text.of(""));
         searchTextField.setChangedListener(s -> this.reloadSymbols());
-        adder1.add(searchTextField);
-        
-        adder1.add(EmptyWidget.ofWidth(40));
+        topRowAdder.add(searchTextField);
 
-        showBlocksWidget = new CheckboxWidget(0, 0, 60, 20, Text.translatable("symbolchat.show_blocks"), false) {
+        topRowGridWidget.refreshPositions();
+        topRowGridWidget.forEachChild(this::addDrawableChild);
+
+
+        GridWidget bottomRowGridWidget = new GridWidget(2,18);
+        GridWidget.Adder bottomRowAdder = bottomRowGridWidget.createAdder(Integer.MAX_VALUE);
+
+        copySelectedButton = ButtonWidget.builder(Text.literal("📋 ").append(Text.translatable("symbolchat.copy_selected")), button -> copySelected()).dimensions(0, 0, 100, 20).build();
+        bottomRowAdder.add(copySelectedButton);
+
+        favoriteSymbolButton = ButtonWidget.builder(Text.literal("✩ ").append(Text.translatable("symbolchat.favorite_symbol")), button -> favoriteSymbols()).dimensions(0, 0, 140, 20).build();
+        bottomRowAdder.add(favoriteSymbolButton);
+        if(!SymbolChat.clothConfigEnabled) {
+            favoriteSymbolButton.active = false;
+            favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.no_clothconfig")));
+        }
+
+
+        bottomRowAdder.add(EmptyWidget.ofWidth(5));
+        
+        MutableText showBlocksText = Text.translatable("symbolchat.show_blocks");
+        showBlocksWidget = new CheckboxWidget(0, 0, 24 + textRenderer.getWidth(showBlocksText.asOrderedText()), 20, showBlocksText, false) {
             @Override
             public void onPress() {
                 super.onPress();
                 refreshButtons();
             }
         };
-        adder1.add(showBlocksWidget);
+        bottomRowAdder.add(showBlocksWidget);
 
-        gridWidget1.refreshPositions();
-        gridWidget1.forEachChild(this::addDrawableChild);
-
-
-        GridWidget gridWidget2 = new GridWidget(2,18);
-        GridWidget.Adder adder2 = gridWidget2.createAdder(Integer.MAX_VALUE);
-
-        copySelectedButton = ButtonWidget.builder(Text.literal("📋 ").append(Text.translatable("symbolchat.copy_selected")), button -> copySelected()).dimensions(0, 0, 100, 20).build();
-        adder2.add(copySelectedButton);
-
-        favoriteSymbolButton = ButtonWidget.builder(Text.literal("✩ ").append(Text.translatable("symbolchat.favorite_symbol")), button -> favoriteSymbols()).dimensions(0, 0, 140, 20).build();
-        adder2.add(favoriteSymbolButton);
-        if(!SymbolChat.clothConfigEnabled) {
-            favoriteSymbolButton.active = false;
-            favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.no_clothconfig")));
-        }
+        bottomRowAdder.add(EmptyWidget.ofWidth(5));
         
-        gridWidget2.refreshPositions();
-        gridWidget2.forEachChild(this::addDrawableChild);
+        hideMissingGlyphs = new CheckboxWidget(0, 0, 100, 20, Text.translatable("symbolchat.hide_missing_glyphs"), false) {
+            @Override
+            public void onPress() {
+                super.onPress();
+                reloadSymbols();
+            }
+        };
+        bottomRowAdder.add(hideMissingGlyphs);
+        
+        bottomRowGridWidget.refreshPositions();
+        bottomRowGridWidget.forEachChild(this::addDrawableChild);
         
         this.reloadSymbols();
     }
@@ -187,6 +204,7 @@ public class UnicodeTableScreen extends Screen {
     }
 
     private void reloadSymbols() {
+        this.pageTextField.active = searchTextField.getText().isBlank();
         this.searchCodePoints();
         this.refreshButtons();
     }
@@ -225,6 +243,7 @@ public class UnicodeTableScreen extends Screen {
         Character.UnicodeBlock currentBlock = null;
         
         void accept(int codepoint) {
+            if(hideMissingGlyphs.isChecked() && ((TextRendererAccess) textRenderer).isMissingGlyph(codepoint, Style.EMPTY)) return;
             Character.UnicodeBlock newBlock = Character.UnicodeBlock.of(codepoint);
             if (newBlock != currentBlock) {
                 blockCycleColorIndex = (blockCycleColorIndex + 1) % CYCLING_BLOCK_COLORS.length;
@@ -249,7 +268,7 @@ public class UnicodeTableScreen extends Screen {
     private void refreshButtons() {
         this.columns = this.width / SymbolButtonWidget.GRID_SPCAING;
         this.screenRows = (this.height-TOOLBAR_HEIGHT) / SymbolButtonWidget.GRID_SPCAING;
-        scroll = MathHelper.clamp(scroll, 0, Math.max(MathHelper.ceilDiv(codepoints.size(), columns)-screenRows, 0));
+        this.scroll = MathHelper.clamp(scroll, 0, Math.max(MathHelper.ceilDiv(codepoints.size(), columns)-screenRows, 0));
         this.widgets.clear();
         int x = 1, y = TOOLBAR_HEIGHT;
         int index = scroll*columns;
@@ -267,7 +286,6 @@ public class UnicodeTableScreen extends Screen {
                     
             int finalIndex = index;
             PasteSymbolButtonWidget button = new PasteSymbolButtonWidget(x, y, null, Util.stringFromCodePoint(codePoint), Tooltip.of(tooltip)) {
-                
                 @Override
                 public boolean onClick(int button) {
                     if(Screen.hasShiftDown() && selectionStart != -1) {
