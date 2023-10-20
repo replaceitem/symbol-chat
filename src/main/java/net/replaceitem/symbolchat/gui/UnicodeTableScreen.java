@@ -1,5 +1,7 @@
 package net.replaceitem.symbolchat.gui;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -46,7 +48,7 @@ public class UnicodeTableScreen extends Screen {
     public static final int TOOLBAR_HEIGHT = 40;
 
     // leftmost byte shows the block color
-    private final List<Integer> codePoints = new ArrayList<>();
+    private IntList codepoints = new IntArrayList();
     
     private final int[] CYCLING_BLOCK_COLORS = new int[] {
             0xFF800000,
@@ -133,8 +135,7 @@ public class UnicodeTableScreen extends Screen {
     private IntStream getSelectedSymbols() {
         IntStream.Builder intStreamBuilder = IntStream.builder();
         for(int i = selectionStart; i <= selectionEnd; i++) {
-            Integer codepoint = this.codePoints.get(i);
-            if(codepoint == null) break;
+            int codepoint = this.codepoints.getInt(i);
             intStreamBuilder.add(codepoint & 0x00FFFFFF);
         }
         return intStreamBuilder.build();
@@ -170,7 +171,7 @@ public class UnicodeTableScreen extends Screen {
         for (PasteSymbolButtonWidget widget : widgets) {
             widget.render(context, mouseX, mouseY, delta);
         }
-        int scrollbarRows = Math.max(MathHelper.ceilDiv(codePoints.size(), columns), screenRows);
+        int scrollbarRows = Math.max(MathHelper.ceilDiv(codepoints.size(), columns), screenRows);
         double visibleRatio = (double) screenRows / scrollbarRows;
         int scrollbarHeight = (int) (visibleRatio * (height - TOOLBAR_HEIGHT));
         int scrollbarY = (int) MathHelper.clampedMap(scroll, 0, scrollbarRows-screenRows, TOOLBAR_HEIGHT, height - scrollbarHeight);
@@ -193,39 +194,48 @@ public class UnicodeTableScreen extends Screen {
     private void searchCodePoints() {
         selectionStart = -1;
         selectionEnd = -1;
-        codePoints.clear();
-        Character.UnicodeBlock currentBlock = null;
-        int blockCycleColorIndex = CYCLING_BLOCK_COLORS.length-1;
         String search = searchTextField.getText().toUpperCase(Locale.ROOT);
-        // TODO - refactor this into one, while keeping an eye on performance. Then use the (half) newly added TextRendererMixin to check and filter (checkbox) missing ones
-        if(search.isBlank()) {
+        boolean searching = search.isBlank();
+        CodePointCollector collector = new CodePointCollector();
+        
+        if(searching) {
             int pageMask = page << 16;
             for (int i = 0; i <= 0xFFFF; i++) {
-                int codePoint = pageMask | i;
-                if(!Character.isValidCodePoint(codePoint)) break;
-                Character.UnicodeBlock newBlock = Character.UnicodeBlock.of(codePoint);
-                if (newBlock != currentBlock) {
-                    blockCycleColorIndex = (blockCycleColorIndex + 1) % CYCLING_BLOCK_COLORS.length;
-                    currentBlock = newBlock;
-                }
-                codePoint |= blockCycleColorIndex << 24;
-                codePoints.add(codePoint);
+                int codepoint = pageMask | i;
+                if(!Character.isValidCodePoint(codepoint)) break;
+                collector.accept(codepoint);
             }
         } else {
-            int codePoint = 0;
-            while(Character.isValidCodePoint(codePoint)) {
-                String name = Character.getName(codePoint);
+            int codepoint = 0;
+            while(Character.isValidCodePoint(codepoint)) {
+                String name = Character.getName(codepoint);
                 if(name != null && isRelevant(name, search)) {
-                    Character.UnicodeBlock newBlock = Character.UnicodeBlock.of(codePoint);
-                    if (newBlock != currentBlock) {
-                        blockCycleColorIndex = (blockCycleColorIndex + 1) % CYCLING_BLOCK_COLORS.length;
-                        currentBlock = newBlock;
-                    }
-                    int savedCodePoint = codePoint | (blockCycleColorIndex << 24);
-                    codePoints.add(savedCodePoint);
+                    collector.accept(codepoint);
                 }
-                codePoint++;
+                codepoint++;
             }
+        }
+        
+        this.codepoints = collector.getCodepoints();
+    }
+    
+    private class CodePointCollector {
+        IntList codepoints = new IntArrayList();
+        int blockCycleColorIndex = CYCLING_BLOCK_COLORS.length-1;
+        Character.UnicodeBlock currentBlock = null;
+        
+        void accept(int codepoint) {
+            Character.UnicodeBlock newBlock = Character.UnicodeBlock.of(codepoint);
+            if (newBlock != currentBlock) {
+                blockCycleColorIndex = (blockCycleColorIndex + 1) % CYCLING_BLOCK_COLORS.length;
+                currentBlock = newBlock;
+            }
+            codepoint |= (blockCycleColorIndex << 24);
+            codepoints.add(codepoint);
+        }
+
+        IntList getCodepoints() {
+            return codepoints;
         }
     }
     
@@ -239,12 +249,12 @@ public class UnicodeTableScreen extends Screen {
     private void refreshButtons() {
         this.columns = this.width / SymbolButtonWidget.GRID_SPCAING;
         this.screenRows = (this.height-TOOLBAR_HEIGHT) / SymbolButtonWidget.GRID_SPCAING;
-        scroll = MathHelper.clamp(scroll, 0, Math.max(MathHelper.ceilDiv(codePoints.size(), columns)-screenRows, 0));
+        scroll = MathHelper.clamp(scroll, 0, Math.max(MathHelper.ceilDiv(codepoints.size(), columns)-screenRows, 0));
         this.widgets.clear();
         int x = 1, y = TOOLBAR_HEIGHT;
         int index = scroll*columns;
-        while(index < codePoints.size()) {
-            int value = codePoints.get(index);
+        while(index < codepoints.size()) {
+            int value = codepoints.getInt(index);
             int codePoint = value & 0x00FFFFFF;
             int blockColor = CYCLING_BLOCK_COLORS[(value & 0xFF000000) >> 24];
 
@@ -299,7 +309,7 @@ public class UnicodeTableScreen extends Screen {
 
     @Override
     public void close() {
-        this.client.setScreen(this.parent);
+        if(this.client != null) this.client.setScreen(this.parent);
     }
 
     @Override
