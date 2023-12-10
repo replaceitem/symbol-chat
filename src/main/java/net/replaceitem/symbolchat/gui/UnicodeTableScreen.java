@@ -276,16 +276,17 @@ public class UnicodeTableScreen extends Screen {
             int value = codepoints.getInt(index);
             int codePoint = value & 0x00FFFFFF;
             int blockColor = CYCLING_BLOCK_COLORS[(value & 0xFF000000) >> 24];
-
+            String symbol = Util.stringFromCodePoint(codePoint);
             Character.UnicodeBlock block = Character.UnicodeBlock.of(codePoint);
             
             Text tooltip = Text.empty()
                     .append(Text.literal(Integer.toHexString(codePoint)))
                     .append("\n\n" + Util.getCapitalizedSymbolName(codePoint) + "\n")
+                    .append("Width: " + textRenderer.getWidth(symbol) + "\n")
                     .append(block == null ? Text.literal("UNKNOWN BLOCK").formatted(Formatting.GRAY) : Text.literal(block.toString()).styled(style -> style.withColor(blockColor)));
                     
             int finalIndex = index;
-            PasteSymbolButtonWidget button = new PasteSymbolButtonWidget(x, y, null, Util.stringFromCodePoint(codePoint), Tooltip.of(tooltip)) {
+            PasteSymbolButtonWidget button = new PasteSymbolButtonWidget(x, y, null, symbol, Tooltip.of(tooltip)) {
                 @Override
                 public boolean onClick(int button) {
                     if(Screen.hasShiftDown() && selectionStart != -1) {
