@@ -40,7 +40,7 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
     }
 
     @Override
-    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if(!this.visible) return;
         drawContext.getMatrices().push();
         drawContext.getMatrices().translate(0.0, 0.0, 350.0);

@@ -89,7 +89,7 @@ public class ScrollableGridWidget extends ScrollableWidget {
 
     // overriding just to not crop scissor by 1px
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             this.drawBox(context);
             context.enableScissor(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height);

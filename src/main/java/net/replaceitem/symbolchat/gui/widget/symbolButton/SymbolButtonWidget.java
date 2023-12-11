@@ -87,7 +87,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     }
 
     @Override
-    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             RenderSystem.disableDepthTest();
             int bg = this.isHovered() ? hoverBackgroundColor : backgroundColor;

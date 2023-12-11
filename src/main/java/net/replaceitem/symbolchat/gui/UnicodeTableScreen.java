@@ -123,24 +123,12 @@ public class UnicodeTableScreen extends Screen {
         bottomRowAdder.add(EmptyWidget.ofWidth(5));
         
         MutableText showBlocksText = Text.translatable("symbolchat.show_blocks");
-        showBlocksWidget = new CheckboxWidget(0, 0, 24 + textRenderer.getWidth(showBlocksText.asOrderedText()), 20, showBlocksText, false) {
-            @Override
-            public void onPress() {
-                super.onPress();
-                refreshButtons();
-            }
-        };
+        showBlocksWidget = CheckboxWidget.builder(showBlocksText, textRenderer).callback((checkbox, checked) -> refreshButtons()).build();
         bottomRowAdder.add(showBlocksWidget);
 
         bottomRowAdder.add(EmptyWidget.ofWidth(5));
         
-        hideMissingGlyphs = new CheckboxWidget(0, 0, 100, 20, Text.translatable("symbolchat.hide_missing_glyphs"), false) {
-            @Override
-            public void onPress() {
-                super.onPress();
-                reloadSymbols();
-            }
-        };
+        hideMissingGlyphs = CheckboxWidget.builder(Text.translatable("symbolchat.hide_missing_glyphs"), textRenderer).callback((checkbox, checked) -> reloadSymbols()).build();
         bottomRowAdder.add(hideMissingGlyphs);
         
         bottomRowGridWidget.refreshPositions();
