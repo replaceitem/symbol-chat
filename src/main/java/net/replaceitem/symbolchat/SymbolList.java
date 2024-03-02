@@ -1,40 +1,94 @@
 package net.replaceitem.symbolchat;
 
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class SymbolList {
-    public final String id;
-    public List<String> lines;
+    private final Identifier id;
+    protected final List<String> symbols;
 
-    public SymbolList(String id, List<String> lines) {
+    public SymbolList(Identifier id, List<String> symbols) {
         this.id = id;
-        this.lines = lines;
+        this.symbols = symbols;
     }
 
-    public SymbolList separateSymbols() {
-        this.lines = this.lines.stream().flatMapToInt(String::codePoints).mapToObj(Character::toString).toList();
-        return this;
+    public Identifier getId() {
+        return id;
     }
 
-    public static SymbolList loadFromFile(String name, boolean separate) {
-        String path = String.format("assets/symbol-chat/symbols/%s.txt", name);
-        InputStream stream = MinecraftClient.getInstance().getClass().getClassLoader().getResourceAsStream(path);
-        if(stream == null) throw new RuntimeException(String.format("Could not open '%s' to get symbols", path));
-        List<String> lines;
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
-            lines = bufferedReader.lines().toList();
-        } catch (IOException e) {
-            throw new RuntimeException(String.format("Could not open '%s' to get symbols", path), e);
+    public Stream<String> stream() {
+        return symbols.stream();
+    }
+    
+    public static class Mutable extends SymbolList {
+
+        private final HashSet<String> set = new HashSet<>();
+        
+        public Mutable(Identifier id, List<String> symbols) {
+            super(id, new ArrayList<>(symbols));
+            set.addAll(symbols);
         }
-        SymbolList symbolList = new SymbolList(name, lines);
-        if(separate) symbolList.separateSymbols();
-        return symbolList;
+        
+        public Mutable(Identifier id) {
+            super(id, new ArrayList<>());
+        }
+
+        public void addSymbol(String symbol) {
+            this.symbols.add(symbol);
+            this.set.add(symbol);
+        }
+        
+        public boolean contains(String symbol) {
+            return set.contains(symbol);
+        }
+        
+        public void clear() {
+            this.symbols.clear();
+            this.set.clear();
+        }
+    }
+
+
+    public static class SplitType {
+        private final Function<BufferedReader,List<String>> splitter;
+
+        private static final Map<String, SplitType> TYPES = new HashMap<>();
+        
+        public static final SplitType CODEPOINT = register("codepoint", new SplitType(reader -> reader.lines().flatMapToInt(String::codePoints).mapToObj(Character::toString).toList()));
+        public static final SplitType LINE = register("line", new SplitType(reader -> reader.lines().toList()));
+
+        public SplitType(Function<BufferedReader, List<String>> splitter) {
+            this.splitter = splitter;
+        }
+
+        public List<String> split(BufferedReader reader) {
+            return splitter.apply(reader);
+        }
+        
+        public static SplitType register(String name, SplitType splitType) {
+            TYPES.put(name, splitType);
+            return splitType;
+        }
+
+        @NotNull
+        public static SplitType getOrDefault(String name, @NotNull SplitType defaultType) {
+            SplitType splitType = get(name);
+            return splitType == null ? defaultType : splitType;
+        }
+
+        @Nullable
+        public static SplitType get(String name) {
+            return TYPES.get(name);
+        }
     }
 }

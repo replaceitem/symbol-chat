@@ -1,0 +1,10 @@
+{
+    "icon": "\uD83C\uDF37",
+    "order": 2,
+    "symbols": [
+        "symbol-chat:environment",
+        "symbol-chat:greenery",
+        "symbol-chat:animals",
+        "symbol-chat:food"
+    ]
+}

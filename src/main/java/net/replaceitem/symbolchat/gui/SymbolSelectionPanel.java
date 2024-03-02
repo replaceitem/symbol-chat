@@ -1,15 +1,18 @@
 package net.replaceitem.symbolchat.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.AbstractParentElement;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.replaceitem.symbolchat.SymbolCategory;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.SymbolStorage;
-import net.replaceitem.symbolchat.gui.tab.SymbolTab;
+import net.replaceitem.symbolchat.SymbolTab;
 import net.replaceitem.symbolchat.gui.widget.TabSelectionWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
+import net.replaceitem.symbolchat.gui.widget.SymbolTabWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +20,13 @@ import java.util.function.Consumer;
 
 public class SymbolSelectionPanel extends AbstractParentElement implements Drawable, Selectable {
     private final TabSelectionWidget tabSelectionWidget;
-    private final List<SymbolTab> tabs;
+    private final List<SymbolTabWidget> tabs;
 
     protected int x,y;
-    public final int height;
+    private final int height;
+    private final int width;
 
-    public static int WIDTH = SymbolTab.COLUMNS * (SymbolButtonWidget.GRID_SPCAING) + 1;
+    private static final int MIN_COLUMNS = 8;
 
     private boolean visible;
 
@@ -33,36 +37,37 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         this.tabs = new ArrayList<>();
         this.x = x;
         this.y = y;
+        int columns = Math.max(SymbolChat.symbolManager.getTabs().size(), MIN_COLUMNS);
+        this.width = columns * (SymbolButtonWidget.GRID_SPCAING) + 1;
         this.visible = SymbolChat.config.getKeepPanelOpen() && SymbolChat.isPanelOpen;
         this.symbolInsertable = symbolConsumer;
-        this.tabSelectionWidget = new TabSelectionWidget(this.x, this.y + 1, WIDTH) {
+        this.tabSelectionWidget = new TabSelectionWidget(this.x, this.y + 1, width) {
             @Override
             protected void onTabSwitched() {
                 getCurrentTab().refresh();
             }
         };
 
-        addTab(SymbolStorage.all);
-        SymbolStorage.categories.forEach(this::addTab);
-        addTab(SymbolStorage.kaomojis);
-        addTab(SymbolStorage.favoriteSymbols);
+        for (SymbolTab tab : SymbolChat.symbolManager.getTabs()) {
+            addTab(tab, columns);
+        }
 
         tabSelectionWidget.refreshPositions();
     }
-    
-    private void addTab(SymbolCategory category) {
+
+    private void addTab(SymbolTab tab, int columns) {
         int tabY = this.y + tabSelectionWidget.getHeight() + 2;
         int tabHeight = this.height - (tabSelectionWidget.getHeight() + 2) - 1;
-        SymbolTab tab = SymbolTab.fromCategory(symbolInsertable, category, this, this.x + 1, tabY, tabHeight);
-        this.tabs.add(tab);
-        this.tabSelectionWidget.addTab(category);
+        SymbolTabWidget tabWidget = new SymbolTabWidget(symbolInsertable, tab, this, this.x + 1, tabY, width, tabHeight, columns);
+        this.tabs.add(tabWidget);
+        this.tabSelectionWidget.addTab(tab);
     }
 
-    public SymbolTab getSymbolTab(int index) {
+    public SymbolTabWidget getSymbolTab(int index) {
         return this.tabs.get(index);
     }
 
-    public SymbolTab getCurrentTab() {
+    public SymbolTabWidget getCurrentTab() {
         return this.getSymbolTab(this.tabSelectionWidget.getSelectedTab());
     }
 
@@ -81,7 +86,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         drawContext.getMatrices().push();
         drawContext.getMatrices().translate(0.0, 0.0, 350.0);
         RenderSystem.disableDepthTest();
-        drawContext.fill(this.x, this.y + SymbolButtonWidget.GRID_SPCAING + 1, this.x + WIDTH, this.y + height, SymbolChat.config.getHudColor());
+        drawContext.fill(this.x, this.y + SymbolButtonWidget.GRID_SPCAING + 1, this.x + width, this.y + height, SymbolChat.config.getHudColor());
         tabSelectionWidget.render(drawContext, mouseX, mouseY, delta);
         getCurrentTab().render(drawContext, mouseX, mouseY, delta);
         drawContext.getMatrices().pop();
@@ -110,7 +115,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < this.x + WIDTH && mouseY < this.y + height;
+        return this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < this.x + width && mouseY < this.y + height;
     }
 
     @Override

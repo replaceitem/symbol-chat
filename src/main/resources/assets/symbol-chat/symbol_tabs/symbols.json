@@ -1,0 +1,8 @@
+{
+    "icon": "\uD83D\uDDF9",
+    "order": 5,
+    "symbols": [
+        "symbol-chat:symbols",
+        "symbol-chat:misc"
+    ]
+}

@@ -4,7 +4,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.SymbolStorage;
 import net.replaceitem.symbolchat.Util;
 import org.lwjgl.glfw.GLFW;
 
@@ -12,8 +11,7 @@ import java.util.function.Consumer;
 
 public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     protected final Consumer<String> symbolConsumer;
-
-    protected final int codepoint;
+    protected final String symbol;
     private boolean isFavorite;
 
     public PasteSymbolButtonWidget(int x, int y, Consumer<String> symbolConsumer, String symbol) {
@@ -22,11 +20,11 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
 
     public PasteSymbolButtonWidget(int x, int y, Consumer<String> symbolConsumer, String symbol, Tooltip tooltip) {
         super(x, y, symbol);
+        this.symbol = symbol;
         this.symbolConsumer = symbolConsumer;
-        this.codepoint = symbol.codePoints().findFirst().orElse(0);
         this.setTooltip(tooltip);
         this.setTooltipDelay(SymbolChat.config.getSymbolTooltipMode().delay);
-        this.isFavorite = SymbolStorage.isFavorite(this.codepoint);
+        this.isFavorite = SymbolChat.symbolManager.isFavorite(symbol);
     }
 
     @Override
@@ -59,10 +57,11 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     }
     
     protected void onRightClick() {
-        boolean currentlyFavorite = SymbolStorage.isFavorite(this.codepoint);
+        boolean currentlyFavorite = SymbolChat.symbolManager.isFavorite(this.symbol);
         if(currentlyFavorite) SymbolChat.config.removeFavorite(this.getSymbol());
         else SymbolChat.config.addFavorite(this.getSymbol());
         this.isFavorite = !currentlyFavorite;
+        // TODO refresh tab
     }
 
     public void setFavorite(boolean favorite) {
@@ -70,6 +69,6 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     }
 
     public String getSymbol() {
-        return Util.stringFromCodePoint(this.codepoint);
+        return symbol;
     }
 }

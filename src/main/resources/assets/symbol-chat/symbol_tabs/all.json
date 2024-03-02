@@ -1,0 +1,26 @@
+{
+    "icon": "\uD83D\uDD0E",
+    "order": 0,
+    "search_bar": true,
+    "symbols": [
+        "symbol-chat:faces",
+        "symbol-chat:hands",
+        "symbol-chat:people",
+        "symbol-chat:body",
+        "symbol-chat:environment",
+        "symbol-chat:greenery",
+        "symbol-chat:animals",
+        "symbol-chat:food",
+        "symbol-chat:things",
+        "symbol-chat:clothes",
+        "symbol-chat:activities",
+        "symbol-chat:transport",
+        "symbol-chat:symbols",
+        "symbol-chat:misc",
+        "symbol-chat:shapes",
+        "symbol-chat:arrows",
+        "symbol-chat:numbers",
+        
+        "symbol-chat:favorites"
+    ]
+}

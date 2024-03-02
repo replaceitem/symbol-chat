@@ -1,4 +1,4 @@
-package net.replaceitem.symbolchat.gui.tab;
+package net.replaceitem.symbolchat.gui.widget;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -12,57 +12,60 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-import net.replaceitem.symbolchat.SymbolCategory;
-import net.replaceitem.symbolchat.SymbolStorage;
+import net.replaceitem.symbolchat.SearchUtil;
+import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.SymbolTab;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
-import net.replaceitem.symbolchat.gui.widget.ScrollableGridWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
-public class SymbolTab extends AbstractParentElement implements Widget, Drawable, Element {
-
-    public static int COLUMNS = 9;
+public class SymbolTabWidget extends AbstractParentElement implements Widget, Drawable, Element {
+    
+    private static final int SEARCH_BAR_HEIGHT = 10;
+    public static final Text NO_RESULTS = Text.translatable("symbolchat.no_search_results");
+    public static final Text NO_FAVORITE_SYMBOLS = Text.translatable("symbolchat.no_favorite_symbols");
+    public static final Text NO_CLOTHCONFIG = Text.translatable("symbolchat.no_clothconfig");
+    private final int columns;
 
     public SymbolSelectionPanel symbolSelectionPanel;
 
     protected List<Element> children;
+    @Nullable
+    private Text emptyText;
     protected int x, y;
     private final int width;
     private final int height;
     
-    protected final SymbolCategory category;
+    protected final SymbolTab tab;
 
     protected Consumer<String> symbolConsumer;
 
+    @Nullable
+    private SymbolSearchBar searchBar;
     protected final ScrollableGridWidget scrollableGridWidget;
-    
-    public static SymbolTab fromCategory(Consumer<String> symbolInsertable, SymbolCategory symbols, SymbolSelectionPanel symbolSelectionPanel, int x, int y, int height) {
-        if(symbols == SymbolStorage.kaomojis) {
-            return new KaomojiTab(symbolInsertable, symbols, symbolSelectionPanel, x, y, height);
-        } else if(symbols == SymbolStorage.all) {
-            return new SearchTab(symbolInsertable, symbols, symbolSelectionPanel, x, y, height);
-        } else if(symbols == SymbolStorage.favoriteSymbols) {
-            return new FavoritesTab(symbolInsertable, symbols, symbolSelectionPanel, x, y, height);
-        } else {
-            return new SymbolTab(symbolInsertable, symbols, symbolSelectionPanel, x, y, height);
-        }
-    }
 
-    public SymbolTab(Consumer<String> symbolConsumer, SymbolCategory symbolCategory, SymbolSelectionPanel symbolSelectionPanel, int x, int y, int height) {
+    public SymbolTabWidget(Consumer<String> symbolConsumer, SymbolTab symbolTab, SymbolSelectionPanel symbolSelectionPanel, int x, int y, int width, int height, int panelColumns) {
+        this.tab = symbolTab;
         this.x = x;
         this.y = y;
-        this.width = SymbolSelectionPanel.WIDTH;
+        this.width = width;
         this.height = height;
+        this.columns = this.tab.getType().getColumns(panelColumns);
         this.symbolConsumer = symbolConsumer;
         this.children = new ArrayList<>();
         this.symbolSelectionPanel = symbolSelectionPanel;
         this.scrollableGridWidget = createScrollableGridWidget();
-        this.category = symbolCategory;
-
         this.children.add(scrollableGridWidget);
+        if(tab.hasSearchBar()) {
+            this.searchBar = new SymbolSearchBar(this.x + 2, this.y + 1, getWidth() - 4, SEARCH_BAR_HEIGHT);
+            this.searchBar.setChangedListener(s -> refresh());
+            this.children.add(this.searchBar);
+        }
         this.refresh();
     }
 
@@ -73,26 +76,50 @@ public class SymbolTab extends AbstractParentElement implements Widget, Drawable
     }
 
     protected void addSymbols() {
-        for (String symbol : this.category.getSymbols()) {
-            this.scrollableGridWidget.add(createButton(symbol));
+        Stream<String> stream = this.tab.streamSymbols();
+        if(searchBar != null) {
+            stream = SearchUtil.performSearch(stream, searchBar.getText());
         }
+        List<PasteSymbolButtonWidget> buttons = stream.map(this::createButton).toList();
+        buttons.forEach(scrollableGridWidget::add);
+        this.emptyText = this.getEmptyText(buttons.isEmpty());
+    }
+    
+    private Text getEmptyText(boolean noSymbols) {
+        if(!noSymbols) return null;
+        if(SymbolChat.symbolManager.isOnlyFavorites(tab)) {
+            return SymbolChat.clothConfigEnabled ? NO_FAVORITE_SYMBOLS : NO_CLOTHCONFIG;
+        }
+        return NO_RESULTS;
     }
     
     protected ScrollableGridWidget createScrollableGridWidget() {
-        return new ScrollableGridWidget(this.x, this.y, this.width, this.height, COLUMNS);
+        int offset = this.tab.hasSearchBar() ? SEARCH_BAR_HEIGHT+2 : 0;
+        return new ScrollableGridWidget(x, y + offset, this.getWidth(), this.getHeight()-offset, columns);
     }
 
     protected PasteSymbolButtonWidget createButton(String symbol) {
+        if(tab.getType() == SymbolTab.Type.KAOMOJIS) {
+            PasteSymbolButtonWidget pasteSymbolButtonWidget = new PasteSymbolButtonWidget(x, y, this.symbolConsumer, symbol) {
+                @Override
+                protected void onRightClick() {
+                }
+            };
+            pasteSymbolButtonWidget.setFavorite(false);
+            pasteSymbolButtonWidget.setWidth(this.getWidth() - 2);
+            pasteSymbolButtonWidget.setTooltip(null);
+            return pasteSymbolButtonWidget;
+        }
+        
         return new PasteSymbolButtonWidget(x, y, this.symbolConsumer, symbol);
     }
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         this.scrollableGridWidget.render(drawContext, mouseX, mouseY, delta);
-        Text text = this.getNoSymbolsText();
-        if(text != null) {
+        if(emptyText != null) {
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-            List<OrderedText> orderedTexts = textRenderer.wrapLines(text, SymbolSelectionPanel.WIDTH - 4);
+            List<OrderedText> orderedTexts = textRenderer.wrapLines(emptyText, width - 4);
             drawContext.getMatrices().push();
             drawContext.getMatrices().translate(0, 0, 200);
             int startY = this.y + (this.getHeight() / 2) - (orderedTexts.size() * textRenderer.fontHeight / 2);
@@ -104,15 +131,18 @@ public class SymbolTab extends AbstractParentElement implements Widget, Drawable
             }
             drawContext.getMatrices().pop();
         }
-    }
-    
-    public Text getNoSymbolsText() {
-        return null;
+        if(this.searchBar != null) this.searchBar.render(drawContext, mouseX, mouseY, delta);
     }
 
     @Override
     public List<? extends Element> children() {
         return this.children;
+    }
+
+    @Override
+    public void setFocused(@Nullable Element focused) {
+        if(this.searchBar != null && this.searchBar.isFocused()) return;
+        super.setFocused(focused);
     }
 
     @Override

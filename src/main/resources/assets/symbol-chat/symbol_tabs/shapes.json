@@ -1,0 +1,9 @@
+{
+    "icon": "\uD83D\uDDA4",
+    "order": 6,
+    "symbols": [
+        "symbol-chat:shapes",
+        "symbol-chat:arrows",
+        "symbol-chat:numbers"
+    ]
+}

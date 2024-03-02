@@ -1,0 +1,10 @@
+{
+    "icon": "\uD83D\uDE42",
+    "order": 1,
+    "symbols": [
+        "symbol-chat:faces",
+        "symbol-chat:hands",
+        "symbol-chat:people",
+        "symbol-chat:body"
+    ]
+}

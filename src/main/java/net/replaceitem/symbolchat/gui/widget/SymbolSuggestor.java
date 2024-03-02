@@ -5,8 +5,10 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.SymbolStorage;
+import net.replaceitem.symbolchat.SearchUtil;
+import net.replaceitem.symbolchat.SymbolManager;
 import net.replaceitem.symbolchat.SymbolSuggestable;
+import net.replaceitem.symbolchat.SymbolTab;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.jetbrains.annotations.Nullable;
@@ -60,7 +62,9 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
         if(search == null) {
             elementCount = 0;
         } else {
-            Stream<String> searchStream = search.isBlank() ? SymbolStorage.favoriteSymbols.stream() : SymbolStorage.performSearch(SymbolStorage.all, search);
+            Stream<String> searchStream = search.isBlank() ?
+                    SymbolChat.symbolManager.getFavoriteSymbols() :
+                    SearchUtil.performSearch(SymbolChat.symbolManager.getTab(SymbolManager.ALL_IDENTIFIER).map(SymbolTab::streamSymbols).orElseGet(Stream::of), search);
             List<String> symbols = searchStream.limit(shownSymbols).toList();
             elementCount = symbols.size();
             this.width = 1 + (SymbolButtonWidget.SYMBOL_SIZE + 1) * elementCount;

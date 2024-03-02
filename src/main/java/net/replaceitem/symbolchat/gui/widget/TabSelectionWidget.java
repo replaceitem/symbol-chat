@@ -1,14 +1,18 @@
 package net.replaceitem.symbolchat.gui.widget;
 
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.AbstractParentElement;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.ScreenPos;
+import net.minecraft.client.gui.ScreenRect;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
-import net.replaceitem.symbolchat.SymbolCategory;
 import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.SymbolTab;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 
 import java.util.ArrayList;
@@ -36,8 +40,8 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
         return selectedTab;
     }
 
-    public void addTab(SymbolCategory category) {
-        this.tabButtons.add(new SwitchTabButton(0, 0, this.tabButtons.size(), category));
+    public void addTab(SymbolTab tab) {
+        this.tabButtons.add(new SwitchTabButton(0, 0, this.tabButtons.size(), tab));
     }
 
     public void refreshPositions() {
@@ -134,10 +138,10 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
 
         protected final int index;
 
-        public SwitchTabButton(int x, int y, int index, SymbolCategory category) {
-            super(x, y, category.icon);
+        public SwitchTabButton(int x, int y, int index, SymbolTab tab) {
+            super(x, y, tab.getIcon());
             this.index = index;
-            this.setTooltip(Tooltip.of(Text.translatable(category.nameKey)));
+            this.setTooltip(Tooltip.of(tab.getTooltipText()));
         }
 
         @Override

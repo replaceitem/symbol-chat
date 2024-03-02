@@ -1,16 +1,15 @@
 package net.replaceitem.symbolchat.config;
 
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ActionResult;
-import net.replaceitem.symbolchat.SymbolStorage;
-import net.replaceitem.symbolchat.Util;
+import net.replaceitem.symbolchat.SymbolChat;
 
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ClothConfigProvider extends ConfigProvider {
     
@@ -20,7 +19,7 @@ public class ClothConfigProvider extends ConfigProvider {
         AutoConfig.register(ClothConfig.class, GsonConfigSerializer::new);
         this.config = AutoConfig.getConfigHolder(ClothConfig.class).getConfig();
         AutoConfig.getConfigHolder(ClothConfig.class).registerSaveListener((configHolder, clothConfig) -> {
-            SymbolStorage.reloadCustomLists();
+            SymbolChat.symbolManager.onConfigReload(ClothConfigProvider.this);
             return ActionResult.SUCCESS;
         });
     }
@@ -117,13 +116,13 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
-    public void toggleFavorite(IntStream codepoints) {
-        IntStream customSymbolsStream = this.config.custom_symbols.codePoints();
-        int[] ints = codepoints.toArray();
-        IntOpenHashSet forRemoval = new IntOpenHashSet();
-        Arrays.stream(ints).filter(SymbolStorage::isFavorite).forEach(forRemoval::add);
-        customSymbolsStream = IntStream.concat(customSymbolsStream.filter(k -> !forRemoval.contains(k)), Arrays.stream(ints).filter(value -> !SymbolStorage.isFavorite(value)));
-        this.config.custom_symbols = Util.stringFromCodePoints(customSymbolsStream);
+    public void toggleFavorite(Stream<String> symbolStream) {
+        Stream<String> current = this.config.custom_symbols.codePoints().mapToObj(Character::toString);
+        List<String> toToggle = symbolStream.toList();
+        HashSet<String> forRemoval = new HashSet<>();
+        toToggle.stream().filter(value -> SymbolChat.symbolManager.isFavorite(value)).forEach(forRemoval::add);
+        current = Stream.concat(current.filter(k -> !forRemoval.contains(k)), toToggle.stream().filter(value -> !SymbolChat.symbolManager.isFavorite(value)));
+        this.config.custom_symbols = current.collect(Collectors.joining());
         AutoConfig.getConfigHolder(ClothConfig.class).save();
     }
 }

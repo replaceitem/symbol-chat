@@ -1,0 +1,8 @@
+{
+    "icon": "\uD83C\uDFAE",
+    "order": 4,
+    "symbols": [
+        "symbol-chat:activities",
+        "symbol-chat:transport"
+    ]
+}

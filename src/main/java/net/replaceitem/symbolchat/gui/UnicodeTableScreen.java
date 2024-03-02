@@ -149,7 +149,7 @@ public class UnicodeTableScreen extends Screen {
     private void favoriteSymbols() {
         if(selectionStart == -1) return;
         IntStream selectedSymbols = getSelectedSymbols();
-        SymbolChat.config.toggleFavorite(selectedSymbols);
+        SymbolChat.config.toggleFavorite(selectedSymbols.mapToObj(Character::toString));
         refreshButtons();
     }
 

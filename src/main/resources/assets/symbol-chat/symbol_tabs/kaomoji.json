@@ -1,0 +1,12 @@
+{
+    "icon": "K",
+    "order": 100,
+    "type": "kaomojis",
+    "symbols": [
+        {
+            "split": "line",
+            "symbols": "symbol-chat:kaomojis"
+        },
+        "symbol-chat:custom_kaomojis"
+    ]
+}
