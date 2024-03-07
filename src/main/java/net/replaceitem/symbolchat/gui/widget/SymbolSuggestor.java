@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class SymbolSuggestor extends AbstractParentElement implements Drawable, Selectable {
+public class SymbolSuggestor extends AbstractParentElement implements Drawable, Selectable, PasteSymbolButtonWidget.Context {
     
     private final Screen screen;
     private final Consumer<String> symbolConsumer;
@@ -46,6 +46,12 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
         visible = false;
     }
 
+    @Override
+    public void onSymbolClicked(String symbol) {
+        symbolConsumer.accept(symbol);
+    }
+
+    @Override
     public void refresh() {
         Vector2i cursorPosition = this.suggestable.getCursorPosition();
         this.x = cursorPosition.x;
@@ -70,7 +76,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
             this.width = 1 + (SymbolButtonWidget.SYMBOL_SIZE + 1) * elementCount;
             this.x = Math.max(Math.min(this.x, this.screen.width - this.width), 0);
             for (int i = 0; i < elementCount; i++) {
-                symbolButtons.add(new PasteSymbolButtonWidget(this.x+1+i*(SymbolButtonWidget.SYMBOL_SIZE+1), this.y+1, symbolConsumer, symbols.get(i)));
+                symbolButtons.add(new PasteSymbolButtonWidget(this.x+1+i*(SymbolButtonWidget.SYMBOL_SIZE+1), this.y+1, this, symbols.get(i)));
             }
         }
         visible = elementCount != 0;

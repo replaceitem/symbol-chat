@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class SymbolTabWidget extends AbstractParentElement implements Widget, Drawable, Element {
+public class SymbolTabWidget extends AbstractParentElement implements Widget, Drawable, Element, PasteSymbolButtonWidget.Context {
     
     private static final int SEARCH_BAR_HEIGHT = 10;
     public static final Text NO_RESULTS = Text.translatable("symbolchat.no_search_results");
@@ -69,6 +69,12 @@ public class SymbolTabWidget extends AbstractParentElement implements Widget, Dr
         this.refresh();
     }
 
+    @Override
+    public void onSymbolClicked(String symbol) {
+        symbolConsumer.accept(symbol);
+    }
+
+    @Override
     public void refresh() {
         scrollableGridWidget.clearElements();
         addSymbols();
@@ -99,19 +105,11 @@ public class SymbolTabWidget extends AbstractParentElement implements Widget, Dr
     }
 
     protected PasteSymbolButtonWidget createButton(String symbol) {
-        if(tab.getType() == SymbolTab.Type.KAOMOJIS) {
-            PasteSymbolButtonWidget pasteSymbolButtonWidget = new PasteSymbolButtonWidget(x, y, this.symbolConsumer, symbol) {
-                @Override
-                protected void onRightClick() {
-                }
-            };
-            pasteSymbolButtonWidget.setFavorite(false);
-            pasteSymbolButtonWidget.setWidth(this.getWidth() - 2);
-            pasteSymbolButtonWidget.setTooltip(null);
-            return pasteSymbolButtonWidget;
-        }
-        
-        return new PasteSymbolButtonWidget(x, y, this.symbolConsumer, symbol);
+        SymbolTab.Type type = tab.getType();
+        PasteSymbolButtonWidget pasteSymbolButtonWidget = new PasteSymbolButtonWidget(x, y, this, symbol);
+        if(type.hasFullWidthButtons()) pasteSymbolButtonWidget.setWidth(this.getWidth() - 2);
+        if(!type.hasTooltip()) pasteSymbolButtonWidget.setTooltip(null);
+        return pasteSymbolButtonWidget;
     }
 
     @Override

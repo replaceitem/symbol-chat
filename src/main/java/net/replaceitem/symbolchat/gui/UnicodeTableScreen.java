@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.IntStream;
 
-public class UnicodeTableScreen extends Screen {
+public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidget.Context {
     public UnicodeTableScreen(Screen parent) {
         super(Text.of("Unicode Table"));
         this.parent = parent;
@@ -224,7 +224,17 @@ public class UnicodeTableScreen extends Screen {
         
         this.codepoints = collector.getCodepoints();
     }
-    
+
+    @Override
+    public void onSymbolClicked(String symbol) {
+        
+    }
+
+    @Override
+    public void refresh() {
+        refreshButtons();
+    }
+
     private class CodePointCollector {
         IntList codepoints = new IntArrayList();
         int blockCycleColorIndex = CYCLING_BLOCK_COLORS.length-1;
@@ -252,6 +262,41 @@ public class UnicodeTableScreen extends Screen {
         }
         return true;
     }
+    
+    public class TableButton extends PasteSymbolButtonWidget {
+        private final int index;
+        private final boolean marked;
+        
+        public TableButton(int x, int y, Context context, String symbol, Tooltip tooltip, int index) {
+            super(x, y, context, symbol, tooltip);
+            this.index = index;
+            this.marked = index >= selectionStart && index <= selectionEnd;
+        }
+
+        @Override
+        protected boolean shouldDrawOutline() {
+            return marked;
+        }
+
+        @Override
+        public boolean onClick(int button) {
+            if(button == GLFW.GLFW_MOUSE_BUTTON_1) {
+                if (Screen.hasShiftDown() && selectionStart != -1) {
+                    if (selectionStart > index) {
+                        selectionEnd = selectionStart;
+                        selectionStart = index;
+                    } else {
+                        selectionEnd = index;
+                    }
+                } else {
+                    selectionStart = index;
+                    selectionEnd = index;
+                }
+            }
+            super.onClick(button);
+            return true;
+        }
+    }
 
     private void refreshButtons() {
         this.columns = this.width / SymbolButtonWidget.GRID_SPCAING;
@@ -272,31 +317,10 @@ public class UnicodeTableScreen extends Screen {
                     .append("\n\n" + Util.getCapitalizedSymbolName(codePoint) + "\n")
                     .append("Width: " + textRenderer.getWidth(symbol) + "\n")
                     .append(block == null ? Text.literal("UNKNOWN BLOCK").formatted(Formatting.GRAY) : Text.literal(block.toString()).styled(style -> style.withColor(blockColor)));
-                    
-            int finalIndex = index;
-            PasteSymbolButtonWidget button = new PasteSymbolButtonWidget(x, y, null, symbol, Tooltip.of(tooltip)) {
-                @Override
-                public boolean onClick(int button) {
-                    if(Screen.hasShiftDown() && selectionStart != -1) {
-                        if(selectionStart > finalIndex) {
-                            selectionEnd = selectionStart;
-                            selectionStart = finalIndex;
-                        } else {
-                            selectionEnd = finalIndex;
-                        }
-                    } else {
-                        selectionStart = finalIndex;
-                        selectionEnd = finalIndex;
-                    }
-                    refreshButtons();
-                    return true;
-                }
-            };
+
+            TableButton button = new TableButton(x, y, this, symbol, Tooltip.of(tooltip), index);
             if(showBlocksWidget.isChecked()) {
                 button.setBackgroundColors(blockColor);
-            }
-            if(index >= selectionStart && index <= selectionEnd) {
-                button.setSelected(true);
             }
             this.widgets.add(button);
             x += SymbolButtonWidget.GRID_SPCAING;

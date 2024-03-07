@@ -71,13 +71,17 @@ public class SymbolTab implements Comparable<SymbolTab> {
     public static class Type {
         private static final Map<String, Type> TYPES = new HashMap<>();
 
-        public static final Type SYMBOLS = register("symbols", new Type(i -> i));
-        public static final Type KAOMOJIS = register("kaomojis", new Type(i -> 1));
+        public static final Type SYMBOLS = register("symbols", new Type(i -> i, true, false));
+        public static final Type KAOMOJIS = register("kaomojis", new Type(i -> 1, false, true));
         
         private final Int2IntFunction columnFunction;
+        private final boolean hasTooltip;
+        private final boolean fullWidthButtons;
 
-        public Type(Int2IntFunction columnFunction) {
+        public Type(Int2IntFunction columnFunction, boolean hasTooltip, boolean fullWidthButtons) {
             this.columnFunction = columnFunction;
+            this.hasTooltip = hasTooltip;
+            this.fullWidthButtons = fullWidthButtons;
         }
 
         public static Type register(String name, Type type) {
@@ -98,6 +102,14 @@ public class SymbolTab implements Comparable<SymbolTab> {
 
         public int getColumns(int panelColumns) {
             return columnFunction.get(panelColumns);
+        }
+
+        public boolean hasTooltip() {
+            return hasTooltip;
+        }
+
+        public boolean hasFullWidthButtons() {
+            return fullWidthButtons;
         }
     }
 }

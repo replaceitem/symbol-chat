@@ -31,6 +31,11 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     private boolean visible;
 
     protected Consumer<String> symbolInsertable;
+    
+    public static int getWidthForTabs(int tabCount) {
+        int columns = Math.max(tabCount, MIN_COLUMNS);
+        return columns * (SymbolButtonWidget.GRID_SPCAING) + 1;
+    }
 
     public SymbolSelectionPanel(Consumer<String> symbolConsumer, int x, int y, int height) {
         this.height = height;
@@ -38,7 +43,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         this.x = x;
         this.y = y;
         int columns = Math.max(SymbolChat.symbolManager.getTabs().size(), MIN_COLUMNS);
-        this.width = columns * (SymbolButtonWidget.GRID_SPCAING) + 1;
+        this.width = getWidthForTabs(SymbolChat.symbolManager.getTabs().size());
         this.visible = SymbolChat.config.getKeepPanelOpen() && SymbolChat.isPanelOpen;
         this.symbolInsertable = symbolConsumer;
         this.tabSelectionWidget = new TabSelectionWidget(this.x, this.y + 1, width) {

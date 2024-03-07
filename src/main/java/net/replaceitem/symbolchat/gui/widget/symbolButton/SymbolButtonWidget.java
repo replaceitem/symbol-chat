@@ -22,9 +22,6 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     private int backgroundColor;
     private int hoverBackgroundColor;
 
-    private boolean isSelected = false;
-
-
     public SymbolButtonWidget(int x, int y, String symbol) {
         this(x, y, SYMBOL_SIZE, SYMBOL_SIZE, symbol);
     }
@@ -49,11 +46,6 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     public void setBackgroundColors(int backgroundColor, int hoverBackgroundColor) {
         this.backgroundColor = backgroundColor;
         this.hoverBackgroundColor = hoverBackgroundColor;
-    }
-
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
     }
 
     public abstract boolean onClick(int button);
@@ -90,11 +82,11 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             RenderSystem.disableDepthTest();
-            int bg = this.isHovered() ? hoverBackgroundColor : backgroundColor;
+            int bg = this.isSelected() ? hoverBackgroundColor : backgroundColor;
             drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bg);
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 
-            int rgb = this.isHovered() ? 0xFFFFFF : 0xA0A0A0;
+            int rgb = this.isSelected() ? 0xFFFFFF : 0xA0A0A0;
             int argb = rgb | MathHelper.ceil(this.alpha * 255.0F) << 24;
 
             drawContext.drawCenteredTextWithShadow(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, argb);
@@ -103,21 +95,35 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     }
     
     protected void renderOverlay(DrawContext drawContext) {
-        if(this.isSelected()) {
+        if(this.shouldDrawOutline()) {
             this.drawOutline(drawContext);
         }
     }
-    
+
+    protected boolean shouldDrawOutline() {
+        return false;
+    }
+
     protected void drawOutline(DrawContext drawContext) {
         drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()-1, 0xFFFFFFFF);
         drawContext.drawVerticalLine(this.getX()-1, this.getY()-1, this.getY()+height, 0xFFFFFFFF);
         drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()+height, 0xFFFFFFFF);
         drawContext.drawVerticalLine(this.getX()+width, this.getY()-1, this.getY()+height, 0xFFFFFFFF);
     }
-
-    @Override
-    public boolean isSelected() {
-        return isSelected;
+    
+    protected void drawCorners(DrawContext drawContext, int color) {
+        int lastX = this.getX()+SYMBOL_SIZE-1;
+        int lastY = this.getY()+SYMBOL_SIZE-1;
+        for(int i = 0; i < 2; i++) {
+            int offset = i*(SYMBOL_SIZE-1);
+            int x = this.getX() + offset;
+            int y = this.getY() + offset;
+            drawContext.drawHorizontalLine(getX(), getX()+1, y, color);
+            drawContext.drawHorizontalLine(lastX-1, lastX, y, color);
+            // why does drawVertical work differently -_-
+            drawContext.drawVerticalLine(x, getY()-1, getY()+2, color);
+            drawContext.drawVerticalLine(x, lastY-2, lastY+1, color);
+        }
     }
 
     @Override

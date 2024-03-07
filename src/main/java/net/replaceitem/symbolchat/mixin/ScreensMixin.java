@@ -12,17 +12,16 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.config.ConfigProvider;
 import net.replaceitem.symbolchat.font.FontProcessor;
-import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.font.Fonts;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.UnicodeTableScreen;
 import net.replaceitem.symbolchat.gui.widget.DropDownWidget;
 import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
-import net.replaceitem.symbolchat.gui.widget.symbolButton.OpenSymbolPanelButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,10 +61,22 @@ public class ScreensMixin extends Screen implements ScreenAccess {
         int symbolButtonX = this.width - 2 - SymbolButtonWidget.SYMBOL_SIZE;
         int symbolButtonY = this.height - 2 - SymbolButtonWidget.SYMBOL_SIZE;
         int panelHeight = SymbolChat.config.getSymbolPanelHeight();
-        this.symbolSelectionPanel = new SymbolSelectionPanel(this::insertSymbol,0,symbolButtonY-2-panelHeight, panelHeight);
+        int panelWidth = SymbolSelectionPanel.getWidthForTabs(SymbolChat.symbolManager.getTabs().size());
+        this.symbolSelectionPanel = new SymbolSelectionPanel(this::insertSymbol, this.width-panelWidth - 2,symbolButtonY-2-panelHeight, panelHeight);
         this.addDrawableChild(symbolSelectionPanel);
 
-        symbolButtonWidget = new OpenSymbolPanelButtonWidget(symbolButtonX, symbolButtonY, this.symbolSelectionPanel);
+        symbolButtonWidget = new SymbolButtonWidget(symbolButtonX, symbolButtonY, "☺") {
+            @Override
+            public boolean onClick(int button) {
+                symbolSelectionPanel.toggleVisible();
+                return true;
+            }
+
+            @Override
+            protected boolean shouldDrawOutline() {
+                return symbolSelectionPanel.isVisible();
+            }
+        };
         this.addDrawableChild(symbolButtonWidget);
 
         GridWidget gridWidget = new GridWidget(0, 2);

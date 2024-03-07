@@ -145,6 +145,11 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
         }
 
         @Override
+        protected boolean shouldDrawOutline() {
+            return selectedTab == index;
+        }
+
+        @Override
         protected void drawOutline(DrawContext context) {
             context.drawVerticalLine(getX()-1, y, y + GRID_SPCAING, 0xFFFFFFFF);
             context.drawHorizontalLine(getX()-1, getX() + SYMBOL_SIZE, y, 0xFFFFFFFF);
@@ -155,11 +160,6 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
         public boolean onClick(int button) {
             setTab(index);
             return true;
-        }
-
-        @Override
-        public boolean isSelected() {
-            return super.isSelected() || selectedTab == index;
         }
     }
 
