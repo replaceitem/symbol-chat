@@ -7,6 +7,7 @@ import net.minecraft.resource.ResourceType;
 import net.replaceitem.symbolchat.config.ClothConfigProvider;
 import net.replaceitem.symbolchat.config.ConfigProvider;
 import net.replaceitem.symbolchat.font.Fonts;
+import net.replaceitem.symbolchat.resource.SymbolManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

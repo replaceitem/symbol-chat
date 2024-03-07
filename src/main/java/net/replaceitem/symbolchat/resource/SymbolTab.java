@@ -1,4 +1,4 @@
-package net.replaceitem.symbolchat;
+package net.replaceitem.symbolchat.resource;
 
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import net.minecraft.text.Text;

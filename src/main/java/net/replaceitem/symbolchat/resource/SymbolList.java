@@ -1,4 +1,4 @@
-package net.replaceitem.symbolchat;
+package net.replaceitem.symbolchat.resource;
 
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;

@@ -1,4 +1,4 @@
-package net.replaceitem.symbolchat;
+package net.replaceitem.symbolchat.resource;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -11,6 +11,7 @@ import net.minecraft.resource.ResourceFinder;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
+import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.config.ClothConfigProvider;
 import org.jetbrains.annotations.NotNull;
 
