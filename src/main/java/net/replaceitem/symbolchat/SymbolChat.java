@@ -6,7 +6,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resource.ResourceType;
 import net.replaceitem.symbolchat.config.ClothConfigProvider;
 import net.replaceitem.symbolchat.config.ConfigProvider;
-import net.replaceitem.symbolchat.font.Fonts;
+import net.replaceitem.symbolchat.resource.FontManager;
 import net.replaceitem.symbolchat.resource.SymbolManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +21,7 @@ public class SymbolChat implements ClientModInitializer {
     
     public static ConfigProvider config;
     public static SymbolManager symbolManager;
+    public static FontManager fontManager;
     public static boolean clothConfigEnabled;
 
 
@@ -30,7 +31,8 @@ public class SymbolChat implements ClientModInitializer {
         clothConfigEnabled = FabricLoader.getInstance().isModLoaded("cloth-config2");
         config = clothConfigEnabled ? new ClothConfigProvider() : new ConfigProvider();
         symbolManager = new SymbolManager();
+        fontManager = new FontManager();
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(symbolManager);
-        Fonts.registerFonts();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(fontManager);
     }
 }

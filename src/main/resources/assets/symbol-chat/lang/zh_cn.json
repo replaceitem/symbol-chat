@@ -29,15 +29,15 @@
   "symbolchat.tab.symbol-chat.kaomoji": "颜文字",
   "symbolchat.tab.symbol-chat.all": "全部",
   
-  "symbolchat.font.normal": "正常",
-  "symbolchat.font.capitalized": "大写 Capitalized",
-  "symbolchat.font.superscript": "上标 Superscript",
-  "symbolchat.font.subscript": "下标 Subscript",
-  "symbolchat.font.circled": "圆圈 Circled",
-  "symbolchat.font.inverse": "反向 Inverse",
-  "symbolchat.font.fullwidth": "全宽 Full width",
-  "symbolchat.font.small": "小 Small",
-  "symbolchat.font.brackets": "方括号 Brackets",
-  "symbolchat.font.scribble": "潦草 Scribble",
-  "symbolchat.font.big_scribble": "非常潦草 Big scribble"
+  "symbolchat.font.symbol-chat.normal": "正常",
+  "symbolchat.font.symbol-chat.capitalized": "大写 Capitalized",
+  "symbolchat.font.symbol-chat.superscript": "上标 Superscript",
+  "symbolchat.font.symbol-chat.subscript": "下标 Subscript",
+  "symbolchat.font.symbol-chat.circled": "圆圈 Circled",
+  "symbolchat.font.symbol-chat.inverse": "反向 Inverse",
+  "symbolchat.font.symbol-chat.fullwidth": "全宽 Full width",
+  "symbolchat.font.symbol-chat.small": "小 Small",
+  "symbolchat.font.symbol-chat.brackets": "方括号 Brackets",
+  "symbolchat.font.symbol-chat.scribble": "潦草 Scribble",
+  "symbolchat.font.symbol-chat.big_scribble": "非常潦草 Big scribble"
 }

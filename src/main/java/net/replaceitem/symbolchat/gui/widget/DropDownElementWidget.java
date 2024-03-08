@@ -21,7 +21,7 @@ public class DropDownElementWidget<T> extends ClickableWidget implements Drawabl
     private final int index;
 
     public DropDownElementWidget(int x, int y, int width, int height, T element, int index, DropDownWidget<T> dropDownWidget) {
-        super(x, y, width, height, Text.empty());
+        super(x, y, width, height, Text.literal(element.toString()));
         this.element = element;
         this.dropDownWidget = dropDownWidget;
         this.index = index;
@@ -41,11 +41,6 @@ public class DropDownElementWidget<T> extends ClickableWidget implements Drawabl
     @Override
     public void onClick(double mouseX, double mouseY) {
         this.dropDownWidget.changeSelected(this.index);
-    }
-
-    @Override
-    public Text getMessage() {
-        return Text.literal(element.toString());
     }
 
     @Override

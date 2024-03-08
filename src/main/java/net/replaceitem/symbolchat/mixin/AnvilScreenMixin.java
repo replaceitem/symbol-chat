@@ -9,9 +9,9 @@ import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.replaceitem.symbolchat.ScreenAccess;
+import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolSuggestable;
-import net.replaceitem.symbolchat.font.FontProcessor;
-import net.replaceitem.symbolchat.font.Fonts;
+import net.replaceitem.symbolchat.resource.FontProcessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,10 +41,10 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
         return new TextFieldWidget(textRenderer, x, y, width, height, text) {
             @Override
             public void write(String text) {
-                FontProcessor fontProcessor = FontProcessor.getCurrentScreenFontProcessor();
+                FontProcessor fontProcessor = SymbolChat.fontManager.getCurrentScreenFontProcessor();
                 text = fontProcessor.convertString(text);
                 super.write(text);
-                if(fontProcessor == Fonts.INVERSE) {
+                if(fontProcessor.isReverseDirection()) {
                     int pos = this.getCursor()-text.length();
                     this.setSelectionStart(pos);
                     this.setSelectionEnd(pos);

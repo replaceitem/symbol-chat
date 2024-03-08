@@ -1,8 +1,8 @@
 package net.replaceitem.symbolchat.gui;
 
 import net.minecraft.client.util.SelectionManager;
-import net.replaceitem.symbolchat.font.FontProcessor;
-import net.replaceitem.symbolchat.font.Fonts;
+import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.resource.FontProcessor;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -15,10 +15,10 @@ public class FontProcessingSelectionManager extends SelectionManager {
 
     @Override
     protected void insert(String string, String insertion) {
-        FontProcessor fontProcessor = FontProcessor.getCurrentScreenFontProcessor();
+        FontProcessor fontProcessor = SymbolChat.fontManager.getCurrentScreenFontProcessor();
         insertion = fontProcessor.convertString(insertion);
         super.insert(string, insertion);
-        if(fontProcessor == Fonts.INVERSE) {
+        if(fontProcessor.isReverseDirection()) {
             int pos = this.getSelectionStart()-insertion.length();
             this.setSelection(pos, pos);
         }
