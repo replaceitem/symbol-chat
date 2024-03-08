@@ -24,15 +24,15 @@
   "symbolchat.tab.symbol-chat.custom": "סמלים מותאמים אישית",
   "symbolchat.tab.symbol-chat.kaomoji": "Kaomoji",
   
-  "symbolchat.font.normal": "Normal",
-  "symbolchat.font.capitalized": "Capitalized",
-  "symbolchat.font.superscript": "Superscript",
-  "symbolchat.font.subscript": "Subscript",
-  "symbolchat.font.circled": "Circled",
-  "symbolchat.font.inverse": "Inverse",
-  "symbolchat.font.fullwidth": "Full width",
-  "symbolchat.font.small": "Small",
-  "symbolchat.font.brackets": "Brackets",
-  "symbolchat.font.scribble": "Scribble",
-  "symbolchat.font.big_scribble": "Big scribble"
+  "symbolchat.font.symbol-chat.normal": "Normal",
+  "symbolchat.font.symbol-chat.capitalized": "Capitalized",
+  "symbolchat.font.symbol-chat.superscript": "Superscript",
+  "symbolchat.font.symbol-chat.subscript": "Subscript",
+  "symbolchat.font.symbol-chat.circled": "Circled",
+  "symbolchat.font.symbol-chat.inverse": "Inverse",
+  "symbolchat.font.symbol-chat.fullwidth": "Full width",
+  "symbolchat.font.symbol-chat.small": "Small",
+  "symbolchat.font.symbol-chat.brackets": "Brackets",
+  "symbolchat.font.symbol-chat.scribble": "Scribble",
+  "symbolchat.font.symbol-chat.big_scribble": "Big scribble"
 }

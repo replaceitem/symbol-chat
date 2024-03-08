@@ -16,13 +16,12 @@ import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.config.ConfigProvider;
-import net.replaceitem.symbolchat.font.FontProcessor;
-import net.replaceitem.symbolchat.font.Fonts;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.UnicodeTableScreen;
 import net.replaceitem.symbolchat.gui.widget.DropDownWidget;
 import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
+import net.replaceitem.symbolchat.resource.FontProcessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -84,7 +83,7 @@ public class ScreensMixin extends Screen implements ScreenAccess {
         GridWidget.Adder adder = gridWidget.createAdder(Integer.MAX_VALUE);
 
         if(!SymbolChat.config.getHideFontButton()) {
-            this.fontSelectionDropDown = new DropDownWidget<>(0, 0, 180, 15, Fonts.fontProcessors, SymbolChat.selectedFont) {
+            this.fontSelectionDropDown = new DropDownWidget<>(0, 0, 180, 15, SymbolChat.fontManager.getFontProcessors(), SymbolChat.selectedFont) {
                 @Override
                 public void onSelection(int index, FontProcessor element) {
                     SymbolChat.selectedFont = index;
@@ -146,9 +145,9 @@ public class ScreensMixin extends Screen implements ScreenAccess {
     @Override
     @NotNull
     public FontProcessor getFontProcessor() {
-        if(this.fontSelectionDropDown == null) return Fonts.NORMAL;
+        if(this.fontSelectionDropDown == null) return SymbolChat.fontManager.getNormal();
         FontProcessor selection = this.fontSelectionDropDown.getSelection();
-        return selection == null ? Fonts.NORMAL : selection;
+        return selection == null ? SymbolChat.fontManager.getNormal() : selection;
     }
 
     @Override

@@ -1,17 +1,19 @@
 package net.replaceitem.symbolchat.font;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.replaceitem.symbolchat.Util;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FontMapBuilder {
 
-    protected final Map<String, String> map = new HashMap<>();
+    //protected final Map<String, String> map = new HashMap<>();
+    protected final JsonObject map = new JsonObject();
 
     public FontMapBuilder put(String from, String to) {
-        map.put(from, to);
+        map.add(from, new JsonPrimitive(to));
         return this;
     }
 
@@ -28,13 +30,11 @@ public class FontMapBuilder {
     }
 
     public FontMapBuilder putSeperated(String fromSequence, String... toStrings) {
-        String[] fromCodePoints = fromSequence.codePoints().mapToObj(Util::stringFromCodePoint).toArray(String[]::new);
-        if(fromCodePoints.length != toStrings.length) throw new IllegalArgumentException("Mismatch in codepoint count");
-        for (int i = 0; i < fromCodePoints.length; i++) {
-            String from = fromCodePoints[i];
-            String to = toStrings[i];
-            map.put(from, to);
+        JsonArray array = new JsonArray(toStrings.length);
+        for (String toString : toStrings) {
+            array.add(toString);
         }
+        map.add(fromSequence, array);
         return this;
     }
 
@@ -55,12 +55,7 @@ public class FontMapBuilder {
 
 
     public FontMapBuilder putSequence(int codePointStart, String toSequence) {
-        String[] toCodePoints = toSequence.codePoints().mapToObj(Util::stringFromCodePoint).toArray(String[]::new);
-        for (int i = 0; i < toCodePoints.length; i++) {
-            String from = Util.stringFromCodePoint(codePointStart + i);
-            String to = toCodePoints[i];
-            map.put(from, to);
-        }
+        put(Util.stringFromCodePoint(codePointStart) + "..", toSequence);
         return this;
     }
 
@@ -90,24 +85,13 @@ public class FontMapBuilder {
     }
 
     public FontMapBuilder shiftSequence(int codePointStart, int codePointShiftStart, int sequenceLength) {
-        int shiftDiff = codePointShiftStart-codePointStart;
-        for (int i = 0; i < sequenceLength; i++) {
-            int fromCodePoint = codePointStart + i;
-            String from = Util.stringFromCodePoint(fromCodePoint);
-            String to = Util.stringFromCodePoint(fromCodePoint + shiftDiff);
-            map.put(from, to);
-        }
+        put(Util.stringFromCodePoint(codePointStart) + ".." + Util.stringFromCodePoint(codePointStart+sequenceLength-1), Util.stringFromCodePoint(codePointShiftStart) + "..");
         return this;
     }
 
     private void assertCodePointCount(String string, int count) {
-        if(Util.getCodePointCount(string) != count) {
+        if (Util.getCodePointCount(string) != count) {
             throw new IllegalArgumentException("Expected " + count + " codepoints: \n" + string.codePoints().mapToObj(Util::stringFromCodePoint).collect(Collectors.joining("\n")));
         }
-    }
-
-
-    public Map<String, String> build() {
-        return map;
     }
 }

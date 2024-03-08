@@ -36,7 +36,7 @@ public class DropDownWidget<T> extends ClickableWidget implements Drawable, Elem
         }
         this.scrollableGridWidget.refreshPositions();
         this.expanded = false;
-        this.selected = defaultSelection;
+        this.selected = defaultSelection >= elementList.size() ? 0 : defaultSelection;
     }
 
     @Override

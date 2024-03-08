@@ -1,7 +1,7 @@
 package net.replaceitem.symbolchat;
 
 import net.minecraft.client.gui.Element;
-import net.replaceitem.symbolchat.font.FontProcessor;
+import net.replaceitem.symbolchat.resource.FontProcessor;
 import org.jetbrains.annotations.NotNull;
 
 public interface ScreenAccess {

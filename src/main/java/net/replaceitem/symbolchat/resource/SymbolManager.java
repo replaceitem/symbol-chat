@@ -47,8 +47,8 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
     @Override
     public void reload(ResourceManager manager) {
         this.listCache.clear();
-        this.addList(favoritesList);
-        this.addList(customKaomojisList);
+        this.addCachedList(favoritesList);
+        this.addCachedList(customKaomojisList);
         tabs = new ArrayList<>();
         for (Map.Entry<Identifier, Resource> identifierListEntry : SYMBOL_TABS_FINDER.findResources(manager).entrySet()) {
             Identifier identifier = SYMBOL_TABS_FINDER.toResourceId(identifierListEntry.getKey());
@@ -58,7 +58,6 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
                 tabs.add(symbolTab);
             } catch (IOException | JsonParseException e) {
                 SymbolChat.LOGGER.error("Could not load symbol tab " + identifier, e);
-                throw new RuntimeException(e);
             }
         }
         tabs.sort(SymbolTab::compareTo);
@@ -97,32 +96,37 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
     private List<SymbolList> readSymbolLists(ResourceManager manager, JsonArray symbolFiles) {
         List<SymbolList> symbols = new ArrayList<>();
         for (JsonElement symbolFile : symbolFiles) {
+            Identifier identifier;
+            SymbolList.SplitType type;
             if(symbolFile instanceof JsonPrimitive primitive) {
-                symbols.add(readSymbolList(manager, new Identifier(primitive.getAsString()), SymbolList.SplitType.CODEPOINT));
+                identifier = new Identifier(primitive.getAsString());
+                type = SymbolList.SplitType.CODEPOINT;
+            } else if(symbolFile instanceof JsonObject object) {
+                identifier = new Identifier(JsonHelper.getString(object, "symbols"));
+                type = SymbolList.SplitType.getOrDefault(JsonHelper.getString(object, "split", null), SymbolList.SplitType.CODEPOINT);
+            } else {
                 continue;
             }
-            if(!(symbolFile instanceof JsonObject object)) continue;
-            SymbolList.SplitType type = SymbolList.SplitType.getOrDefault(JsonHelper.getString(object, "split", null), SymbolList.SplitType.CODEPOINT);
-            Identifier identifier = new Identifier(JsonHelper.getString(object, "symbols"));
-            symbols.add(readSymbolList(manager, identifier, type));
+            try {
+                symbols.add(readSymbolList(manager, identifier, type));
+            } catch (IOException | JsonParseException e) {
+                SymbolChat.LOGGER.error("Could not load symbols " + identifier, e);
+            }
         }
         return symbols;
     }
     
     @NotNull
-    private SymbolList readSymbolList(ResourceManager manager, Identifier identifier, SymbolList.SplitType type) {
+    private SymbolList readSymbolList(ResourceManager manager, Identifier identifier, SymbolList.SplitType type) throws IOException, JsonParseException {
         if(listCache.containsKey(identifier)) return listCache.get(identifier);
         try(BufferedReader symbolsReader = manager.openAsReader(SYMBOLS_FINDER.toResourcePath(identifier))) {
             SymbolList symbolList = new SymbolList(identifier, type.split(symbolsReader));
-            this.addList(symbolList);
+            this.addCachedList(symbolList);
             return symbolList;
-        } catch (IOException | JsonParseException e) {
-            SymbolChat.LOGGER.error("Could not load symbols " + identifier, e);
-            throw new RuntimeException(e);
         }
     }
     
-    private void addList(SymbolList symbolList) {
+    private void addCachedList(SymbolList symbolList) {
         this.listCache.put(symbolList.getId(), symbolList);
     }
 
