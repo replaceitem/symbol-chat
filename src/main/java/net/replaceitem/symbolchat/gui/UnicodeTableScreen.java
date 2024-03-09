@@ -16,6 +16,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.TextRendererAccess;
@@ -266,28 +267,23 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
     public class TableButton extends PasteSymbolButtonWidget {
         private final int index;
         private final boolean marked;
-        private int backgroundColor;
-        private int hoverBackgroundColor;
+        private final int backgroundColor;
+        private final int hoverBackgroundColor;
         
-        public TableButton(int x, int y, Context context, String symbol, Tooltip tooltip, int index) {
+        public TableButton(int x, int y, Context context, String symbol, Tooltip tooltip, int index, int backgroundColor, int hoverBackgroundColor) {
             super(x, y, context, symbol, tooltip);
             this.index = index;
             this.marked = index >= selectionStart && index <= selectionEnd;
+            this.backgroundColor = backgroundColor;
+            this.hoverBackgroundColor = hoverBackgroundColor;
         }
-
-        public void setBackgroundColors(int hoverColor) {
-            this.hoverBackgroundColor = hoverColor;
-            int alpha = hoverColor & 0xFF000000;
-            int color = (
-                    ((((hoverColor >> 16) & 0xFF) / 2) << 16) |
-                            ((((hoverColor >> 8 ) & 0xFF) / 2) << 8 ) |
-                            ((((hoverColor      ) & 0xFF) / 2)      )
-            );
-            this.backgroundColor = alpha | color;
+        
+        public TableButton(int x, int y, Context context, String symbol, Tooltip tooltip, int index) {
+            this(x, y, context, symbol, tooltip, index, SymbolChat.config.getButtonColor(), SymbolChat.config.getButtonHoverColor());
         }
 
         @Override
-        protected int getTextColor() {
+        protected int getBackgroundColor() {
             return this.isSelected() ? hoverBackgroundColor : backgroundColor;
         }
 
@@ -330,16 +326,16 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
             String symbol = Util.stringFromCodePoint(codePoint);
             Character.UnicodeBlock block = Character.UnicodeBlock.of(codePoint);
             
-            Text tooltip = Text.empty()
+            Tooltip tooltip = Tooltip.of(Text.empty()
                     .append(Text.literal(Integer.toHexString(codePoint)))
                     .append("\n\n" + Util.getCapitalizedSymbolName(codePoint) + "\n")
                     .append("Width: " + textRenderer.getWidth(symbol) + "\n")
-                    .append(block == null ? Text.literal("UNKNOWN BLOCK").formatted(Formatting.GRAY) : Text.literal(block.toString()).styled(style -> style.withColor(blockColor)));
+                    .append(block == null ? Text.literal("UNKNOWN BLOCK").formatted(Formatting.GRAY) : Text.literal(block.toString()).styled(style -> style.withColor(blockColor))));
 
-            TableButton button = new TableButton(x, y, this, symbol, Tooltip.of(tooltip), index);
-            if(showBlocksWidget.isChecked()) {
-                button.setBackgroundColors(blockColor);
-            }
+            TableButton button = showBlocksWidget.isChecked() ?
+                    new TableButton(x, y, this, symbol, tooltip, index, ColorHelper.Argb.mixColor(blockColor, 0xFF808080), blockColor) :
+                    new TableButton(x, y, this, symbol, tooltip, index);
+            
             this.widgets.add(button);
             x += SymbolButtonWidget.GRID_SPCAING;
             if(x > width-SymbolButtonWidget.SYMBOL_SIZE) {
