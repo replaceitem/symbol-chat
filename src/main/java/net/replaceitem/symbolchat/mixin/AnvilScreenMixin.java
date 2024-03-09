@@ -1,6 +1,7 @@
 package net.replaceitem.symbolchat.mixin;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.ForgingScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -12,6 +13,7 @@ import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.resource.FontProcessor;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -62,6 +64,11 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     @Inject(method = "onRenamed", at = @At("HEAD"))
     private void updateSuggestions(String chatText, CallbackInfo ci) {
         ((ScreenAccess) this).refreshSuggestions();
+    }
+
+    @Override
+    public void setFocused(@Nullable Element focused) {
+        if (!((ScreenAccess) this).isSymbolChatWidget(focused)) super.setFocused(focused);
     }
 
     @Override
