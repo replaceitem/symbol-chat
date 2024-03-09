@@ -84,7 +84,7 @@ As an advanced feature, you can access a unicode table through the `⣿⣿` butt
 This allows you to browse all unicode pages with the minecraft font to find new symbols.
 You can also search symbols and directly add them to your favorites or copy them to the clipboard.
 
-![Unicode table](/images/unicode.png)
+![Unicode table](https://github.com/replaceitem/symbol-chat/raw/master/images/unicode.png)
 
 ## Fully customizable
 
