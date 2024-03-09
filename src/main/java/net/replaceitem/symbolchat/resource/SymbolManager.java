@@ -102,7 +102,7 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
                 identifier = new Identifier(primitive.getAsString());
                 type = SymbolList.SplitType.CODEPOINT;
             } else if(symbolFile instanceof JsonObject object) {
-                identifier = new Identifier(JsonHelper.getString(object, "symbols"));
+                identifier = new Identifier(JsonHelper.getString(object, "id"));
                 type = SymbolList.SplitType.getOrDefault(JsonHelper.getString(object, "split", null), SymbolList.SplitType.CODEPOINT);
             } else {
                 continue;

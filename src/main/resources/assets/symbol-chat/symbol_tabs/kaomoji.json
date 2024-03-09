@@ -5,7 +5,7 @@
     "symbols": [
         {
             "split": "line",
-            "symbols": "symbol-chat:kaomojis"
+            "id": "symbol-chat:kaomojis"
         },
         "symbol-chat:custom_kaomojis"
     ]
