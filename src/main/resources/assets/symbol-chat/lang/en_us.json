@@ -33,6 +33,7 @@
   "symbolchat.hide_missing_glyphs": "Hide missing glyphs",
   "symbolchat.copy_selected": "Copy selected",
   "symbolchat.favorite_symbol": "Favorite symbol",
+  "symbolchat.unicode_table": "Unicode Table",
   
   "symbolchat.tab.symbol-chat.faces_people": "Faces & People",
   "symbolchat.tab.symbol-chat.nature_food": "Nature & Food",

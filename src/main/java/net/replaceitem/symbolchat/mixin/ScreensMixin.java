@@ -120,6 +120,7 @@ public class ScreensMixin extends Screen implements ScreenAccess {
                     return true;
                 }
             };
+            tableButtonWidget.setTooltip(Tooltip.of(Text.translatable("symbolchat.unicode_table")));
             adder.add(tableButtonWidget);
         }
 
