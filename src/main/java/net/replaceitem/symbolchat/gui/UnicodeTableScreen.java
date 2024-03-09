@@ -266,11 +266,29 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
     public class TableButton extends PasteSymbolButtonWidget {
         private final int index;
         private final boolean marked;
+        private int backgroundColor;
+        private int hoverBackgroundColor;
         
         public TableButton(int x, int y, Context context, String symbol, Tooltip tooltip, int index) {
             super(x, y, context, symbol, tooltip);
             this.index = index;
             this.marked = index >= selectionStart && index <= selectionEnd;
+        }
+
+        public void setBackgroundColors(int hoverColor) {
+            this.hoverBackgroundColor = hoverColor;
+            int alpha = hoverColor & 0xFF000000;
+            int color = (
+                    ((((hoverColor >> 16) & 0xFF) / 2) << 16) |
+                            ((((hoverColor >> 8 ) & 0xFF) / 2) << 8 ) |
+                            ((((hoverColor      ) & 0xFF) / 2)      )
+            );
+            this.backgroundColor = alpha | color;
+        }
+
+        @Override
+        protected int getTextColor() {
+            return this.isSelected() ? hoverBackgroundColor : backgroundColor;
         }
 
         @Override

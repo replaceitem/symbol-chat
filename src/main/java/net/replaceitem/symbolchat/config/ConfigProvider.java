@@ -10,6 +10,8 @@ public class ConfigProvider {
     public int getButtonColor() {return 0xA0000000;}
     public int getButtonHoverColor() {return 0xA0303030;}
     public int getFavoriteColor() {return 0xFFFFFF00;}
+    public int getButtonTextColor() {return 0xFFA0A0A0;}
+    public int getButtonTextHoverColor() {return 0xFFFFFFFF;}
     public boolean getHideFontButton() {return false;}
     public boolean getHideSettingsButton() {return false;}
     public boolean getHideTableButton() {return false;}

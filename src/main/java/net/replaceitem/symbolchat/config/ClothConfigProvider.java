@@ -45,6 +45,16 @@ public class ClothConfigProvider extends ConfigProvider {
     }
 
     @Override
+    public int getButtonTextColor() {
+        return config.button_text_color;
+    }
+
+    @Override
+    public int getButtonTextHoverColor() {
+        return config.button_text_hover_color;
+    }
+
+    @Override
     public boolean getHideFontButton() {
         return config.hide_font_button;
     }

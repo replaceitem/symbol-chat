@@ -11,16 +11,12 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
 import org.lwjgl.glfw.GLFW;
 
 public abstract class SymbolButtonWidget extends ClickableWidget implements Drawable, Element, Narratable {
     public static final int SYMBOL_SIZE = 12;
     public static final int GRID_SPCAING = SYMBOL_SIZE + 1;
-    
-    private int backgroundColor;
-    private int hoverBackgroundColor;
 
     public SymbolButtonWidget(int x, int y, String symbol) {
         this(x, y, SYMBOL_SIZE, SYMBOL_SIZE, symbol);
@@ -28,24 +24,6 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
 
     public SymbolButtonWidget(int x, int y, int w, int h, String symbol) {
         super(x, y, w, h, Text.literal(symbol));
-        hoverBackgroundColor = SymbolChat.config.getButtonHoverColor();
-        backgroundColor = SymbolChat.config.getButtonColor();
-    }
-
-    public void setBackgroundColors(int hoverColor) {
-        this.hoverBackgroundColor = hoverColor;
-        int alpha = hoverColor & 0xFF000000;
-        int color = (
-                ((((hoverColor >> 16) & 0xFF) / 2) << 16) |
-                ((((hoverColor >> 8 ) & 0xFF) / 2) << 8 ) |
-                ((((hoverColor      ) & 0xFF) / 2)      )
-        );
-        this.backgroundColor = alpha | color;
-    }
-    
-    public void setBackgroundColors(int backgroundColor, int hoverBackgroundColor) {
-        this.backgroundColor = backgroundColor;
-        this.hoverBackgroundColor = hoverBackgroundColor;
     }
 
     public abstract boolean onClick(int button);
@@ -82,18 +60,19 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             RenderSystem.disableDepthTest();
-            int bg = this.isSelected() ? hoverBackgroundColor : backgroundColor;
+            int bg = this.isSelected() ? SymbolChat.config.getButtonHoverColor() : SymbolChat.config.getButtonColor();
             drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bg);
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-
-            int rgb = this.isSelected() ? 0xFFFFFF : 0xA0A0A0;
-            int argb = rgb | MathHelper.ceil(this.alpha * 255.0F) << 24;
-
-            drawContext.drawCenteredTextWithShadow(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, argb);
+            int textColor = getTextColor();
+            drawContext.drawCenteredTextWithShadow(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, textColor);
             this.renderOverlay(drawContext);
         }
     }
-    
+
+    protected int getTextColor() {
+        return this.isSelected() ? SymbolChat.config.getButtonTextHoverColor() : SymbolChat.config.getButtonTextColor();
+    }
+
     protected void renderOverlay(DrawContext drawContext) {
         if(this.shouldDrawOutline()) {
             this.drawOutline(drawContext);

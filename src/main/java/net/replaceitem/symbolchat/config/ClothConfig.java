@@ -22,6 +22,12 @@ public class ClothConfig implements ConfigData {
     @ConfigEntry.ColorPicker(allowAlpha = true)
     public int favorite_color = 0xFFFFFF00;
     
+    @ConfigEntry.ColorPicker(allowAlpha = true)
+    public int button_text_color = 0xFFA0A0A0;
+    
+    @ConfigEntry.ColorPicker(allowAlpha = true)
+    public int button_text_hover_color = 0xFFFFFFFF;
+    
     public boolean hide_font_button = false;
 
     @ConfigEntry.Gui.Tooltip
