@@ -35,8 +35,7 @@ public class MappedFontProcessor extends FontProcessor {
     private static void readMapping(String key, JsonElement value, Map<String, String> map) throws JsonParseException {
         try {
             if(key.codePoints().count() == 1) {
-                if(!(value instanceof JsonPrimitive primitive) || !primitive.isString()) throw new JsonSyntaxException("Expected string for single codepoint mapping");
-                map.put(key, primitive.getAsString());
+                map.put(key, readStringOrCodepoint(value));
                 return;
             }
             CodepointIterator lRange = readRange(key);
