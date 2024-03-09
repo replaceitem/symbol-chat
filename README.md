@@ -85,3 +85,7 @@ This allows you to browse all unicode pages with the minecraft font to find new 
 You can also search symbols and directly add them to your favorites or copy them to the clipboard.
 
 ![Unicode table](/images/unicode.png)
+
+## Fully customizable
+
+The symbol tabs and the symbol fonts can be fully customized and expanded using resource packs. For more information, visit the [Wiki](https://github.com/replaceitem/symbol-chat/wiki/Resource-pack-syntax).
