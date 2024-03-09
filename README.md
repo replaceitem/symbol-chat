@@ -23,13 +23,13 @@ The symbol panel can be accessed by clicking the small button on the bottom left
 * Sign edit screen
 * Book editing screen
 
-![Symbol menu](/images/symbol_menu.png)
+![Symbol menu](https://github.com/replaceitem/symbol-chat/raw/master/images/symbol_menu.png)
 
 When opened, on the top there are multiple tabs in which all symbols are grouped.
 Clicking on a symbol in a tab will paste it into your chat box.
 The first tab shows all available symbols of the following tabs and additionally has a search bar for finding a specific symbol.
 
-![All symbols](/images/symbol_list.gif)
+![All symbols](https://github.com/replaceitem/symbol-chat/raw/master/images/symbol_list.gif)
 
 The next tabs group the symbols into various categories:
 
@@ -52,7 +52,7 @@ For inserting symbols faster, you can use the symbol suggestion popup, which wor
 By typing a colon (`:`), a popup will open and shows symbols that match with what you type after.
 For example, if you type `:cro` it will suggest a crown, crocodile, croissant, cross and crossed flags.
 
-![Symbol menu](/images/suggestion.png)
+![Symbol menu](https://github.com/replaceitem/symbol-chat/raw/master/images/suggestion.png)
 
 If you just enter a colon without entering anything after, it will show the first couple favorited symbols for quick access.
 
@@ -65,7 +65,7 @@ This will change the text you type to that font.
 Fonts make use of unicode characters to produce a more interesting looking text.
 These are also supported on clients without symbol-chat and can be seen by everyone.
 
-![Fonts](/images/fonts.png)
+![Fonts](https://github.com/replaceitem/symbol-chat/raw/master/images/fonts.png)
 
 ## Config
 
@@ -76,7 +76,7 @@ The config allows you to change the appearance and behavior of the symbol-chat H
 You can also add custom symbols not present in the tabs by adding them to the "Favorite symbols" text box.
 There is also support for adding custom kaomojis.
 
-![Config](/images/config.png)
+![Config](https://github.com/replaceitem/symbol-chat/raw/master/images/config.png)
 
 ## Unicode table
 
