@@ -227,7 +227,7 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
 
     @Override
     public void onSymbolClicked(String symbol) {
-        
+        this.refresh();
     }
 
     @Override

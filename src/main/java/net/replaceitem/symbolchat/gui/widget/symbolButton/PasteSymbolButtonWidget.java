@@ -5,18 +5,20 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.Util;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class PasteSymbolButtonWidget extends SymbolButtonWidget {
+    @Nullable
     protected final Context context;
     protected final String symbol;
     private boolean isFavorite;
 
-    public PasteSymbolButtonWidget(int x, int y, Context context, String symbol) {
+    public PasteSymbolButtonWidget(int x, int y, @Nullable Context context, String symbol) {
         this(x, y, context, symbol, Tooltip.of(Text.of(Util.getCapitalizedSymbolName(symbol))));
     }
 
-    public PasteSymbolButtonWidget(int x, int y, Context context, String symbol, Tooltip tooltip) {
+    public PasteSymbolButtonWidget(int x, int y, @Nullable Context context, String symbol, Tooltip tooltip) {
         super(x, y, symbol);
         this.symbol = symbol;
         this.context = context;
@@ -33,8 +35,13 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
 
     @Override
     public boolean onClick(int button) {
-        if(button == GLFW.GLFW_MOUSE_BUTTON_1 && this.context != null) this.context.onSymbolClicked(this.getSymbol());
-        if(button == GLFW.GLFW_MOUSE_BUTTON_2) onRightClick();
+        if(button == GLFW.GLFW_MOUSE_BUTTON_1 && this.context != null) {
+            this.context.onSymbolClicked(this.getSymbol());
+        }
+        if(button == GLFW.GLFW_MOUSE_BUTTON_2) {
+            onRightClick();
+            if(this.context != null) this.context.refresh();
+        }
         return true;
     }
     
@@ -44,7 +51,6 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
         if(currentlyFavorite) SymbolChat.config.removeFavorite(this.getSymbol());
         else SymbolChat.config.addFavorite(this.getSymbol());
         this.isFavorite = !currentlyFavorite;
-        this.context.refresh();
     }
 
     public String getSymbol() {
