@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.ScreenAccess;
+import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.FontProcessingSelectionManager;
 import org.joml.Vector2i;
@@ -26,7 +27,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Mixin(AbstractSignEditScreen.class)
-public abstract class AbstractSignEditScreenMixin extends Screen implements Consumer<String>, SymbolSuggestable.SelectionManagerSymbolSuggestable {
+public abstract class AbstractSignEditScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.SelectionManagerSymbolSuggestable {
     @Shadow private SelectionManager selectionManager;
     @Shadow private int currentRow;
     @Shadow @Final private String[] messages;
@@ -67,10 +68,9 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Cons
         return new FontProcessingSelectionManager(stringGetter, stringSetter, clipboardGetter, clipboardSetter, stringFilter);
     }
     
-
     @Override
-    public void accept(String s) {
-        this.selectionManager.insert(s);
+    public void insertSymbol(String symbol) {
+        this.selectionManager.insert(symbol);
     }
 
     @SuppressWarnings("ConstantValue")

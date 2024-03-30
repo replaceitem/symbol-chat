@@ -1,29 +1,33 @@
 package net.replaceitem.symbolchat.gui.widget;
 
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.AbstractParentElement;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.util.math.MathHelper;
-import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SearchUtil;
-import net.replaceitem.symbolchat.resource.SymbolManager;
+import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
-import net.replaceitem.symbolchat.resource.SymbolTab;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
+import net.replaceitem.symbolchat.resource.SymbolManager;
+import net.replaceitem.symbolchat.resource.SymbolTab;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class SymbolSuggestor extends AbstractParentElement implements Drawable, Selectable, PasteSymbolButtonWidget.Context {
     
     private final Screen screen;
-    private final Consumer<String> symbolConsumer;
+    private final SymbolInsertable symbolInsertable;
     private final SymbolSuggestable suggestable;
     
     public static final int HEIGHT = SymbolButtonWidget.SYMBOL_SIZE + 2;
@@ -37,9 +41,9 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
     
     private final List<PasteSymbolButtonWidget> symbolButtons = new ArrayList<>();
 
-    public SymbolSuggestor(Screen screen, Consumer<String> symbolConsumer, SymbolSuggestable suggestable) {
+    public SymbolSuggestor(Screen screen, SymbolInsertable symbolInsertable, SymbolSuggestable suggestable) {
         this.screen = screen;
-        this.symbolConsumer = symbolConsumer;
+        this.symbolInsertable = symbolInsertable;
         this.suggestable = suggestable;
         this.elementCount = 0;
         this.focusedElement = -1;
@@ -48,7 +52,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
 
     @Override
     public void onSymbolClicked(String symbol) {
-        symbolConsumer.accept(symbol);
+        symbolInsertable.insertSymbol(symbol);
     }
 
     @Override

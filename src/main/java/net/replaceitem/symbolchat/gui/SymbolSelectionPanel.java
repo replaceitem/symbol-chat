@@ -9,14 +9,14 @@ import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.resource.SymbolTab;
+import net.replaceitem.symbolchat.SymbolInsertable;
+import net.replaceitem.symbolchat.gui.widget.SymbolTabWidget;
 import net.replaceitem.symbolchat.gui.widget.TabSelectionWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
-import net.replaceitem.symbolchat.gui.widget.SymbolTabWidget;
+import net.replaceitem.symbolchat.resource.SymbolTab;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class SymbolSelectionPanel extends AbstractParentElement implements Drawable, Selectable {
     private final TabSelectionWidget tabSelectionWidget;
@@ -30,14 +30,14 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
 
     private boolean visible;
 
-    protected Consumer<String> symbolInsertable;
+    protected SymbolInsertable symbolInsertable;
     
     public static int getWidthForTabs(int tabCount) {
         int columns = Math.max(tabCount, MIN_COLUMNS);
         return columns * (SymbolButtonWidget.GRID_SPCAING) + 1;
     }
 
-    public SymbolSelectionPanel(Consumer<String> symbolConsumer, int x, int y, int height) {
+    public SymbolSelectionPanel(SymbolInsertable symbolInsertable, int x, int y, int height) {
         this.height = height;
         this.tabs = new ArrayList<>();
         this.x = x;
@@ -45,7 +45,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         int columns = Math.max(SymbolChat.symbolManager.getTabs().size(), MIN_COLUMNS);
         this.width = getWidthForTabs(SymbolChat.symbolManager.getTabs().size());
         this.visible = SymbolChat.config.getKeepPanelOpen() && SymbolChat.isPanelOpen;
-        this.symbolInsertable = symbolConsumer;
+        this.symbolInsertable = symbolInsertable;
         this.tabSelectionWidget = new TabSelectionWidget(this.x, this.y + 1, width) {
             @Override
             protected void onTabSwitched() {
@@ -63,7 +63,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     private void addTab(SymbolTab tab, int columns) {
         int tabY = this.y + tabSelectionWidget.getHeight() + 2;
         int tabHeight = this.height - (tabSelectionWidget.getHeight() + 2) - 1;
-        SymbolTabWidget tabWidget = new SymbolTabWidget(symbolInsertable, tab, this, this.x + 1, tabY, width, tabHeight, columns);
+        SymbolTabWidget tabWidget = new SymbolTabWidget(tab, this, this.x + 1, tabY, width, tabHeight, columns);
         this.tabs.add(tabWidget);
         this.tabSelectionWidget.addTab(tab);
     }
@@ -74,6 +74,10 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
 
     public SymbolTabWidget getCurrentTab() {
         return this.getSymbolTab(this.tabSelectionWidget.getSelectedTab());
+    }
+
+    public SymbolInsertable getSymbolInsertable() {
+        return symbolInsertable;
     }
 
     public boolean isVisible() {

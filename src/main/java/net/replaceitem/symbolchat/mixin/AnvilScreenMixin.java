@@ -11,6 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.resource.FontProcessor;
 import org.jetbrains.annotations.Nullable;
@@ -22,10 +23,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.function.Consumer;
-
 @Mixin(AnvilScreen.class)
-public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implements Consumer<String>, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
+public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> implements SymbolInsertable, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
     @Shadow private TextFieldWidget nameField;
 
     public AnvilScreenMixin(AnvilScreenHandler handler, PlayerInventory playerInventory, Text title, Identifier texture) {
@@ -72,10 +71,10 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     }
 
     @Override
-    public void accept(String s) {
+    public void insertSymbol(String symbol) {
         if(nameField == null) return;
         if(this.nameField.isActive())
-            this.nameField.write(s);
+            this.nameField.write(symbol);
     }
 
     @Override

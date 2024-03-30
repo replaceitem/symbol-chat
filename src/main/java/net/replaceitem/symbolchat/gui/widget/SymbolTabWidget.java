@@ -14,9 +14,9 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.SearchUtil;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.resource.SymbolTab;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
+import net.replaceitem.symbolchat.resource.SymbolTab;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -32,9 +32,9 @@ public class SymbolTabWidget extends AbstractParentElement implements Widget, Dr
     public static final Text NO_CLOTHCONFIG = Text.translatable("symbolchat.no_clothconfig");
     private final int columns;
 
-    public SymbolSelectionPanel symbolSelectionPanel;
+    private final SymbolSelectionPanel symbolSelectionPanel;
 
-    protected List<Element> children;
+    private final List<Element> children;
     @Nullable
     private Text emptyText;
     protected int x, y;
@@ -43,20 +43,17 @@ public class SymbolTabWidget extends AbstractParentElement implements Widget, Dr
     
     protected final SymbolTab tab;
 
-    protected Consumer<String> symbolConsumer;
-
     @Nullable
     private SymbolSearchBar searchBar;
     protected final ScrollableGridWidget scrollableGridWidget;
 
-    public SymbolTabWidget(Consumer<String> symbolConsumer, SymbolTab symbolTab, SymbolSelectionPanel symbolSelectionPanel, int x, int y, int width, int height, int panelColumns) {
+    public SymbolTabWidget(SymbolTab symbolTab, SymbolSelectionPanel symbolSelectionPanel, int x, int y, int width, int height, int panelColumns) {
         this.tab = symbolTab;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.columns = this.tab.getType().getColumns(panelColumns);
-        this.symbolConsumer = symbolConsumer;
         this.children = new ArrayList<>();
         this.symbolSelectionPanel = symbolSelectionPanel;
         this.scrollableGridWidget = createScrollableGridWidget();
@@ -71,7 +68,7 @@ public class SymbolTabWidget extends AbstractParentElement implements Widget, Dr
 
     @Override
     public void onSymbolClicked(String symbol) {
-        symbolConsumer.accept(symbol);
+        this.symbolSelectionPanel.getSymbolInsertable().insertSymbol(symbol);
     }
 
     @Override

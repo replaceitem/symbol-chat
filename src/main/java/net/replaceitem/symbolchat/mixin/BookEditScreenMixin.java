@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.ScreenAccess;
+import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.FontProcessingSelectionManager;
 import org.joml.Vector2i;
@@ -24,7 +25,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Mixin(BookEditScreen.class)
-public abstract class BookEditScreenMixin extends Screen implements Consumer<String>, SymbolSuggestable.SelectionManagerSymbolSuggestable {
+public abstract class BookEditScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.SelectionManagerSymbolSuggestable {
     @Shadow @Final private SelectionManager currentPageSelectionManager;
     @Shadow protected abstract String getCurrentPageContent();
     @Shadow protected abstract BookEditScreen.PageContent getPageContent();
@@ -74,8 +75,8 @@ public abstract class BookEditScreenMixin extends Screen implements Consumer<Str
     }
 
     @Override
-    public void accept(String s) {
-        this.currentPageSelectionManager.insert(s);
+    public void insertSymbol(String symbol) {
+        this.currentPageSelectionManager.insert(symbol);
     }
 
     @Override

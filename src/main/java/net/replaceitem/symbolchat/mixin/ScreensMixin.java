@@ -14,6 +14,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.config.ConfigProvider;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
@@ -27,10 +28,8 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-import java.util.function.Consumer;
-
 @Mixin({ChatScreen.class, BookEditScreen.class, AnvilScreen.class, AbstractSignEditScreen.class})
-public class ScreensMixin extends Screen implements ScreenAccess {
+public abstract class ScreensMixin extends Screen implements ScreenAccess, SymbolInsertable {
 
     protected ScreensMixin(Text title) {
         super(title);
@@ -61,7 +60,7 @@ public class ScreensMixin extends Screen implements ScreenAccess {
         int symbolButtonY = this.height - 2 - SymbolButtonWidget.SYMBOL_SIZE;
         int panelHeight = SymbolChat.config.getSymbolPanelHeight();
         int panelWidth = SymbolSelectionPanel.getWidthForTabs(SymbolChat.symbolManager.getTabs().size());
-        this.symbolSelectionPanel = new SymbolSelectionPanel(this::insertSymbol, this.width-panelWidth - 2,symbolButtonY-2-panelHeight, panelHeight);
+        this.symbolSelectionPanel = new SymbolSelectionPanel(this, this.width-panelWidth - 2,symbolButtonY-2-panelHeight, panelHeight);
         this.addDrawableChild(symbolSelectionPanel);
 
         symbolButtonWidget = new SymbolButtonWidget(symbolButtonX, symbolButtonY, "☺") {
@@ -167,12 +166,6 @@ public class ScreensMixin extends Screen implements ScreenAccess {
     @Override
     public boolean onCharTyped(char chr, int modifiers) {
         return this.symbolSelectionPanel != null && this.symbolSelectionPanel.charTyped(chr, modifiers);
-    }
-
-    @Unique
-    @SuppressWarnings("unchecked")
-    public void insertSymbol(String s) {
-        ((Consumer<String>) this).accept(s);
     }
 
     @Unique

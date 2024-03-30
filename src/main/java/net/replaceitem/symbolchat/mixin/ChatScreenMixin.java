@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.jetbrains.annotations.Nullable;
@@ -20,11 +21,10 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.function.Consumer;
 import java.util.regex.PatternSyntaxException;
 
 @Mixin(ChatScreen.class)
-public class ChatScreenMixin extends Screen implements Consumer<String>, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
+public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
     @Shadow protected TextFieldWidget chatField;
 
     protected ChatScreenMixin(Text title) {
@@ -82,8 +82,8 @@ public class ChatScreenMixin extends Screen implements Consumer<String>, SymbolS
     }
     
     @Override
-    public void accept(String s) {
-        this.chatField.write(s);
+    public void insertSymbol(String symbol) {
+        this.chatField.write(symbol);
     }
 
 
