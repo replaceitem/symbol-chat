@@ -38,10 +38,8 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!this.active || !this.visible) return false;
         if (this.isValidClickButton(button) && this.clicked(mouseX, mouseY)) {
-            if(this.onClick(button)) {
-                this.playDownSound(MinecraftClient.getInstance().getSoundManager());
-            }
-            return true;
+            this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+            return this.onClick(button);
         }
         return false;
     }

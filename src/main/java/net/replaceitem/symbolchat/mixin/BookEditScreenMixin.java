@@ -48,12 +48,12 @@ public abstract class BookEditScreenMixin extends Screen implements SymbolInsert
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(((ScreenAccess) this).onKeyPressed(keyCode, scanCode, modifiers)) cir.setReturnValue(true);
+        if(((ScreenAccess) this).handleKeyPressed(keyCode, scanCode, modifiers)) cir.setReturnValue(true);
     }
 
     @Inject(method = "charTyped", at = @At("HEAD"), cancellable = true)
     public void charTyped(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(((ScreenAccess) this).onCharTyped(chr, modifiers)) cir.setReturnValue(true);
+        if(((ScreenAccess) this).handlePanelCharTyped(chr, modifiers)) cir.setReturnValue(true);
     }
     
     @Inject(method = "charTyped", at = @At("RETURN"))

@@ -2,7 +2,6 @@ package net.replaceitem.symbolchat.mixin;
 
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
@@ -133,16 +132,6 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
     }
 
     @Override
-    public boolean isSymbolChatWidget(Element element) {
-        return element == symbolSelectionPanel ||
-                element == symbolButtonWidget ||
-                element == symbolSuggestor ||
-                element == fontSelectionDropDown ||
-                element == settingsButtonWidget ||
-                element == tableButtonWidget;
-    }
-
-    @Override
     @NotNull
     public FontProcessor getFontProcessor() {
         if(this.fontSelectionDropDown == null) return SymbolChat.fontManager.getNormal();
@@ -154,17 +143,24 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
     public void refreshSuggestions() {
         if(this.symbolSuggestor != null) {
             this.symbolSuggestor.refresh();
-            if(this.symbolSuggestor.isFocused()) this.setFocused(this.symbolSuggestor);
         }
-    }
-
-    @Override
-    public boolean onKeyPressed(int keyCode, int scanCode, int modifiers) {
-        return this.symbolSelectionPanel != null && this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers) || this.symbolSuggestor != null && this.symbolSuggestor.isVisible() && this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers);
     }
     
     @Override
-    public boolean onCharTyped(char chr, int modifiers) {
+    @Unique
+    public boolean handleSuggestorKeyPressed(int keyCode, int scanCode, int modifiers) {
+        return this.symbolSuggestor != null && this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    @Unique
+    public boolean handlePanelKeyPressed(int keyCode, int scanCode, int modifiers) {
+        return this.symbolSelectionPanel != null && this.symbolSelectionPanel.isFocused() && this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    @Unique
+    public boolean handlePanelCharTyped(char chr, int modifiers) {
         return this.symbolSelectionPanel != null && this.symbolSelectionPanel.charTyped(chr, modifiers);
     }
 

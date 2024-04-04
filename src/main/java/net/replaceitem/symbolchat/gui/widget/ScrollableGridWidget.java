@@ -1,6 +1,7 @@
 package net.replaceitem.symbolchat.gui.widget;
 
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.GridWidget;
@@ -8,11 +9,15 @@ import net.minecraft.client.gui.widget.ScrollableWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.text.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ScrollableGridWidget extends ScrollableWidget {
     private GridWidget gridWidget;
     private GridWidget.Adder adder;
     private final int columns;
     private int backgroundColor = 0;
+    private final List<Widget> children = new ArrayList<>();
 
     public ScrollableGridWidget(int x, int y, int w, int h, int columns) {
         super(x, y, w, h, Text.empty());
@@ -25,6 +30,7 @@ public class ScrollableGridWidget extends ScrollableWidget {
     }
 
     public void clearElements() {
+        this.children.clear();
         this.gridWidget = new GridWidget(getX(), getY());
         this.gridWidget.setSpacing(1);
         this.adder = gridWidget.createAdder(columns);
@@ -38,7 +44,12 @@ public class ScrollableGridWidget extends ScrollableWidget {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(this.isWithinBounds(mouseX, mouseY)) {
-            this.gridWidget.forEachChild(clickableWidget -> clickableWidget.mouseClicked(mouseX, mouseY + getScrollY(), button));
+            double scrolledMouseY = mouseY + getScrollY();
+            for (Widget child : this.children) {
+                if(child instanceof Element element) {
+                    if(element.mouseClicked(mouseX, scrolledMouseY, button)) return true;
+                }
+            }
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
@@ -46,7 +57,12 @@ public class ScrollableGridWidget extends ScrollableWidget {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         if(this.isWithinBounds(mouseX, mouseY)) {
-            this.gridWidget.forEachChild(clickableWidget -> clickableWidget.mouseScrolled(mouseX, mouseY + getScrollY(), horizontalAmount, verticalAmount));
+            double scrolledMouseY = mouseY + getScrollY();
+            for (Widget child : this.children) {
+                if(child instanceof Element element) {
+                    if(element.mouseScrolled(mouseX, scrolledMouseY, horizontalAmount, verticalAmount)) return true;
+                }
+            }
         }
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
@@ -54,7 +70,12 @@ public class ScrollableGridWidget extends ScrollableWidget {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if(this.isWithinBounds(mouseX, mouseY)) {
-            this.gridWidget.forEachChild(clickableWidget -> clickableWidget.mouseReleased(mouseX, mouseY + getScrollY(), button));
+            double scrolledMouseY = mouseY + getScrollY();
+            for (Widget child : this.children) {
+                if(child instanceof Element element) {
+                    if(element.mouseReleased(mouseX, scrolledMouseY, button)) return true;
+                }
+            }
         }
         return super.mouseReleased(mouseX, mouseY, button);
     }
@@ -62,7 +83,12 @@ public class ScrollableGridWidget extends ScrollableWidget {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if(this.isWithinBounds(mouseX, mouseY)) {
-            this.gridWidget.forEachChild(clickableWidget -> clickableWidget.mouseDragged(mouseX, mouseY + getScrollY(), button, deltaX, deltaY));
+            double scrolledMouseY = mouseY + getScrollY();
+            for (Widget child : this.children) {
+                if(child instanceof Element element) {
+                    if(element.mouseDragged(mouseX, scrolledMouseY, button, deltaX, deltaY)) return true;
+                }
+            }
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
@@ -131,6 +157,7 @@ public class ScrollableGridWidget extends ScrollableWidget {
 
     public void add(Widget widget) {
         this.adder.add(widget);
+        this.children.add(widget);
     }
 
     @Override

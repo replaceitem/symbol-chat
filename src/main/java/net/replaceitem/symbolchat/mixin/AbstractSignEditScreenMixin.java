@@ -46,14 +46,14 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(((ScreenAccess) this).onKeyPressed(keyCode, scanCode, modifiers)) cir.setReturnValue(true);
+        if(((ScreenAccess) this).handleKeyPressed(keyCode, scanCode, modifiers)) cir.setReturnValue(true);
     }
-
+    
     @Inject(method = "charTyped", at = @At("HEAD"), cancellable = true)
     public void charTyped(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(((ScreenAccess) this).onCharTyped(chr, modifiers)) cir.setReturnValue(true);
+        if(((ScreenAccess) this).handlePanelCharTyped(chr, modifiers)) cir.setReturnValue(true);
     }
-
+    
     @Inject(method = "charTyped", at = @At("RETURN"))
     private void updateSuggestions(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         ((ScreenAccess) this).refreshSuggestions();
@@ -79,10 +79,10 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
         Vector3f textScale = this.getTextScale();
         String string = this.getText();
         int cursor = this.getSelectionManager().getSelectionStart();
-        if (string == null || cursor < 0) return new Vector2i(0,0);
+        if (string == null || cursor < 0 || client == null) return new Vector2i(0,0);
         int halfY = 4 * this.blockEntity.getTextLineHeight() / 2;
         int y = this.currentRow * this.blockEntity.getTextLineHeight() - halfY;
-        int cx = this.client.textRenderer.getWidth(string.substring(0, Math.max(Math.min(cursor, string.length()), 0)));
+        int cx = this.client.textRenderer.getWidth(string.substring(0, Math.min(cursor, string.length())));
         int x = cx - this.client.textRenderer.getWidth(string) / 2;
         x += this.width/2; // see translateForRender()
         y += 90;

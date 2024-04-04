@@ -1,7 +1,5 @@
 package net.replaceitem.symbolchat.mixin;
 
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.navigation.GuiNavigationPath;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -11,7 +9,6 @@ import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,30 +33,16 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
         ((ScreenAccess) this).addSymbolChatComponents();
     }
     
+    @Inject(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;mouseClicked(DDI)Z"), cancellable = true)
+    private void callSuperMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        // Directly call super.mouseClicked instead of chatField.mouseClicked first.
+        // Since chatField is also in this.children(), this means that clicking the chat box will actually change focus like any other element.
+        cir.setReturnValue(super.mouseClicked(mouseX, mouseY, button));
+    }
+    
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(((ScreenAccess) this).onKeyPressed(keyCode, scanCode, modifiers)) cir.setReturnValue(true);
-    }
-
-    @Override
-    public boolean charTyped(char chr, int modifiers) {
-        if(((ScreenAccess) this).onCharTyped(chr, modifiers)) return true;
-        return super.charTyped(chr, modifiers);
-    }
-
-    @Override
-    public void setFocused(@Nullable Element focused) {
-        if (!((ScreenAccess) this).isSymbolChatWidget(focused)) super.setFocused(focused);
-    }
-
-    @Override
-    protected void switchFocus(GuiNavigationPath path) {
-        // we don't want focus to leave the chat box (breaks with the symbol chat widgets when using arrow keys)
-        GuiNavigationPath tempPath = path;
-        while(tempPath instanceof GuiNavigationPath.IntermediaryNode intermediaryNode && intermediaryNode != intermediaryNode.childPath()) {
-            tempPath = intermediaryNode.childPath();
-        }
-        if(!((ScreenAccess) this).isSymbolChatWidget(tempPath.component())) super.switchFocus(path);
+        if(((ScreenAccess) this).handleSuggestorKeyPressed(keyCode, scanCode, modifiers)) cir.setReturnValue(true);
     }
 
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 1),require = 1)
@@ -84,9 +67,11 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     @Override
     public void insertSymbol(String symbol) {
         this.chatField.write(symbol);
+        if(client != null) this.client.send(() -> {
+            if(client.currentScreen == this) this.setFocused(this.chatField);
+        });
     }
-
-
+    
     @Override
     public boolean disabled() {
         String text = this.chatField.getText();

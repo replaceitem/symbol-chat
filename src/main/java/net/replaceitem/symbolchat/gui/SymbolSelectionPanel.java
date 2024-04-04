@@ -29,6 +29,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     private static final int MIN_COLUMNS = 8;
 
     private boolean visible;
+    private boolean focused;
 
     protected SymbolInsertable symbolInsertable;
     
@@ -48,7 +49,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
         this.symbolInsertable = symbolInsertable;
         this.tabSelectionWidget = new TabSelectionWidget(this.x, this.y + 1, width) {
             @Override
-            protected void onTabSwitched() {
+            protected void onTabSwitched(int previousIndex, int newIndex) {
                 getCurrentTab().refresh();
             }
         };
@@ -104,8 +105,7 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(this.isMouseOver(mouseX, mouseY)) {
-            super.mouseClicked(mouseX, mouseY, button);
-            return true;
+            return super.mouseClicked(mouseX, mouseY, button);
         }
         this.setFocused(null);
         return false;
@@ -125,6 +125,16 @@ public class SymbolSelectionPanel extends AbstractParentElement implements Drawa
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
         return this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < this.x + width && mouseY < this.y + height;
+    }
+
+    @Override
+    public void setFocused(boolean focused) { // TODO added this, maybe fixes anvil focus issues?
+        this.focused = focused;
+    }
+
+    @Override
+    public boolean isFocused() {
+        return focused;
     }
 
     @Override

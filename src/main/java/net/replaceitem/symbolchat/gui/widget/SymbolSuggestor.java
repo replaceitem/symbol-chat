@@ -85,9 +85,11 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
         }
         visible = elementCount != 0;
         setFocused(visible && isFocused());
+        setFocusedElement(focusedElement);
     }
     
     private void setFocusedElement(int focused) {
+        if(focused >= this.elementCount) focused = -1;
         this.focusedElement = MathHelper.clamp(focused, -1, elementCount-1);
         PasteSymbolButtonWidget focus = focusedElement == -1 ? null : this.symbolButtons.get(focusedElement);
         this.setFocused(focus);
@@ -114,6 +116,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if(!visible) return false;
         if(keyCode == GLFW.GLFW_KEY_TAB) {
             PasteSymbolButtonWidget focused;
             if(this.getFocused() instanceof PasteSymbolButtonWidget pasteSymbolButtonWidget) {
@@ -131,7 +134,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
         }
         
         if(keyCode == GLFW.GLFW_KEY_RIGHT && this.getFocused() != null) {
-            this.setFocusedElement(this.focusedElement+1);
+            this.setFocusedElement(Math.min(this.focusedElement+1, elementCount-1));
             return true;
         }
         if(keyCode == GLFW.GLFW_KEY_LEFT && this.getFocused() != null) {
@@ -150,7 +153,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
             return true;
         }
         
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return false;
     }
     
     private void hide() {

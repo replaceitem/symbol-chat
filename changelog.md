@@ -1,1 +1,1 @@
-* Fixed unicode table buttons having black text
+* Reworked some of the screen logic, fixing some issues with focus and mouse/key events

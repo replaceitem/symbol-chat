@@ -61,10 +61,10 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
             child.setY(y);
         }
         this.tabButtons.get(selectedTab).setY(y+1);
-        if(previousTab != this.selectedTab) this.onTabSwitched();
+        if(previousTab != this.selectedTab) this.onTabSwitched(previousTab, selectedTab);
     }
 
-    protected void onTabSwitched() {}
+    protected void onTabSwitched(int previousIndex, int newIndex) {}
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -122,16 +122,6 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
     @Override
     public List<? extends Element> children() {
         return this.tabButtons;
-    }
-
-    @Override
-    public void setFocused(boolean focused) {
-
-    }
-
-    @Override
-    public boolean isFocused() {
-        return false;
     }
 
     protected class SwitchTabButton extends SymbolButtonWidget {

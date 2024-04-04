@@ -130,6 +130,11 @@ public class SymbolTabWidget extends AbstractParentElement implements Widget, Dr
     }
 
     @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return super.mouseClicked(mouseX, mouseY, button);
+    } // TODO
+
+    @Override
     public List<? extends Element> children() {
         return this.children;
     }

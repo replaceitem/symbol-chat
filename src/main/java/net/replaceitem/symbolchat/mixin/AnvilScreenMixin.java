@@ -1,7 +1,6 @@
 package net.replaceitem.symbolchat.mixin;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.ForgingScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -14,7 +13,6 @@ import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.resource.FontProcessor;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -56,25 +54,23 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(((ScreenAccess) this).onKeyPressed(keyCode, scanCode, modifiers)) cir.setReturnValue(true);
-        
+        if(((ScreenAccess) this).handleKeyPressed(keyCode, scanCode, modifiers)) cir.setReturnValue(true);
     }
 
     @Inject(method = "onRenamed", at = @At("HEAD"))
     private void updateSuggestions(String chatText, CallbackInfo ci) {
         ((ScreenAccess) this).refreshSuggestions();
     }
-
-    @Override
-    public void setFocused(@Nullable Element focused) {
-        if (!((ScreenAccess) this).isSymbolChatWidget(focused)) super.setFocused(focused);
-    }
-
+    
     @Override
     public void insertSymbol(String symbol) {
         if(nameField == null) return;
-        if(this.nameField.isActive())
+        if(this.nameField.isActive()) {
             this.nameField.write(symbol);
+            if(client != null) this.client.send(() -> {
+                if(client.currentScreen == this) this.setFocused(this.nameField);
+            });
+        }
     }
 
     @Override

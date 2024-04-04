@@ -37,6 +37,7 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     public boolean onClick(int button) {
         if(button == GLFW.GLFW_MOUSE_BUTTON_1 && this.context != null) {
             this.context.onSymbolClicked(this.getSymbol());
+            return true;
         }
         if(button == GLFW.GLFW_MOUSE_BUTTON_2) {
             onRightClick();

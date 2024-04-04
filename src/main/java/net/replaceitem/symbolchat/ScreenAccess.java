@@ -1,15 +1,18 @@
 package net.replaceitem.symbolchat;
 
-import net.minecraft.client.gui.Element;
 import net.replaceitem.symbolchat.resource.FontProcessor;
 import org.jetbrains.annotations.NotNull;
 
 public interface ScreenAccess {
     void addSymbolChatComponents();
-    @NotNull
-    FontProcessor getFontProcessor();
+    @NotNull FontProcessor getFontProcessor();
     void refreshSuggestions();
-    boolean onKeyPressed(int keyCode, int scanCode, int modifiers);
-    boolean onCharTyped(char chr, int modifiers);
-    boolean isSymbolChatWidget(Element element);
+    boolean handleSuggestorKeyPressed(int keyCode, int scanCode, int modifiers);
+    boolean handlePanelKeyPressed(int keyCode, int scanCode, int modifiers);
+    boolean handlePanelCharTyped(char chr, int modifiers);
+    
+    default boolean handleKeyPressed(int keyCode, int scanCode, int modifiers) {
+        if(handleSuggestorKeyPressed(keyCode, scanCode, modifiers)) return true;
+        return handlePanelKeyPressed(keyCode, scanCode, modifiers);
+    }
 }
