@@ -2,29 +2,24 @@ package net.replaceitem.symbolchat.gui.widget;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.AbstractParentElement;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.ScreenPos;
-import net.minecraft.client.gui.ScreenRect;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.widget.ScrollableWidget;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.SearchUtil;
 import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.gui.container.ContainerWidgetImpl;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
+import net.replaceitem.symbolchat.gui.container.GridLayoutContainer;
+import net.replaceitem.symbolchat.gui.container.ScrollableContainer;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.resource.SymbolTab;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class SymbolTabWidget extends AbstractParentElement implements Widget, Drawable, Element, PasteSymbolButtonWidget.Context {
+public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolButtonWidget.Context {
     
     private static final int SEARCH_BAR_HEIGHT = 10;
     public static final Text NO_RESULTS = Text.translatable("symbolchat.no_search_results");
@@ -34,34 +29,29 @@ public class SymbolTabWidget extends AbstractParentElement implements Widget, Dr
 
     private final SymbolSelectionPanel symbolSelectionPanel;
 
-    private final List<Element> children;
     @Nullable
     private Text emptyText;
-    protected int x, y;
-    private final int width;
-    private final int height;
-    
     protected final SymbolTab tab;
 
     @Nullable
     private SymbolSearchBar searchBar;
-    protected final ScrollableGridWidget scrollableGridWidget;
+    protected final ScrollableWidget scrollableWidget;
+    protected final GridLayoutContainer symbolContainer;
 
-    public SymbolTabWidget(SymbolTab symbolTab, SymbolSelectionPanel symbolSelectionPanel, int x, int y, int width, int height, int panelColumns) {
+    public SymbolTabWidget(int x, int y, int width, int height, SymbolTab symbolTab, SymbolSelectionPanel symbolSelectionPanel, int panelColumns) {
+        super(x, y, width, height);
         this.tab = symbolTab;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
         this.columns = this.tab.getType().getColumns(panelColumns);
-        this.children = new ArrayList<>();
         this.symbolSelectionPanel = symbolSelectionPanel;
-        this.scrollableGridWidget = createScrollableGridWidget();
-        this.children.add(scrollableGridWidget);
+        this.symbolContainer = new GridLayoutContainer(0, 0, 0, 0, panelColumns);
+        this.symbolContainer.setSpacing(1);
+        int offset = this.tab.hasSearchBar() ? SEARCH_BAR_HEIGHT+2 : 0;
+        this.scrollableWidget = new ScrollableContainer(getX(), getY() + offset, this.getWidth(), this.getHeight()-offset, symbolContainer);
+        this.addChildren(scrollableWidget);
         if(tab.hasSearchBar()) {
-            this.searchBar = new SymbolSearchBar(this.x + 2, this.y + 1, getWidth() - 4, SEARCH_BAR_HEIGHT);
+            this.searchBar = new SymbolSearchBar(this.getX() + 2, this.getY() + 1, getWidth() - 4, SEARCH_BAR_HEIGHT);
             this.searchBar.setChangedListener(s -> refresh());
-            this.children.add(this.searchBar);
+            this.addChildren(this.searchBar);
         }
         this.refresh();
     }
@@ -73,9 +63,9 @@ public class SymbolTabWidget extends AbstractParentElement implements Widget, Dr
 
     @Override
     public void refresh() {
-        scrollableGridWidget.clearElements();
+        symbolContainer.clearElements();
         addSymbols();
-        this.scrollableGridWidget.refreshPositions();
+        this.symbolContainer.refreshPositions();
     }
 
     protected void addSymbols() {
@@ -84,7 +74,7 @@ public class SymbolTabWidget extends AbstractParentElement implements Widget, Dr
             stream = SearchUtil.performSearch(stream, searchBar.getText());
         }
         List<PasteSymbolButtonWidget> buttons = stream.map(this::createButton).toList();
-        buttons.forEach(scrollableGridWidget::add);
+        buttons.forEach(symbolContainer::addChildren);
         this.emptyText = this.getEmptyText(buttons.isEmpty());
     }
     
@@ -95,30 +85,25 @@ public class SymbolTabWidget extends AbstractParentElement implements Widget, Dr
         }
         return NO_RESULTS;
     }
-    
-    protected ScrollableGridWidget createScrollableGridWidget() {
-        int offset = this.tab.hasSearchBar() ? SEARCH_BAR_HEIGHT+2 : 0;
-        return new ScrollableGridWidget(x, y + offset, this.getWidth(), this.getHeight()-offset, columns);
-    }
 
     protected PasteSymbolButtonWidget createButton(String symbol) {
         SymbolTab.Type type = tab.getType();
-        PasteSymbolButtonWidget pasteSymbolButtonWidget = new PasteSymbolButtonWidget(x, y, this, symbol);
+        PasteSymbolButtonWidget pasteSymbolButtonWidget = new PasteSymbolButtonWidget(getX(), getY(), this, symbol);
         if(type.hasFullWidthButtons()) pasteSymbolButtonWidget.setWidth(this.getWidth() - 2);
         if(!type.hasTooltip()) pasteSymbolButtonWidget.setTooltip(null);
         return pasteSymbolButtonWidget;
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        this.scrollableGridWidget.render(drawContext, mouseX, mouseY, delta);
+    public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        super.renderWidget(drawContext, mouseX, mouseY, delta);
         if(emptyText != null) {
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
             List<OrderedText> orderedTexts = textRenderer.wrapLines(emptyText, width - 4);
             drawContext.getMatrices().push();
             drawContext.getMatrices().translate(0, 0, 200);
-            int startY = this.y + (this.getHeight() / 2) - (orderedTexts.size() * textRenderer.fontHeight / 2);
-            int centerX = this.x + this.getWidth() / 2;
+            int startY = this.getX() + (this.getHeight() / 2) - (orderedTexts.size() * textRenderer.fontHeight / 2);
+            int centerX = this.getY() + this.getWidth() / 2;
             for (int i = 0; i < orderedTexts.size(); i++) {
                 OrderedText orderedText = orderedTexts.get(i);
                 int dy = startY + (i * textRenderer.fontHeight);
@@ -126,69 +111,5 @@ public class SymbolTabWidget extends AbstractParentElement implements Widget, Dr
             }
             drawContext.getMatrices().pop();
         }
-        if(this.searchBar != null) this.searchBar.render(drawContext, mouseX, mouseY, delta);
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return super.mouseClicked(mouseX, mouseY, button);
-    } // TODO
-
-    @Override
-    public List<? extends Element> children() {
-        return this.children;
-    }
-
-    @Override
-    public void setFocused(@Nullable Element focused) {
-        if(this.searchBar != null && this.searchBar.isFocused()) return;
-        super.setFocused(focused);
-    }
-
-    @Override
-    public boolean isMouseOver(double mouseX, double mouseY) {
-        return mouseX >= this.x && mouseY >= this.y && mouseX < this.x + width && mouseY < this.y + height;
-    }
-
-    @Override
-    public void setX(int x) {
-        this.x = x;
-        scrollableGridWidget.refreshPositions();
-    }
-
-    @Override
-    public void setY(int y) {
-        this.y = y;
-        scrollableGridWidget.refreshPositions();
-    }
-
-    @Override
-    public int getX() {
-        return x;
-    }
-
-    @Override
-    public int getY() {
-        return y;
-    }
-
-    @Override
-    public int getWidth() {
-        return this.width;
-    }
-
-    @Override
-    public int getHeight() {
-        return this.height;
-    }
-
-    @Override
-    public void forEachChild(Consumer<ClickableWidget> consumer) {
-        this.scrollableGridWidget.forEachChild(consumer);
-    }
-
-    @Override
-    public ScreenRect getNavigationFocus() {
-        return new ScreenRect(new ScreenPos(x, y), width, height);
     }
 }
