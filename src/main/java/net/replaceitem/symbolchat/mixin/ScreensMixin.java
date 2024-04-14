@@ -59,7 +59,7 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
         int symbolButtonY = this.height - 2 - SymbolButtonWidget.SYMBOL_SIZE;
         int panelHeight = SymbolChat.config.getSymbolPanelHeight();
         int panelWidth = SymbolSelectionPanel.getWidthForTabs(SymbolChat.symbolManager.getTabs().size());
-        this.symbolSelectionPanel = new SymbolSelectionPanel(this, this.width-panelWidth - 2,symbolButtonY-2-panelHeight, panelHeight);
+        this.symbolSelectionPanel = new SymbolSelectionPanel(this.width-panelWidth - 2, symbolButtonY-2-panelHeight, panelHeight, this);
         this.addDrawableChild(symbolSelectionPanel);
 
         symbolButtonWidget = new SymbolButtonWidget(symbolButtonX, symbolButtonY, "☺") {
