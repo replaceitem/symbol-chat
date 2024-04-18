@@ -65,7 +65,6 @@ public class ContainerWidgetImpl extends ContainerWidget {
         if(this.isMouseOver(mouseX, mouseY)) {
             return super.mouseClicked(mouseX, mouseY, button);
         }
-        //this.setFocused(null); // TODO - think about whether this is a good idea
         return false;
     }
 

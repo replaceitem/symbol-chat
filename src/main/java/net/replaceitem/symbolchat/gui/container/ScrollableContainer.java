@@ -1,5 +1,6 @@
 package net.replaceitem.symbolchat.gui.container;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.ScreenRect;
 import net.minecraft.client.gui.screen.Screen;
@@ -7,6 +8,7 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.ScrollableWidget;
 import net.minecraft.text.Text;
+import net.replaceitem.symbolchat.mixin.ScreenAccessor;
 
 public class ScrollableContainer extends ScrollableWidget {
     private final ClickableWidget child;
@@ -102,14 +104,15 @@ public class ScrollableContainer extends ScrollableWidget {
         if(child instanceof ContainerWidgetImpl containerWidget) {
             ScreenRect navigationFocus = this.getNavigationFocus();
             ScreenRect shiftedNavigationFocus = new ScreenRect(navigationFocus.getLeft(), navigationFocus.getTop() + (int) getScrollY(), navigationFocus.width(), navigationFocus.height());
+            boolean mouseInsideChild = navigationFocus.overlaps(new ScreenRect(mouseX, mouseY, 1, 1));
+            Screen currentScreen = MinecraftClient.getInstance().currentScreen;
+            Screen.PositionedTooltip beforeTooltip = currentScreen == null ? null : ((ScreenAccessor) currentScreen).getTooltip();
             containerWidget.renderInside(context, mouseX, scrolledMouseY, delta, shiftedNavigationFocus);
+            // hack to prevent tooltips from elements outside the scissored area
+            if(!mouseInsideChild && currentScreen != null && beforeTooltip != ((ScreenAccessor) currentScreen).getTooltip()) ((ScreenAccessor) currentScreen).setTooltip(beforeTooltip);
         } else {
             child.render(context, mouseX, scrolledMouseY, delta);
         }
-        /*this.gridWidget.forEachChild(clickableWidget -> {
-            if(clickableWidget.getY()+clickableWidget.getHeight() > getY() + getScrollY() && clickableWidget.getY() < getY() + getHeight() + getScrollY())
-                clickableWidget.render(context, mouseX, mouseY + (int) getScrollY(), delta);
-        });*/ // TODO remove if not needed for reference
     }
 
     @Override

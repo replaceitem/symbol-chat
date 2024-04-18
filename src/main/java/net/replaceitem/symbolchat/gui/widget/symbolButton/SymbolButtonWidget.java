@@ -61,14 +61,14 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
             int bg = getBackgroundColor();
             drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bg);
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-            int textColor = this.isSelected() ? SymbolChat.config.getButtonTextHoverColor() : SymbolChat.config.getButtonTextColor();
+            int textColor = this.isHovered() ? SymbolChat.config.getButtonTextHoverColor() : SymbolChat.config.getButtonTextColor();
             drawContext.drawCenteredTextWithShadow(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, textColor);
             this.renderOverlay(drawContext);
         }
     }
 
     protected int getBackgroundColor() {
-        return this.isSelected() ? SymbolChat.config.getButtonHoverColor() : SymbolChat.config.getButtonColor();
+        return this.isHovered() ? SymbolChat.config.getButtonHoverColor() : SymbolChat.config.getButtonColor();
     }
 
     protected void renderOverlay(DrawContext drawContext) {

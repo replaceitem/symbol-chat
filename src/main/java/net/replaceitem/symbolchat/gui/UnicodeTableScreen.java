@@ -284,7 +284,7 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
 
         @Override
         protected int getBackgroundColor() {
-            return this.isSelected() ? hoverBackgroundColor : backgroundColor;
+            return this.isHovered() ? hoverBackgroundColor : backgroundColor;
         }
 
         @Override
