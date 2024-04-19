@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.replaceitem.symbolchat.DrawContextExtension;
 import net.replaceitem.symbolchat.SymbolChat;
 import org.lwjgl.glfw.GLFW;
 
@@ -56,7 +57,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
 
     @Override
     public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        if (this.visible) {
+        if (this.visible && ((DrawContextExtension) drawContext).scissorOverlaps(getNavigationFocus())) {
             RenderSystem.disableDepthTest();
             int bg = getBackgroundColor();
             drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bg);

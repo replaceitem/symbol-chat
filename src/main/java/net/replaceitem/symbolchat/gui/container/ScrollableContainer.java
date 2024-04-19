@@ -1,14 +1,11 @@
 package net.replaceitem.symbolchat.gui.container;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.ScreenRect;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.ScrollableWidget;
 import net.minecraft.text.Text;
-import net.replaceitem.symbolchat.mixin.ScreenAccessor;
 
 public class ScrollableContainer extends ScrollableWidget {
     private final ClickableWidget child;
@@ -28,10 +25,15 @@ public class ScrollableContainer extends ScrollableWidget {
     }
 
     @Override
+    protected void setScrollY(double scrollY) {
+        super.setScrollY(scrollY);
+        this.child.setY(this.getY() - ((int) getScrollY()));
+    }
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(this.isWithinBounds(mouseX, mouseY)) {
-            double scrolledMouseY = mouseY + getScrollY();
-            if(child.mouseClicked(mouseX, scrolledMouseY, button)) return true;
+            if(child.mouseClicked(mouseX, mouseY, button)) return true;
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
@@ -39,8 +41,7 @@ public class ScrollableContainer extends ScrollableWidget {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         if(this.isWithinBounds(mouseX, mouseY)) {
-            double scrolledMouseY = mouseY + getScrollY();
-            if(child.mouseScrolled(mouseX, scrolledMouseY, horizontalAmount, verticalAmount)) return true;
+            if(child.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)) return true;
         }
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
@@ -48,8 +49,7 @@ public class ScrollableContainer extends ScrollableWidget {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if(this.isWithinBounds(mouseX, mouseY)) {
-            double scrolledMouseY = mouseY + getScrollY();
-            if(child.mouseReleased(mouseX, scrolledMouseY, button)) return true;
+            if(child.mouseReleased(mouseX, mouseY, button)) return true;
         }
         return super.mouseReleased(mouseX, mouseY, button);
     }
@@ -57,8 +57,7 @@ public class ScrollableContainer extends ScrollableWidget {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if(this.isWithinBounds(mouseX, mouseY)) {
-            double scrolledMouseY = mouseY + getScrollY();
-            if(child.mouseDragged(mouseX, scrolledMouseY, button, deltaX, deltaY)) return true;
+            if(child.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)) return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
@@ -89,10 +88,7 @@ public class ScrollableContainer extends ScrollableWidget {
         if (this.visible) {
             this.drawBox(context);
             context.enableScissor(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height);
-            context.getMatrices().push();
-            context.getMatrices().translate(0.0, -this.getScrollY(), 0.0);
             this.renderContents(context, mouseX, mouseY, delta);
-            context.getMatrices().pop();
             context.disableScissor();
             this.renderOverlay(context);
         }
@@ -100,19 +96,7 @@ public class ScrollableContainer extends ScrollableWidget {
 
     @Override
     protected void renderContents(DrawContext context, int mouseX, int mouseY, float delta) {
-        int scrolledMouseY = mouseY + (int) getScrollY();
-        if(child instanceof ContainerWidgetImpl containerWidget) {
-            ScreenRect navigationFocus = this.getNavigationFocus();
-            ScreenRect shiftedNavigationFocus = new ScreenRect(navigationFocus.getLeft(), navigationFocus.getTop() + (int) getScrollY(), navigationFocus.width(), navigationFocus.height());
-            boolean mouseInsideChild = navigationFocus.overlaps(new ScreenRect(mouseX, mouseY, 1, 1));
-            Screen currentScreen = MinecraftClient.getInstance().currentScreen;
-            Screen.PositionedTooltip beforeTooltip = currentScreen == null ? null : ((ScreenAccessor) currentScreen).getTooltip();
-            containerWidget.renderInside(context, mouseX, scrolledMouseY, delta, shiftedNavigationFocus);
-            // hack to prevent tooltips from elements outside the scissored area
-            if(!mouseInsideChild && currentScreen != null && beforeTooltip != ((ScreenAccessor) currentScreen).getTooltip()) ((ScreenAccessor) currentScreen).setTooltip(beforeTooltip);
-        } else {
-            child.render(context, mouseX, scrolledMouseY, delta);
-        }
+        child.render(context, mouseX, mouseY, delta);
     }
 
     @Override
@@ -144,7 +128,7 @@ public class ScrollableContainer extends ScrollableWidget {
     @Override
     public void setY(int y) {
         super.setY(y);
-        this.child.setY(y);
+        this.child.setY(y - ((int) getScrollY()));
         this.refreshPositions();
     }
 }

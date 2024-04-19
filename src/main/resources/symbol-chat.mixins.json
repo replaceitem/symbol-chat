@@ -3,15 +3,14 @@
     "minVersion": "0.8",
     "package": "net.replaceitem.symbolchat.mixin",
     "compatibilityLevel": "JAVA_17",
-    "mixins": [
-        "ScreenAccessor"
-    ],
     "client": [
         "AbstractSignEditScreenMixin",
         "AnonymousChatTextFieldWidgetMixin",
         "AnvilScreenMixin",
         "BookEditScreenMixin",
         "ChatScreenMixin",
+        "DrawContextMixin",
+        "ScissorStackMixin",
         "PageContentAccessor",
         "ScreensMixin",
         "TextFieldWidgetAccessor",

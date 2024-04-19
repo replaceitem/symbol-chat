@@ -2,6 +2,7 @@ package net.replaceitem.symbolchat.config;
 
 import net.minecraft.client.gui.screen.Screen;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -38,13 +39,17 @@ public class ConfigProvider {
 
     @SuppressWarnings("unused")
     public enum SymbolTooltipMode {
-        OFF(Integer.MAX_VALUE),
-        ON(0),
-        DELAYED(500);
+        OFF(Duration.ofSeconds(Integer.MAX_VALUE)),
+        ON(Duration.ZERO),
+        DELAYED(Duration.ofMillis(500));
 
-        public final int delay;
+        private final Duration delay;
 
-        SymbolTooltipMode(int delay) {
+        public Duration getDelay() {
+            return delay;
+        }
+
+        SymbolTooltipMode(Duration delay) {
             this.delay = delay;
         }
     }

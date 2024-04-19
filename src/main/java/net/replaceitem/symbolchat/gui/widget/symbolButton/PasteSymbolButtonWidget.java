@@ -23,7 +23,7 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
         this.symbol = symbol;
         this.context = context;
         this.setTooltip(tooltip);
-        this.setTooltipDelay(SymbolChat.config.getSymbolTooltipMode().delay);
+        this.setTooltipDelay(SymbolChat.config.getSymbolTooltipMode().getDelay());
         this.isFavorite = SymbolChat.symbolManager.isFavorite(symbol);
     }
 
