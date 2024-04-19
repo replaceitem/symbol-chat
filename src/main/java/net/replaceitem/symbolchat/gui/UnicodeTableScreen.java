@@ -11,11 +11,14 @@ import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.EmptyWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.TextIconButtonWidget;
 import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
@@ -35,6 +38,9 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         super(Text.of("Unicode Table"));
         this.parent = parent;
     }
+
+    private static final Identifier COPY_TEXTURE = new Identifier(SymbolChat.NAMESPACE, "copy");
+    private static final Identifier FAVORITE_TEXTURE = new Identifier(SymbolChat.NAMESPACE, "favorite");
 
     private final Screen parent;
 
@@ -110,10 +116,10 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         GridWidget bottomRowGridWidget = new GridWidget(2,18);
         GridWidget.Adder bottomRowAdder = bottomRowGridWidget.createAdder(Integer.MAX_VALUE);
 
-        copySelectedButton = ButtonWidget.builder(Text.literal("📋 ").append(Text.translatable("symbolchat.copy_selected")), button -> copySelected()).dimensions(0, 0, 100, 20).build();
+        copySelectedButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> copySelected(), true).texture(COPY_TEXTURE, 16, 16).dimension(20, 20).build();
         bottomRowAdder.add(copySelectedButton);
 
-        favoriteSymbolButton = ButtonWidget.builder(Text.literal("✩ ").append(Text.translatable("symbolchat.favorite_symbol")), button -> favoriteSymbols()).dimensions(0, 0, 140, 20).build();
+        favoriteSymbolButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> favoriteSymbols(), true).texture(FAVORITE_TEXTURE, 16, 16).dimension(20, 20).build();
         bottomRowAdder.add(favoriteSymbolButton);
         if(!SymbolChat.clothConfigEnabled) {
             favoriteSymbolButton.active = false;
