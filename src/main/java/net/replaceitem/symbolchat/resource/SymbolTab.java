@@ -13,8 +13,8 @@ import java.util.stream.Stream;
 
 public class SymbolTab implements Comparable<SymbolTab> {
     private final Identifier id;
-
-    private final String icon;
+    private final Identifier icon;
+    private final String textIcon;
     private final Text tooltipText;
     private List<SymbolList> symbols;
     private final int order;
@@ -23,7 +23,13 @@ public class SymbolTab implements Comparable<SymbolTab> {
 
     public SymbolTab(Identifier id, String icon, int order, Type type, boolean searchBar, List<SymbolList> symbols) {
         this.id = id;
-        this.icon = icon;
+        if(icon.codePoints().count() == 1) {
+            this.icon = null;
+            this.textIcon = icon;
+        } else {
+            this.icon = new Identifier(icon);
+            this.textIcon = null;
+        }
         this.order = order;
         this.type = type;
         this.tooltipText = Text.translatable(id.toTranslationKey("symbolchat.tab"));
@@ -64,8 +70,12 @@ public class SymbolTab implements Comparable<SymbolTab> {
         return type;
     }
 
-    public String getIcon() {
+    public Identifier getIcon() {
         return icon;
+    }
+
+    public String getTextIcon() {
+        return textIcon;
     }
 
     public static class Type {

@@ -9,8 +9,9 @@ import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.text.MutableText;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
@@ -19,6 +20,7 @@ import net.replaceitem.symbolchat.config.ConfigProvider;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.UnicodeTableScreen;
 import net.replaceitem.symbolchat.gui.widget.DropDownWidget;
+import net.replaceitem.symbolchat.gui.widget.FlatIconButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.SymbolSuggestor;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import net.replaceitem.symbolchat.resource.FontProcessor;
@@ -34,12 +36,16 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
         super(title);
     }
     
+    private static final Identifier WRENCH_TEXTURE = new Identifier(SymbolChat.NAMESPACE, "wrench");
+    private static final Identifier TABLE_TEXTURE = new Identifier(SymbolChat.NAMESPACE, "table");
+    private static final Identifier SMILEY_TEXTURE = new Identifier(SymbolChat.NAMESPACE, "smiley");
+    
     @Unique
     @Nullable
     private SymbolSelectionPanel symbolSelectionPanel;
     @Unique
     @Nullable
-    private SymbolButtonWidget symbolButtonWidget;
+    private FlatIconButtonWidget symbolButtonWidget;
     @Unique
     @Nullable
     private SymbolSuggestor symbolSuggestor;
@@ -48,10 +54,10 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
     private DropDownWidget<FontProcessor> fontSelectionDropDown;
     @Unique
     @Nullable
-    private SymbolButtonWidget settingsButtonWidget;
+    private FlatIconButtonWidget settingsButtonWidget;
     @Unique
     @Nullable
-    private SymbolButtonWidget tableButtonWidget;
+    private FlatIconButtonWidget tableButtonWidget;
 
 
     public void addSymbolChatComponents() {
@@ -62,18 +68,19 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
         this.symbolSelectionPanel = new SymbolSelectionPanel(this.width-panelWidth - 2, symbolButtonY-2-panelHeight, panelHeight, this);
         this.addDrawableChild(symbolSelectionPanel);
 
-        symbolButtonWidget = new SymbolButtonWidget(symbolButtonX, symbolButtonY, "☺") {
-            @Override
-            public boolean onClick(int button) {
-                symbolSelectionPanel.toggleVisible();
-                return true;
-            }
-
-            @Override
-            protected boolean shouldDrawOutline() {
-                return symbolSelectionPanel.isVisible();
-            }
-        };
+        symbolButtonWidget = new FlatIconButtonWidget(
+                SymbolButtonWidget.SYMBOL_SIZE, SymbolButtonWidget.SYMBOL_SIZE,
+                ScreenTexts.EMPTY,
+                SymbolButtonWidget.SYMBOL_SIZE, SymbolButtonWidget.SYMBOL_SIZE,
+                SMILEY_TEXTURE,
+                button -> {
+                    symbolSelectionPanel.toggleVisible();
+                    button.setOutlined(!button.isOutlined());
+                },
+                textSupplier -> Text.translatable("symbolchat.toggle_symbol_panel")
+        );
+        symbolButtonWidget.setPosition(symbolButtonX, symbolButtonY);
+        symbolButtonWidget.setOutlined(symbolSelectionPanel.isVisible());
         this.addDrawableChild(symbolButtonWidget);
 
         GridWidget gridWidget = new GridWidget(0, 2);
@@ -91,33 +98,19 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
         }
 
         if(!SymbolChat.config.getHideSettingsButton()) {
-            settingsButtonWidget = new SymbolButtonWidget(0, 0, 15, 15, "⚙") {
-                @Override
-                public boolean onClick(int button) {
-                    if(SymbolChat.clothConfigEnabled) {
-                        MinecraftClient.getInstance().setScreen(SymbolChat.config.getConfigScreen(ScreensMixin.this));
-                        return true;
-                    }
-                    return false;
+            settingsButtonWidget = new FlatIconButtonWidget(15, 15, ScreenTexts.EMPTY, 15, 15, WRENCH_TEXTURE, button -> {
+                if(SymbolChat.clothConfigEnabled) {
+                    MinecraftClient.getInstance().setScreen(SymbolChat.config.getConfigScreen(ScreensMixin.this));
                 }
-
-                @Override
-                protected MutableText getNarrationMessage() {
-                    return Text.translatable("text.autoconfig.symbol-chat.title");
-                }
-            };
+            }, textSupplier -> Text.translatable("text.autoconfig.symbol-chat.title"));
             settingsButtonWidget.setTooltip(Tooltip.of(Text.translatable(SymbolChat.clothConfigEnabled ? "text.autoconfig.symbol-chat.title" : "symbolchat.no_clothconfig")));
             adder.add(settingsButtonWidget);
         }
 
         if(!SymbolChat.config.getHideTableButton()) {
-            tableButtonWidget = new SymbolButtonWidget(0, 0, 15, 15, "⣿⣿") {
-                @Override
-                public boolean onClick(int button) {
-                    if(ScreensMixin.this.client != null) ScreensMixin.this.client.setScreen(new UnicodeTableScreen(ScreensMixin.this));
-                    return true;
-                }
-            };
+            tableButtonWidget = new FlatIconButtonWidget(15, 15, ScreenTexts.EMPTY, 15, 15, TABLE_TEXTURE, button -> {
+                if(ScreensMixin.this.client != null) ScreensMixin.this.client.setScreen(new UnicodeTableScreen(ScreensMixin.this));
+            }, textSupplier -> Text.translatable("symbolchat.unicode_table"));
             tableButtonWidget.setTooltip(Tooltip.of(Text.translatable("symbolchat.unicode_table")));
             adder.add(tableButtonWidget);
         }

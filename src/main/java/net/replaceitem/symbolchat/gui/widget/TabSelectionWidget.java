@@ -10,10 +10,13 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.resource.SymbolTab;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
+import net.replaceitem.symbolchat.resource.SymbolTab;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +25,7 @@ import java.util.function.Consumer;
 public class TabSelectionWidget extends AbstractParentElement implements Widget, Drawable, Element {
 
     private static final int HEIGHT = SymbolButtonWidget.GRID_SPCAING;
-    private final List<SwitchTabButton> tabButtons;
+    private final List<FlatIconButtonWidget> tabButtons;
     private int selectedTab;
 
     private int x, y;
@@ -41,7 +44,21 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
     }
 
     public void addTab(SymbolTab tab) {
-        this.tabButtons.add(new SwitchTabButton(0, 0, this.tabButtons.size(), tab));
+        int index = this.tabButtons.size();
+        MutableText narration = tab.getTooltipText().copy();
+        Identifier icon = tab.getIcon();
+        String textIcon = tab.getTextIcon();
+        boolean hasLiteralIcon = textIcon != null;
+        FlatIconButtonWidget switchTabWidget = new FlatIconButtonWidget(
+                SymbolButtonWidget.SYMBOL_SIZE, SymbolButtonWidget.SYMBOL_SIZE,
+                hasLiteralIcon ? Text.literal(textIcon) : null,
+                SymbolButtonWidget.SYMBOL_SIZE, SymbolButtonWidget.SYMBOL_SIZE,
+                hasLiteralIcon ? null : icon,
+                button -> setTab(index),
+                textSupplier -> narration
+        );
+        switchTabWidget.setTooltip(Tooltip.of(tab.getTooltipText()));
+        this.tabButtons.add(switchTabWidget);
     }
 
     public void refreshPositions() {
@@ -57,7 +74,7 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
         int previousTab = this.getSelectedTab();
         this.selectedTab = MathHelper.clamp(tab, 0, this.tabButtons.size()-1);
         SymbolChat.selectedTab = this.selectedTab;
-        for (SymbolButtonWidget child : this.tabButtons) {
+        for (Widget child : this.tabButtons) {
             child.setY(y);
         }
         this.tabButtons.get(selectedTab).setY(y+1);
@@ -68,12 +85,16 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        for (SymbolButtonWidget tabButton : this.tabButtons) {
+        for (Drawable tabButton : this.tabButtons) {
             tabButton.render(context, mouseX, mouseY, delta);
         }
         int dx = this.x + selectedTab * SymbolButtonWidget.GRID_SPCAING;
-        if(dx > x) context.drawHorizontalLine(x, dx-1, y + SymbolButtonWidget.SYMBOL_SIZE, 0xFFFFFFFF);
-        if(x + width > dx + SymbolButtonWidget.GRID_SPCAING) context.drawHorizontalLine(dx + SymbolButtonWidget.GRID_SPCAING, x + width - 1, y + SymbolButtonWidget.SYMBOL_SIZE, 0xFFFFFFFF);
+        int color = 0xFFFFFFFF;
+        if(dx > x) context.drawHorizontalLine(x, dx-1, y + SymbolButtonWidget.SYMBOL_SIZE, color);
+        if(x + width > dx + SymbolButtonWidget.GRID_SPCAING) context.drawHorizontalLine(dx + SymbolButtonWidget.GRID_SPCAING, x + width - 1, y + SymbolButtonWidget.SYMBOL_SIZE, color);
+        context.drawVerticalLine(dx, y, y + SymbolButtonWidget.GRID_SPCAING, color);
+        context.drawHorizontalLine(dx, dx + SymbolButtonWidget.GRID_SPCAING, y, color);
+        context.drawVerticalLine(dx + SymbolButtonWidget.GRID_SPCAING, y, y + SymbolButtonWidget.SYMBOL_SIZE, color);
     }
 
 
@@ -123,34 +144,4 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
     public List<? extends Element> children() {
         return this.tabButtons;
     }
-
-    protected class SwitchTabButton extends SymbolButtonWidget {
-
-        protected final int index;
-
-        public SwitchTabButton(int x, int y, int index, SymbolTab tab) {
-            super(x, y, tab.getIcon());
-            this.index = index;
-            this.setTooltip(Tooltip.of(tab.getTooltipText()));
-        }
-
-        @Override
-        protected boolean shouldDrawOutline() {
-            return selectedTab == index;
-        }
-
-        @Override
-        protected void drawOutline(DrawContext context) {
-            context.drawVerticalLine(getX()-1, y, y + GRID_SPCAING, 0xFFFFFFFF);
-            context.drawHorizontalLine(getX()-1, getX() + SYMBOL_SIZE, y, 0xFFFFFFFF);
-            context.drawVerticalLine(getX() + SYMBOL_SIZE, y, y + SYMBOL_SIZE, 0xFFFFFFFF);
-        }
-
-        @Override
-        public boolean onClick(int button) {
-            setTab(index);
-            return true;
-        }
-    }
-
 }

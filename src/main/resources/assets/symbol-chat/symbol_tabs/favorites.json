@@ -1,5 +1,5 @@
 {
-    "icon": "✩",
+    "icon": "symbol-chat:tab_favorites",
     "order": 200,
     "symbols": [
         "symbol-chat:favorites"

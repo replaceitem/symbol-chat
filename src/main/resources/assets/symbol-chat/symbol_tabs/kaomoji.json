@@ -1,5 +1,5 @@
 {
-    "icon": "K",
+    "icon": "symbol-chat:tab_kaomojis",
     "order": 100,
     "type": "kaomojis",
     "symbols": [
