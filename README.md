@@ -89,3 +89,9 @@ You can also search symbols and directly add them to your favorites or copy them
 ## Fully customizable
 
 The symbol tabs and the symbol fonts can be fully customized and expanded using resource packs. For more information, visit the [Wiki](https://github.com/replaceitem/symbol-chat/wiki/Resource-pack-syntax).
+
+## Compatible projects
+
+* The [Pixel Twemoji 9x](https://modrinth.com/resourcepack/pixel-twemoji-9x) and
+[Pixel Twemoji 18x](https://modrinth.com/resourcepack/pixel-twemoji-18x) resource packs can be used to get nicer looking
+emojis than minecraft's. They also provide a symbol panel layout more suitable for these emojis.
