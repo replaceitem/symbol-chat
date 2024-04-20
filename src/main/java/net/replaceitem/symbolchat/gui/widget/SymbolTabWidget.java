@@ -101,8 +101,8 @@ public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolB
             List<OrderedText> orderedTexts = textRenderer.wrapLines(emptyText, width - 4);
             drawContext.getMatrices().push();
             drawContext.getMatrices().translate(0, 0, 200);
-            int startY = this.getX() + (this.getHeight() / 2) - (orderedTexts.size() * textRenderer.fontHeight / 2);
-            int centerX = this.getY() + this.getWidth() / 2;
+            int centerX = this.getX() + this.getWidth() / 2;
+            int startY = this.getY() + (this.getHeight() / 2) - (orderedTexts.size() * textRenderer.fontHeight / 2);
             for (int i = 0; i < orderedTexts.size(); i++) {
                 OrderedText orderedText = orderedTexts.get(i);
                 int dy = startY + (i * textRenderer.fontHeight);
