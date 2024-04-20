@@ -25,7 +25,6 @@ public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolB
     public static final Text NO_RESULTS = Text.translatable("symbolchat.no_search_results");
     public static final Text NO_FAVORITE_SYMBOLS = Text.translatable("symbolchat.no_favorite_symbols");
     public static final Text NO_CLOTHCONFIG = Text.translatable("symbolchat.no_clothconfig");
-    private final int columns;
 
     private final SymbolSelectionPanel symbolSelectionPanel;
 
@@ -41,9 +40,9 @@ public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolB
     public SymbolTabWidget(int x, int y, int width, int height, SymbolTab symbolTab, SymbolSelectionPanel symbolSelectionPanel, int panelColumns) {
         super(x, y, width, height);
         this.tab = symbolTab;
-        this.columns = this.tab.getType().getColumns(panelColumns);
         this.symbolSelectionPanel = symbolSelectionPanel;
-        this.symbolContainer = new GridLayoutContainer(0, 0, 0, 0, panelColumns);
+        int columns = this.tab.getType().getColumns(panelColumns);
+        this.symbolContainer = new GridLayoutContainer(0, 0, 0, 0, columns);
         this.symbolContainer.setSpacing(1);
         int offset = this.tab.hasSearchBar() ? SEARCH_BAR_HEIGHT+2 : 0;
         this.scrollableWidget = new ScrollableContainer(getX(), getY() + offset, this.getWidth(), this.getHeight()-offset, symbolContainer);
