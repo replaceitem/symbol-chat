@@ -34,6 +34,7 @@
   "symbolchat.show_blocks": "Blöcke anzeigen",
   "symbolchat.hide_missing_glyphs": "Fehlende Zeichen anzeigen",
   "symbolchat.unicode_table": "Unicode Tabelle",
+  "symbolchat.toggle_symbol_panel": "Symbolpanel umschalten",
 
   "symbolchat.tab.symbol-chat.faces_people": "Gesichter & Menschen",
   "symbolchat.tab.symbol-chat.nature_food": "Natur & Lebensmittel",
