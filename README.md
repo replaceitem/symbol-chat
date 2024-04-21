@@ -40,7 +40,7 @@ The next tabs group the symbols into various categories:
 * Symbols
 * Shapes
 
-The tab labeled `K` contains various kaomojis like `¯\_(ツ)_/¯`.
+The tab labeled `^-^` contains various kaomojis like `¯\_(ツ)_/¯`.
 
 The last tab is a favorites tab, which you can add favorite symbols too as well as adding custom symbols.
 To favorite a symbol, just right click it in the symbol panel.
