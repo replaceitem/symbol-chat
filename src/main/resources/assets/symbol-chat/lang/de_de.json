@@ -36,6 +36,7 @@
   "symbolchat.copy_selected": "Auswahl kopieren",
   "symbolchat.favorite_symbol": "Symbol favorisieren",
   "symbolchat.unicode_table": "Unicode Tabelle",
+  "symbolchat.toggle_symbol_panel": "Symbolpanel umschalten",
 
   "symbolchat.tab.symbol-chat.faces_people": "Gesichter & Menschen",
   "symbolchat.tab.symbol-chat.nature_food": "Natur & Lebensmittel",
