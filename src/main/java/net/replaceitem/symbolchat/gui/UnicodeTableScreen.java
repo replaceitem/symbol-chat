@@ -39,8 +39,8 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         this.parent = parent;
     }
 
-    private static final Identifier COPY_TEXTURE = new Identifier(SymbolChat.NAMESPACE, "copy");
-    private static final Identifier FAVORITE_TEXTURE = new Identifier(SymbolChat.NAMESPACE, "favorite");
+    private static final Identifier COPY_TEXTURE = Identifier.of(SymbolChat.NAMESPACE, "copy");
+    private static final Identifier FAVORITE_TEXTURE = Identifier.of(SymbolChat.NAMESPACE, "favorite");
 
     private final Screen parent;
 

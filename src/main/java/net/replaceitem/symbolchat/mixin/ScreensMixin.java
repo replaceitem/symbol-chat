@@ -36,9 +36,9 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
         super(title);
     }
     
-    private static final Identifier WRENCH_TEXTURE = new Identifier(SymbolChat.NAMESPACE, "wrench");
-    private static final Identifier TABLE_TEXTURE = new Identifier(SymbolChat.NAMESPACE, "table");
-    private static final Identifier SMILEY_TEXTURE = new Identifier(SymbolChat.NAMESPACE, "smiley");
+    private static final Identifier WRENCH_TEXTURE = Identifier.of(SymbolChat.NAMESPACE, "wrench");
+    private static final Identifier TABLE_TEXTURE = Identifier.of(SymbolChat.NAMESPACE, "table");
+    private static final Identifier SMILEY_TEXTURE = Identifier.of(SymbolChat.NAMESPACE, "smiley");
     
     @Unique
     @Nullable

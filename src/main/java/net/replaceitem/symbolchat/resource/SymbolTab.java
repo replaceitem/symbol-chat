@@ -27,7 +27,7 @@ public class SymbolTab implements Comparable<SymbolTab> {
             this.icon = null;
             this.textIcon = icon;
         } else {
-            this.icon = new Identifier(icon);
+            this.icon = Identifier.of(icon);
             this.textIcon = null;
         }
         this.order = order;

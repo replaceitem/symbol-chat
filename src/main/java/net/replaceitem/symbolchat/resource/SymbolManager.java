@@ -29,15 +29,15 @@ import static net.replaceitem.symbolchat.SymbolChat.NAMESPACE;
 
 public class SymbolManager implements SimpleSynchronousResourceReloadListener {
     
-    public static final Identifier IDENTIFIER = new Identifier(NAMESPACE,"symbols");
-    public static final Identifier ALL_IDENTIFIER = new Identifier(NAMESPACE, "all");
+    public static final Identifier IDENTIFIER = Identifier.of(NAMESPACE,"symbols");
+    public static final Identifier ALL_IDENTIFIER = Identifier.of(NAMESPACE, "all");
     public static final ResourceFinder SYMBOLS_FINDER = new ResourceFinder("symbols", ".txt");
     public static final ResourceFinder SYMBOL_TABS_FINDER = ResourceFinder.json("symbol_tabs");
 
     private List<SymbolTab> tabs = List.of();
     private final HashMap<Identifier, SymbolList> listCache = new HashMap<>();
-    private final SymbolList.Mutable favoritesList = new SymbolList.Mutable(new Identifier(NAMESPACE, "favorites"));
-    private final SymbolList.Mutable customKaomojisList = new SymbolList.Mutable(new Identifier(NAMESPACE, "custom_kaomojis"));
+    private final SymbolList.Mutable favoritesList = new SymbolList.Mutable(Identifier.of(NAMESPACE, "favorites"));
+    private final SymbolList.Mutable customKaomojisList = new SymbolList.Mutable(Identifier.of(NAMESPACE, "custom_kaomojis"));
     
     @Override
     public Identifier getFabricId() {
@@ -99,10 +99,10 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
             Identifier identifier;
             SymbolList.SplitType type;
             if(symbolFile instanceof JsonPrimitive primitive) {
-                identifier = new Identifier(primitive.getAsString());
+                identifier = Identifier.of(primitive.getAsString());
                 type = SymbolList.SplitType.CODEPOINT;
             } else if(symbolFile instanceof JsonObject object) {
-                identifier = new Identifier(JsonHelper.getString(object, "id"));
+                identifier = Identifier.of(JsonHelper.getString(object, "id"));
                 type = SymbolList.SplitType.getOrDefault(JsonHelper.getString(object, "split", null), SymbolList.SplitType.CODEPOINT);
             } else {
                 continue;

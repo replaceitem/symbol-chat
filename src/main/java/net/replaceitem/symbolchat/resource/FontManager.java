@@ -28,7 +28,7 @@ import static net.replaceitem.symbolchat.SymbolChat.NAMESPACE;
 
 public class FontManager implements SimpleSynchronousResourceReloadListener {
     
-    public static final Identifier IDENTIFIER = new Identifier(NAMESPACE,"fonts");
+    public static final Identifier IDENTIFIER = Identifier.of(NAMESPACE,"fonts");
     public static final ResourceFinder FONT_FINDER = new ResourceFinder("symbol_fonts", ".json");
     private FontProcessor normal;
     private List<FontProcessor> fonts = List.of();
@@ -40,7 +40,7 @@ public class FontManager implements SimpleSynchronousResourceReloadListener {
 
     @Override
     public void reload(ResourceManager manager) {
-        normal = new FontProcessor(new Identifier(NAMESPACE, "normal"), Function.identity(), Integer.MIN_VALUE, false);
+        normal = new FontProcessor(Identifier.of(NAMESPACE, "normal"), Function.identity(), Integer.MIN_VALUE, false);
         fonts = new ArrayList<>();
         fonts.add(normal);
         for (Map.Entry<Identifier, Resource> identifierResourceEntry : FONT_FINDER.findResources(manager).entrySet()) {
