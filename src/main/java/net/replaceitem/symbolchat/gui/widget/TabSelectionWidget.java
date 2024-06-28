@@ -1,26 +1,17 @@
 package net.replaceitem.symbolchat.gui.widget;
 
-import net.minecraft.client.gui.AbstractParentElement;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.ScreenPos;
-import net.minecraft.client.gui.ScreenRect;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
-import net.replaceitem.symbolchat.resource.SymbolTab;
+import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.tooltip.*;
+import net.minecraft.client.gui.widget.*;
+import net.minecraft.text.*;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
+import net.replaceitem.symbolchat.*;
+import net.replaceitem.symbolchat.gui.widget.symbolButton.*;
+import net.replaceitem.symbolchat.resource.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+import java.util.*;
+import java.util.function.*;
 
 public class TabSelectionWidget extends AbstractParentElement implements Widget, Drawable, Element {
 
@@ -71,13 +62,15 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
     }
 
     public void setTab(int tab) {
-        int previousTab = this.getSelectedTab();
-        this.selectedTab = MathHelper.clamp(tab, 0, this.tabButtons.size()-1);
-        SymbolChat.selectedTab = this.selectedTab;
         for (Widget child : this.tabButtons) {
             child.setY(y);
         }
-        this.tabButtons.get(selectedTab).setY(y+1);
+        int previousTab = this.getSelectedTab();
+        this.selectedTab = MathHelper.clamp(tab, 0, this.tabButtons.size()-1);
+        if(selectedTab != -1) {
+            SymbolChat.selectedTab = this.selectedTab;
+            tabButtons.get(selectedTab).setY(y+1);
+        }
         if(previousTab != this.selectedTab) this.onTabSwitched(previousTab, selectedTab);
     }
 
@@ -92,9 +85,11 @@ public class TabSelectionWidget extends AbstractParentElement implements Widget,
         int color = 0xFFFFFFFF;
         if(dx > x) context.drawHorizontalLine(x, dx-1, y + SymbolButtonWidget.SYMBOL_SIZE, color);
         if(x + width > dx + SymbolButtonWidget.GRID_SPCAING) context.drawHorizontalLine(dx + SymbolButtonWidget.GRID_SPCAING, x + width - 1, y + SymbolButtonWidget.SYMBOL_SIZE, color);
-        context.drawVerticalLine(dx, y, y + SymbolButtonWidget.GRID_SPCAING, color);
-        context.drawHorizontalLine(dx, dx + SymbolButtonWidget.GRID_SPCAING, y, color);
-        context.drawVerticalLine(dx + SymbolButtonWidget.GRID_SPCAING, y, y + SymbolButtonWidget.SYMBOL_SIZE, color);
+        if(selectedTab != -1) {
+            context.drawVerticalLine(dx, y, y + SymbolButtonWidget.GRID_SPCAING, color);
+            context.drawHorizontalLine(dx, dx + SymbolButtonWidget.GRID_SPCAING, y, color);
+            context.drawVerticalLine(dx + SymbolButtonWidget.GRID_SPCAING, y, y + SymbolButtonWidget.SYMBOL_SIZE, color);
+        }
     }
 
 

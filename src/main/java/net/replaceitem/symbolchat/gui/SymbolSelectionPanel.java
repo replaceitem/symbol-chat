@@ -10,8 +10,7 @@ import net.replaceitem.symbolchat.gui.widget.TabSelectionWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import net.replaceitem.symbolchat.resource.SymbolTab;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SymbolSelectionPanel extends ContainerWidgetImpl {
     private final TabSelectionWidget tabSelectionWidget;
@@ -35,9 +34,8 @@ public class SymbolSelectionPanel extends ContainerWidgetImpl {
         this.tabSelectionWidget = new TabSelectionWidget(this.getX(), this.getY() + 1, width) {
             @Override
             protected void onTabSwitched(int previousIndex, int newIndex) {
-                tabs.forEach(symbolTabWidget -> symbolTabWidget.visible = false);
-                getSymbolTab(newIndex).visible = true;
-                getCurrentTab().refresh();
+                getSymbolTab(newIndex).ifPresent(SymbolSelectionPanel.this::setVisibleTab);
+                getCurrentTab().ifPresent(SymbolTabWidget::refresh);
             }
         };
         this.addChildren(tabSelectionWidget);
@@ -47,9 +45,13 @@ public class SymbolSelectionPanel extends ContainerWidgetImpl {
         }
 
 
-        tabs.forEach(symbolTabWidget -> symbolTabWidget.visible = false);
-        getCurrentTab().visible = true;
+        getCurrentTab().ifPresent(this::setVisibleTab);
         tabSelectionWidget.refreshPositions();
+    }
+    
+    private void setVisibleTab(SymbolTabWidget tab) {
+        tabs.forEach(symbolTabWidget -> symbolTabWidget.visible = false);
+        tab.visible = true;
     }
 
     private void addTab(SymbolTab tab, int columns) {
@@ -61,11 +63,12 @@ public class SymbolSelectionPanel extends ContainerWidgetImpl {
         this.addChildren(tabWidget);
     }
 
-    public SymbolTabWidget getSymbolTab(int index) {
-        return this.tabs.get(index);
+    public Optional<SymbolTabWidget> getSymbolTab(int index) {
+        if(index < 0 || index >= tabs.size()) return Optional.empty();
+        return Optional.of(this.tabs.get(index));
     }
 
-    public SymbolTabWidget getCurrentTab() {
+    public Optional<SymbolTabWidget> getCurrentTab() {
         return this.getSymbolTab(this.tabSelectionWidget.getSelectedTab());
     }
 
