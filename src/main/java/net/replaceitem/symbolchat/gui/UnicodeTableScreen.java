@@ -213,6 +213,7 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         selectionEnd = -1;
         String search = searchTextField.getText().toUpperCase(Locale.ROOT);
         boolean searching = search.isBlank();
+        String[] searchTerms = search.trim().split("\\s+");
         CodePointCollector collector = new CodePointCollector();
         
         if(searching) {
@@ -226,7 +227,7 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
             int codepoint = 0;
             while(Character.isValidCodePoint(codepoint)) {
                 String name = Character.getName(codepoint);
-                if(name != null && isRelevant(name, search)) {
+                if(name != null && isRelevant(name, searchTerms)) {
                     collector.accept(codepoint);
                 }
                 codepoint++;
@@ -267,8 +268,8 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         }
     }
     
-    private static boolean isRelevant(String name, String search) {
-        for (String s : search.split(" ")) {
+    private static boolean isRelevant(String name, String[] searchTerms) {
+        for (String s : searchTerms) {
             if(!name.contains(s)) return false;
         }
         return true;
