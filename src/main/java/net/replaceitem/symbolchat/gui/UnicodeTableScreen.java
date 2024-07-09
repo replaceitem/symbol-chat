@@ -46,10 +46,11 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
 
     private TextFieldWidget pageTextField;
     private TextFieldWidget searchTextField;
-    private CheckboxWidget showBlocksWidget;
-    private CheckboxWidget hideMissingGlyphs;
     private ButtonWidget copySelectedButton;
     private ButtonWidget favoriteSymbolButton;
+    private CheckboxWidget showBlocksWidget;
+    private CheckboxWidget hideMissingGlyphs;
+    private CheckboxWidget textShadow;
     
     private int selectionStart = -1;
     private int selectionEnd = -1;
@@ -136,10 +137,13 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         bottomRowAdder.add(EmptyWidget.ofWidth(5));
         
         hideMissingGlyphs = CheckboxWidget.builder(Text.translatable("symbolchat.hide_missing_glyphs"), textRenderer).callback((checkbox, checked) -> reloadSymbols()).build();
-        bottomRowAdder.add(hideMissingGlyphs);
-        
-        bottomRowGridWidget.refreshPositions();
-        bottomRowGridWidget.forEachChild(this::addDrawableChild);
+        adder.add(hideMissingGlyphs);
+
+        textShadow = CheckboxWidget.builder(Text.translatable("symbolchat.text_shadow"), textRenderer).checked(true).callback((checkbox, checked) -> refreshButtons()).build();
+        adder.add(textShadow);
+
+        gridWidget.refreshPositions();
+        gridWidget.forEachChild(this::addDrawableChild);
         
         this.reloadSymbols();
     }
@@ -296,6 +300,11 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         @Override
         protected boolean shouldDrawOutline() {
             return marked;
+        }
+
+        @Override
+        protected boolean shouldRenderTextWithShadow() {
+            return textShadow.isChecked();
         }
 
         @Override
