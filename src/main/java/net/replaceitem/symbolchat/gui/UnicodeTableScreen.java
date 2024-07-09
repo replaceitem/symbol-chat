@@ -183,6 +183,18 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         color |= 0xFF000000;
         context.fill(0, 0, this.width, this.height, color);
 
+        drawGridLines(context);
+        context.fill(0, 0, SIDEBAR_WIDTH, height, 0xFF101010); // sidebar background
+        context.drawVerticalLine(SIDEBAR_WIDTH, -1, height, 0xFFFFFFFF); // sidebar divider line
+    }
+
+    private void drawGridLines(DrawContext context) {
+        for (int i = 0; i < columns+1; i++) {
+            context.drawVerticalLine(SYMBOLS_START_X + i*SymbolButtonWidget.GRID_SPCAING - 1, -1, height, 0xFF101010);
+        }
+        for (int i = 0; i < screenRows; i++) {
+            context.drawHorizontalLine(SYMBOLS_START_X, SYMBOLS_START_X + columns*SymbolButtonWidget.GRID_SPCAING, i*SymbolButtonWidget.GRID_SPCAING+SymbolButtonWidget.SYMBOL_SIZE, 0xFF101010);
+        }
     }
 
     @Override
@@ -300,6 +312,11 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         }
 
         @Override
+        protected boolean shouldRenderBackground() {
+            return showBlocksWidget.isChecked() || this.isHovered();
+        }
+
+        @Override
         public boolean onClick(int button) {
             if(button == GLFW.GLFW_MOUSE_BUTTON_1) {
                 if (Screen.hasShiftDown() && selectionStart != -1) {
@@ -382,10 +399,5 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         scroll -= ((int) verticalAmount * (Screen.hasControlDown() ? screenRows : 1));
         this.refreshButtons();
         return true;
-    }
-
-    @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.fill(0, 0, this.width, this.height, 0xFF101010);
     }
 }
