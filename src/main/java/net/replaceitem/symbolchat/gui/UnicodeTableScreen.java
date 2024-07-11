@@ -6,15 +6,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.CheckboxWidget;
-import net.minecraft.client.gui.widget.EmptyWidget;
-import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.TextIconButtonWidget;
-import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.client.gui.widget.*;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -46,17 +39,19 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
 
     private TextFieldWidget pageTextField;
     private TextFieldWidget searchTextField;
-    private CheckboxWidget showBlocksWidget;
-    private CheckboxWidget hideMissingGlyphs;
     private ButtonWidget copySelectedButton;
     private ButtonWidget favoriteSymbolButton;
+    private CheckboxWidget showBlocksWidget;
+    private CheckboxWidget hideMissingGlyphs;
+    private CheckboxWidget textShadow;
     
     private int selectionStart = -1;
     private int selectionEnd = -1;
     
     int page = 0;
     
-    public static final int TOOLBAR_HEIGHT = 40;
+    public static final int SIDEBAR_WIDTH = 128;
+    public static final int SYMBOLS_START_X = SIDEBAR_WIDTH+2;
 
     // leftmost byte shows the block color
     private IntList codepoints = new IntArrayList();
@@ -73,17 +68,24 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
     @Override
     protected void init() {
         super.init();
-        this.columns = this.width / SymbolButtonWidget.GRID_SPCAING;
-        this.screenRows = this.height / SymbolButtonWidget.GRID_SPCAING;
+        this.columns = Math.floorDiv(this.width-SYMBOLS_START_X, SymbolButtonWidget.GRID_SPCAING);
+        this.screenRows = Math.floorDiv(this.height, SymbolButtonWidget.GRID_SPCAING);
+        
+        int widgetWidth = SIDEBAR_WIDTH-4;
 
-        GridWidget topRowGridWidget = new GridWidget(2,2);
-        topRowGridWidget.setColumnSpacing(2);
-        GridWidget.Adder topRowAdder = topRowGridWidget.createAdder(Integer.MAX_VALUE);
+        GridWidget gridWidget = new GridWidget(2,2);
+        gridWidget.setRowSpacing(2);
+        GridWidget.Adder adder = gridWidget.createAdder(1);
+
+        TextWidget searchTextWidget = new TextWidget(Text.translatable("symbolchat.search"), this.textRenderer);
+        adder.add(searchTextWidget);
+
+        searchTextField = new TextFieldWidget(this.textRenderer, widgetWidth, 12, Text.of(""));
+        searchTextField.setChangedListener(s -> this.reloadSymbols());
+        adder.add(searchTextField);
 
         TextWidget pageTextWidget = new TextWidget(Text.translatable("symbolchat.page"), this.textRenderer);
-        pageTextWidget.setX(0);
-        pageTextWidget.setY(0);
-        topRowAdder.add(pageTextWidget);
+        adder.add(pageTextWidget);
         
         pageTextField = new TextFieldWidget(this.textRenderer, 0, 0, 20, 12, Text.empty());
         pageTextField.setText("0");
@@ -96,50 +98,32 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
             }
             this.reloadSymbols();
         });
-        topRowAdder.add(pageTextField);
-        
-        topRowAdder.add(EmptyWidget.ofWidth(10));
+        adder.add(pageTextField);
 
-        TextWidget searchTextWidget = new TextWidget(Text.translatable("symbolchat.search"), this.textRenderer);
-        searchTextWidget.setX(0);
-        searchTextWidget.setY(0);
-        topRowAdder.add(searchTextWidget);
+        {
+            GridWidget.Adder buttonRow = adder.add(new GridWidget()).createAdder(Integer.MAX_VALUE);
+            copySelectedButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> copySelected(), true).texture(COPY_TEXTURE, 16, 16).dimension(20, 20).build();
+            buttonRow.add(copySelectedButton);
 
-        searchTextField = new TextFieldWidget(this.textRenderer, 0, 0, 150, 12, Text.of(""));
-        searchTextField.setChangedListener(s -> this.reloadSymbols());
-        topRowAdder.add(searchTextField);
-
-        topRowGridWidget.refreshPositions();
-        topRowGridWidget.forEachChild(this::addDrawableChild);
-
-
-        GridWidget bottomRowGridWidget = new GridWidget(2,18);
-        GridWidget.Adder bottomRowAdder = bottomRowGridWidget.createAdder(Integer.MAX_VALUE);
-
-        copySelectedButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> copySelected(), true).texture(COPY_TEXTURE, 16, 16).dimension(20, 20).build();
-        bottomRowAdder.add(copySelectedButton);
-
-        favoriteSymbolButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> favoriteSymbols(), true).texture(FAVORITE_TEXTURE, 16, 16).dimension(20, 20).build();
-        bottomRowAdder.add(favoriteSymbolButton);
-        if(!SymbolChat.clothConfigEnabled) {
-            favoriteSymbolButton.active = false;
-            favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.no_clothconfig")));
+            favoriteSymbolButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> favoriteSymbols(), true).texture(FAVORITE_TEXTURE, 16, 16).dimension(20, 20).build();
+            buttonRow.add(favoriteSymbolButton);
+            if (!SymbolChat.clothConfigEnabled) {
+                favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.no_clothconfig")));
+                favoriteSymbolButton.active = false;
+            }
         }
-
-
-        bottomRowAdder.add(EmptyWidget.ofWidth(5));
         
-        MutableText showBlocksText = Text.translatable("symbolchat.show_blocks");
-        showBlocksWidget = CheckboxWidget.builder(showBlocksText, textRenderer).callback((checkbox, checked) -> refreshButtons()).build();
-        bottomRowAdder.add(showBlocksWidget);
-
-        bottomRowAdder.add(EmptyWidget.ofWidth(5));
+        showBlocksWidget = CheckboxWidget.builder(Text.translatable("symbolchat.show_blocks"), textRenderer).callback((checkbox, checked) -> refreshButtons()).build();
+        adder.add(showBlocksWidget);
         
         hideMissingGlyphs = CheckboxWidget.builder(Text.translatable("symbolchat.hide_missing_glyphs"), textRenderer).callback((checkbox, checked) -> reloadSymbols()).build();
-        bottomRowAdder.add(hideMissingGlyphs);
-        
-        bottomRowGridWidget.refreshPositions();
-        bottomRowGridWidget.forEachChild(this::addDrawableChild);
+        adder.add(hideMissingGlyphs);
+
+        textShadow = CheckboxWidget.builder(Text.translatable("symbolchat.text_shadow"), textRenderer).checked(true).callback((checkbox, checked) -> refreshButtons()).build();
+        adder.add(textShadow);
+
+        gridWidget.refreshPositions();
+        gridWidget.forEachChild(this::addDrawableChild);
         
         this.reloadSymbols();
     }
@@ -185,9 +169,32 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         }
         int scrollbarRows = Math.max(MathHelper.ceilDiv(codepoints.size(), columns), screenRows);
         double visibleRatio = (double) screenRows / scrollbarRows;
-        int scrollbarHeight = (int) (visibleRatio * (height - TOOLBAR_HEIGHT));
-        int scrollbarY = (int) MathHelper.clampedMap(scroll, 0, scrollbarRows-screenRows, TOOLBAR_HEIGHT, height - scrollbarHeight);
+        int scrollbarHeight = (int) (visibleRatio * height);
+        int scrollbarY = (int) MathHelper.clampedMap(scroll, 0, scrollbarRows-screenRows, 0, height - scrollbarHeight);
         context.fill(width-2, scrollbarY, width-1, scrollbarY+scrollbarHeight, 0xFFA0A0A0);
+    }
+
+    @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+        int color = SymbolChat.config.getButtonColor();
+        int alpha = ColorHelper.Argb.getAlpha(color);
+        // remove alpha of color and apply it as fading to black instead
+        color = ColorHelper.Argb.mixColor(color, ColorHelper.Argb.getArgb(255, alpha, alpha, alpha));
+        color |= 0xFF000000;
+        context.fill(0, 0, this.width, this.height, color);
+
+        drawGridLines(context);
+        context.fill(0, 0, SIDEBAR_WIDTH, height, 0xFF101010); // sidebar background
+        context.drawVerticalLine(SIDEBAR_WIDTH, -1, height, 0xFFFFFFFF); // sidebar divider line
+    }
+
+    private void drawGridLines(DrawContext context) {
+        for (int i = 0; i < columns+1; i++) {
+            context.drawVerticalLine(SYMBOLS_START_X + i*SymbolButtonWidget.GRID_SPCAING - 1, -1, height, 0xFF101010);
+        }
+        for (int i = 0; i < screenRows; i++) {
+            context.drawHorizontalLine(SYMBOLS_START_X, SYMBOLS_START_X + columns*SymbolButtonWidget.GRID_SPCAING, i*SymbolButtonWidget.GRID_SPCAING+SymbolButtonWidget.SYMBOL_SIZE, 0xFF101010);
+        }
     }
 
     @Override
@@ -209,6 +216,7 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         selectionEnd = -1;
         String search = searchTextField.getText().toUpperCase(Locale.ROOT);
         boolean searching = search.isBlank();
+        String[] searchTerms = search.trim().split("\\s+");
         CodePointCollector collector = new CodePointCollector();
         
         if(searching) {
@@ -222,7 +230,7 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
             int codepoint = 0;
             while(Character.isValidCodePoint(codepoint)) {
                 String name = Character.getName(codepoint);
-                if(name != null && isRelevant(name, search)) {
+                if(name != null && isRelevant(name, searchTerms)) {
                     collector.accept(codepoint);
                 }
                 codepoint++;
@@ -263,8 +271,8 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         }
     }
     
-    private static boolean isRelevant(String name, String search) {
-        for (String s : search.split(" ")) {
+    private static boolean isRelevant(String name, String[] searchTerms) {
+        for (String s : searchTerms) {
             if(!name.contains(s)) return false;
         }
         return true;
@@ -299,6 +307,16 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         }
 
         @Override
+        protected boolean shouldRenderTextWithShadow() {
+            return textShadow.isChecked();
+        }
+
+        @Override
+        protected boolean shouldRenderBackground() {
+            return showBlocksWidget.isChecked() || this.isHovered();
+        }
+
+        @Override
         public boolean onClick(int button) {
             if(button == GLFW.GLFW_MOUSE_BUTTON_1) {
                 if (Screen.hasShiftDown() && selectionStart != -1) {
@@ -319,11 +337,9 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
     }
 
     private void refreshButtons() {
-        this.columns = this.width / SymbolButtonWidget.GRID_SPCAING;
-        this.screenRows = (this.height-TOOLBAR_HEIGHT) / SymbolButtonWidget.GRID_SPCAING;
         this.scroll = MathHelper.clamp(scroll, 0, Math.max(MathHelper.ceilDiv(codepoints.size(), columns)-screenRows, 0));
         this.widgets.clear();
-        int x = 1, y = TOOLBAR_HEIGHT;
+        int x = SYMBOLS_START_X, y = 0;
         int index = scroll*columns;
         while(index < codepoints.size()) {
             int value = codepoints.getInt(index);
@@ -345,7 +361,7 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
             this.widgets.add(button);
             x += SymbolButtonWidget.GRID_SPCAING;
             if(x > width-SymbolButtonWidget.SYMBOL_SIZE) {
-                x = 1;
+                x = SYMBOLS_START_X;
                 y += SymbolButtonWidget.GRID_SPCAING;
             }
             if(y >= height) break;
@@ -383,10 +399,5 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         scroll -= ((int) verticalAmount * (Screen.hasControlDown() ? screenRows : 1));
         this.refreshButtons();
         return true;
-    }
-
-    @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.fill(0, 0, this.width, this.height, 0xFF101010);
     }
 }
