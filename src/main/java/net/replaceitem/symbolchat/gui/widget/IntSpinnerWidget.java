@@ -15,8 +15,10 @@ public class IntSpinnerWidget extends GridWidget {
     private final TextFieldWidget textField;
     private final ButtonWidget decreaseButton;
     private final ButtonWidget increaseButton;
+    @Nullable
+    private Consumer<OptionalInt> changedListener;
 
-    private IntSpinnerWidget(TextRenderer textRenderer, int value, int min, int max, @Nullable Consumer<OptionalInt> changedListener) {
+    private IntSpinnerWidget(TextRenderer textRenderer, int value, int min, int max) {
         this.min = min;
         this.max = max;
         
@@ -27,24 +29,28 @@ public class IntSpinnerWidget extends GridWidget {
 
         textField = new TextFieldWidget(textRenderer, 0, 0, 20, 12, Text.empty());
         textField.setMaxLength(Math.max(String.valueOf(min).length(), String.valueOf(max).length()));
-        this.setValue(value); // before listener is attached
-        if(changedListener != null) textField.setChangedListener(string -> {
+        textField.setChangedListener(string -> {
             OptionalInt val = getValue();
             decreaseButton.active = val.isEmpty() || val.getAsInt() != min;
             increaseButton.active = val.isEmpty() || val.getAsInt() != max;
-            changedListener.accept(getValue());
+            if(changedListener != null) changedListener.accept(getValue());
         });
+        this.setValue(value);
         
         adder.add(decreaseButton);
         adder.add(textField);
         adder.add(increaseButton);
     }
     
+    public void setChangeListener(@Nullable Consumer<OptionalInt> changedListener) {
+        this.changedListener = changedListener;
+    }
+    
     public void setValue(int value) {
         textField.setText(String.valueOf(MathHelper.clamp(value, min, max)));
     }
     
-    public void setValue(String value) {
+    public void setValue(@NotNull String value) {
         textField.setText(value);
     }
     
@@ -71,6 +77,8 @@ public class IntSpinnerWidget extends GridWidget {
         @Nullable
         private Consumer<OptionalInt> changedListener;
         private Integer value = 0;
+        @Nullable
+        private String stringValue = null;
         private int min = Integer.MIN_VALUE;
         private int max = Integer.MAX_VALUE;
 
@@ -92,14 +100,23 @@ public class IntSpinnerWidget extends GridWidget {
             this.value = value;
             return this;
         }
-        
-         public Builder changedListener(@Nullable Consumer<OptionalInt> changedListener) {
+
+        public Builder value(@Nullable String value) {
+            this.stringValue = value;
+            return this;
+        }
+
+        public Builder changedListener(@Nullable Consumer<OptionalInt> changedListener) {
             this.changedListener = changedListener;
             return this;
-         }
-        
+        }
+
         public IntSpinnerWidget build() {
-            return new IntSpinnerWidget(textRenderer, value, min, max, changedListener);
+            IntSpinnerWidget intSpinnerWidget = new IntSpinnerWidget(textRenderer, value, min, max);
+            if(stringValue != null) intSpinnerWidget.setValue(stringValue);
+            else intSpinnerWidget.setValue(value);
+            intSpinnerWidget.setChangeListener(changedListener);
+            return intSpinnerWidget;
         }
     }
 }

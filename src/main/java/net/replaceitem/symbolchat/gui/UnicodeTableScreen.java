@@ -17,6 +17,7 @@ import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.TextRendererAccess;
 import net.replaceitem.symbolchat.Util;
+import net.replaceitem.symbolchat.gui.widget.IntSpinnerWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.lwjgl.glfw.GLFW;
@@ -37,18 +38,19 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
 
     private final Screen parent;
 
-    private TextFieldWidget pageTextField;
-    private TextFieldWidget searchTextField;
     private ButtonWidget copySelectedButton;
     private ButtonWidget favoriteSymbolButton;
+    
     private CheckboxWidget showBlocksWidget;
-    private CheckboxWidget hideMissingGlyphs;
     private CheckboxWidget textShadow;
+
+    private TextFieldWidget searchTextField;
+    private IntSpinnerWidget pageSpinner;
+    private IntSpinnerWidget widthSpinner;
+    private CheckboxWidget hideMissingGlyphs;
     
     private int selectionStart = -1;
     private int selectionEnd = -1;
-    
-    int page = 0;
     
     public static final int SIDEBAR_WIDTH = 128;
     public static final int SYMBOLS_START_X = SIDEBAR_WIDTH+2;
@@ -73,35 +75,11 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         
         int widgetWidth = SIDEBAR_WIDTH-4;
 
-        GridWidget gridWidget = new GridWidget(2,2);
-        gridWidget.setRowSpacing(2);
-        GridWidget.Adder adder = gridWidget.createAdder(1);
-
-        TextWidget searchTextWidget = new TextWidget(Text.translatable("symbolchat.search"), this.textRenderer);
-        adder.add(searchTextWidget);
-
-        searchTextField = new TextFieldWidget(this.textRenderer, widgetWidth, 12, Text.of(""));
-        searchTextField.setChangedListener(s -> this.reloadSymbols());
-        adder.add(searchTextField);
-
-        TextWidget pageTextWidget = new TextWidget(Text.translatable("symbolchat.page"), this.textRenderer);
-        adder.add(pageTextWidget);
-        
-        pageTextField = new TextFieldWidget(this.textRenderer, 0, 0, 20, 12, Text.empty());
-        pageTextField.setText("0");
-        pageTextField.setMaxLength(2);
-        pageTextField.setChangedListener(s -> {
-            try {
-                page = Integer.parseInt(this.pageTextField.getText());
-            } catch (NumberFormatException e) {
-                page = 0;
-            }
-            this.reloadSymbols();
-        });
-        adder.add(pageTextField);
+        DirectionalLayoutWidget adder = new DirectionalLayoutWidget(2,2, DirectionalLayoutWidget.DisplayAxis.VERTICAL);
+        adder.spacing(4);
 
         {
-            GridWidget.Adder buttonRow = adder.add(new GridWidget()).createAdder(Integer.MAX_VALUE);
+            DirectionalLayoutWidget buttonRow = adder.add(new DirectionalLayoutWidget(0,0, DirectionalLayoutWidget.DisplayAxis.HORIZONTAL));
             copySelectedButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> copySelected(), true).texture(COPY_TEXTURE, 16, 16).dimension(20, 20).build();
             buttonRow.add(copySelectedButton);
 
@@ -112,18 +90,42 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
                 favoriteSymbolButton.active = false;
             }
         }
+
+
+        adder.add(EmptyWidget.ofHeight(6));
+        adder.add(new TextWidget(Text.translatable("symbolchat.view").styled(style -> style.withUnderline(true)), this.textRenderer));
         
         showBlocksWidget = CheckboxWidget.builder(Text.translatable("symbolchat.show_blocks"), textRenderer).callback((checkbox, checked) -> refreshButtons()).build();
         adder.add(showBlocksWidget);
         
+        textShadow = CheckboxWidget.builder(Text.translatable("symbolchat.text_shadow"), textRenderer).checked(true).callback((checkbox, checked) -> refreshButtons()).build();
+        adder.add(textShadow);
+        
+        adder.add(EmptyWidget.ofHeight(6));
+        adder.add(new TextWidget(Text.translatable("symbolchat.filter").styled(style -> style.withUnderline(true)), this.textRenderer));
+        
+        {
+            TextWidget searchLabel = new TextWidget(Text.translatable("symbolchat.search"), this.textRenderer);
+            searchTextField = new TextFieldWidget(this.textRenderer, widgetWidth - searchLabel.getWidth(), 12, Text.empty());
+            searchTextField.setChangedListener(s -> this.reloadSymbols());
+
+            SimplePositioningWidget searchRow = adder.add(new SimplePositioningWidget(widgetWidth, 0));
+            searchRow.add(searchLabel, Positioner::alignLeft);
+            searchRow.add(searchTextField, Positioner::alignRight);
+        }
+        {
+            pageSpinner = IntSpinnerWidget.builder(this.textRenderer).value(0).min(0).changedListener(optionalInt -> reloadSymbols()).build();
+
+            SimplePositioningWidget pageRow = adder.add(new SimplePositioningWidget(widgetWidth, 0));
+            pageRow.add(new TextWidget(Text.translatable("symbolchat.page"), this.textRenderer), Positioner::alignLeft);
+            pageRow.add(pageSpinner, Positioner::alignRight);
+        }
+        
         hideMissingGlyphs = CheckboxWidget.builder(Text.translatable("symbolchat.hide_missing_glyphs"), textRenderer).callback((checkbox, checked) -> reloadSymbols()).build();
         adder.add(hideMissingGlyphs);
 
-        textShadow = CheckboxWidget.builder(Text.translatable("symbolchat.text_shadow"), textRenderer).checked(true).callback((checkbox, checked) -> refreshButtons()).build();
-        adder.add(textShadow);
-
-        gridWidget.refreshPositions();
-        gridWidget.forEachChild(this::addDrawableChild);
+        adder.refreshPositions();
+        adder.forEachChild(this::addDrawableChild);
         
         this.reloadSymbols();
     }
@@ -206,7 +208,6 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
     }
 
     private void reloadSymbols() {
-        this.pageTextField.active = searchTextField.getText().isBlank();
         this.searchCodePoints();
         this.refreshButtons();
     }
@@ -220,7 +221,7 @@ public class UnicodeTableScreen extends Screen implements PasteSymbolButtonWidge
         CodePointCollector collector = new CodePointCollector();
         
         if(searching) {
-            int pageMask = page << 16;
+            int pageMask = pageSpinner.getValue().orElse(0) << 16;
             for (int i = 0; i <= 0xFFFF; i++) {
                 int codepoint = pageMask | i;
                 if(!Character.isValidCodePoint(codepoint)) break;
