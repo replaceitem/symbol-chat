@@ -29,6 +29,8 @@
   "symbolchat.no_favorite_symbols": "No favorite symbols specified. You can favorite symbols by right clicking them or adding them in the ClothConfig configuration accessible from the ModMenu screen.",
   "symbolchat.no_clothconfig": "Install ClothConfig to favorite symbols.",
   "symbolchat.no_search_results": "No symbols found.",
+  "symbolchat.copy_to_clipboard": "Copy to Clipboard",
+  "symbolchat.favorite_symbol": "Favorite Symbol",
   "symbolchat.view": "View",
   "symbolchat.filter": "Filter",
   "symbolchat.search": "Search",

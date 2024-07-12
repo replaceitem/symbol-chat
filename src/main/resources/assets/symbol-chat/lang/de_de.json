@@ -29,6 +29,8 @@
   "symbolchat.no_favorite_symbols": "Keine favorisierten Symbole angegeben. Du kannst Symbole durch Rechtsklick favorisieren oder sie in der ClothConfig Konfiguration hinzufügen, die vom ModMenu Menu erreichbar ist.",
   "symbolchat.no_clothconfig": "Installiere ClothConfig um Symbole zu favorisieren.",
   "symbolchat.no_search_results": "Keine Symbole gefunden.",
+  "symbolchat.copy_to_clipboard": "In die Zwischenablage kopieren",
+  "symbolchat.favorite_symbol": "Symbol favorisieren",
   "symbolchat.view": "Ansicht",
   "symbolchat.filter": "Filter",
   "symbolchat.search": "Suche",

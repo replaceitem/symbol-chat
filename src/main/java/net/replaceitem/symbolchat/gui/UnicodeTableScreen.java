@@ -62,10 +62,10 @@ public class UnicodeTableScreen extends Screen {
         DirectionalLayoutWidget adder = new DirectionalLayoutWidget(2,2, DirectionalLayoutWidget.DisplayAxis.VERTICAL);
         adder.spacing(4);
 
-        // TODO add tooltips to these
         {
             DirectionalLayoutWidget buttonRow = adder.add(new DirectionalLayoutWidget(0,0, DirectionalLayoutWidget.DisplayAxis.HORIZONTAL));
             copySelectedButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> unicodeTable.copySelected(), true).texture(COPY_TEXTURE, 16, 16).dimension(20, 20).build();
+            copySelectedButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.copy_to_clipboard")));
             buttonRow.add(copySelectedButton);
 
             favoriteSymbolButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> unicodeTable.favoriteSymbols(), true).texture(FAVORITE_TEXTURE, 16, 16).dimension(20, 20).build();
@@ -73,6 +73,8 @@ public class UnicodeTableScreen extends Screen {
             if (!SymbolChat.clothConfigEnabled) {
                 favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.no_clothconfig")));
                 favoriteSymbolButton.active = false;
+            } else {
+                favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.favorite_symbol")));
             }
         }
 
