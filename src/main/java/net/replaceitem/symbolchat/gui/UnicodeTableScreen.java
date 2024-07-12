@@ -140,7 +140,7 @@ public class UnicodeTableScreen extends Screen {
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.fill(0, 0, width, height, 0xFF101010);
+        context.fill(0, 0, width, height, 0xFF303030);
         context.drawVerticalLine(SIDEBAR_WIDTH, -1, height, 0xFFFFFFFF); // sidebar divider line
     }
     

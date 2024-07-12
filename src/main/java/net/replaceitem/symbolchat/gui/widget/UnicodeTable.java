@@ -69,6 +69,7 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
         double visibleRatio = totalRows > 0 ? Math.min((double) visibleRows / totalRows, 1) : 1;
         scrollbarHeight = Math.max((int) (visibleRatio * height), 16);
         scrollbarY = (int) MathHelper.clampedMap(scroll, 0, maxScroll, 0, height - scrollbarHeight);
+        setScroll(scroll);
     }
 
     @Override
@@ -76,10 +77,12 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
         this.drawBackground(context);
         super.renderWidget(context, mouseX, mouseY, delta);
         
-        RenderSystem.enableBlend();
-        context.drawGuiTexture(SCROLLER_BACKGROUND_TEXTURE, scrollbarX, getY(), SCROLLBAR_WIDTH, getHeight());
-        context.drawGuiTexture(SCROLLER_TEXTURE, scrollbarX, scrollbarY, SCROLLBAR_WIDTH, scrollbarHeight);
-        RenderSystem.disableBlend();
+        if(scrollbarHeight != getHeight()) {
+            RenderSystem.enableBlend();
+            context.drawGuiTexture(SCROLLER_BACKGROUND_TEXTURE, scrollbarX, getY(), SCROLLBAR_WIDTH, getHeight());
+            context.drawGuiTexture(SCROLLER_TEXTURE, scrollbarX, scrollbarY, SCROLLBAR_WIDTH, scrollbarHeight);
+            RenderSystem.disableBlend();
+        }
     }
 
     private void drawBackground(DrawContext context) {
@@ -88,21 +91,33 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
         // remove alpha of color and apply it as fading to black instead
         color = ColorHelper.Argb.mixColor(color, ColorHelper.Argb.getArgb(255, alpha, alpha, alpha));
         color |= 0xFF000000;
-        context.fill(getX(), getY(), getRight(), getBottom(), color);
-        
+
         int visibleSymbols = codepoints.length-(getScrolledRows()*columns);
+
+        int fullRowsCount = Math.floorDiv(visibleSymbols, columns);
+        int partialRowsCount = Math.ceilDiv(visibleSymbols, columns);
+        int firstRowCount = Math.min(visibleSymbols, columns);
+        if(fullRowsCount != 0 && firstRowCount != 0) {
+            context.fill(getX(), getY(), getX() + firstRowCount*GRID_SPCAING, getY()+fullRowsCount*GRID_SPCAING, color);
+        }
+        if(partialRowsCount != fullRowsCount) {
+            int partialRowSymbolCount = visibleSymbols % columns;
+            if(partialRowSymbolCount != 0 && partialRowsCount != 0) {
+                context.fill(getX(), getY(), getX() + partialRowSymbolCount * GRID_SPCAING, getY() + partialRowsCount * GRID_SPCAING, color);
+            }
+        }
         
         for (int i = 0; i <= columns; i++) {
             int leftSymbols = visibleSymbols - i;
             if(leftSymbols < 0) break;
             int lineHeight = MathHelper.clamp(MathHelper.ceilDiv(leftSymbols+1, columns) * GRID_SPCAING + 1, 0, height);
-            context.drawVerticalLine(getX() + i* GRID_SPCAING, getY()-1, getY()+lineHeight, 0xFF101010);
+            context.drawVerticalLine(getX() + i* GRID_SPCAING, getY()-1, getY()+lineHeight, 0xFF303030);
         }
         for (int i = 0; i <= visibleRows; i++) {
-            int leftSymbols = visibleSymbols - (i-1)*columns;
+            int leftSymbols = visibleSymbols - Math.max(i-1, 0)*columns;
             int lineWidth = Math.min(leftSymbols, columns) * GRID_SPCAING;
             if(lineWidth <= 0) break;
-            context.drawHorizontalLine(getX(), getX() + lineWidth - 1, getY() + i * GRID_SPCAING, 0xFF101010);
+            context.drawHorizontalLine(getX(), getX() + lineWidth - 1, getY() + i * GRID_SPCAING, 0xFF303030);
         }
     }
 
