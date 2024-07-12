@@ -2,6 +2,10 @@ package net.replaceitem.symbolchat;
 
 import net.minecraft.text.Style;
 
+import java.util.function.IntPredicate;
+import java.util.function.IntUnaryOperator;
+
 public interface TextRendererAccess {
-    boolean isMissingGlyph(int codepoint, Style style);
+    IntPredicate getMissingGlyphPredicate(Style style);
+    IntUnaryOperator getCodepointWidthGetter(Style style);
 }
