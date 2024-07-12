@@ -51,8 +51,8 @@ public class UnicodeTableScreen extends Screen {
             @Override
             protected void onRefreshed() {
                 boolean hasSelection = hasSelection();
-                copySelectedButton.active = hasSelection;
-                favoriteSymbolButton.active = hasSelection;
+                if(copySelectedButton != null) copySelectedButton.active = hasSelection;
+                if(favoriteSymbolButton != null) favoriteSymbolButton.active = hasSelection;
             }
         };
         addDrawableChild(unicodeTable);

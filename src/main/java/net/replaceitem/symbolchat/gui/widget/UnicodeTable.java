@@ -1,5 +1,6 @@
 package net.replaceitem.symbolchat.gui.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -8,6 +9,7 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
@@ -25,11 +27,18 @@ import static net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWid
 public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButtonWidget.Context {
 
     private final TextRenderer textRenderer;
-    
+
     private boolean renderTextShadow;
     private boolean showBlocks;
 
-    private int scroll;
+    private static final int SCROLLBAR_WIDTH = 6;
+    private double scroll;
+    private boolean scrolling;
+    private int maxScroll;
+    private final int scrollbarX;
+    private int scrollbarY;
+    private int scrollbarHeight;
+    
     private final int columns;
     private final int visibleRows;
     
@@ -37,26 +46,40 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
     private int selectionEnd = -1;
 
     // leftmost byte shows the block color
-    private int[] codepoints = new int[0];
+    private int[] codepoints;
 
+
+    private static final Identifier SCROLLER_TEXTURE = Identifier.ofVanilla("widget/scroller");
+    private static final Identifier SCROLLER_BACKGROUND_TEXTURE = Identifier.ofVanilla("widget/scroller_background");
     private static final int[] CYCLING_BLOCK_COLORS = new int[] {0xFF800000,0xFF808000,0xFF008000,0xFF008080,0xFF000080,0xFF800080};
+    private int totalRows;
 
     public UnicodeTable(TextRenderer textRenderer, int x, int y, int width, int height) {
         super(x, y, width, height);
         this.textRenderer = textRenderer;
-        this.columns = Math.floorDiv(this.width-1, GRID_SPCAING);
+        this.scrollbarX = getX()+width-SCROLLBAR_WIDTH;
+        this.columns = Math.floorDiv(this.width-1-SCROLLBAR_WIDTH, GRID_SPCAING);
         this.visibleRows = Math.floorDiv(this.height-1, GRID_SPCAING);
+        setCodepoints(new int[0]);
+        refresh();
+    }
+    
+    private void calculateScrollbarPos() {
+        maxScroll = Math.max(totalRows, visibleRows)-visibleRows;
+        double visibleRatio = totalRows > 0 ? Math.min((double) visibleRows / totalRows, 1) : 1;
+        scrollbarHeight = Math.max((int) (visibleRatio * height), 16);
+        scrollbarY = (int) MathHelper.clampedMap(scroll, 0, maxScroll, 0, height - scrollbarHeight);
     }
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         this.drawBackground(context);
         super.renderWidget(context, mouseX, mouseY, delta);
-        int scrollbarRows = Math.max(MathHelper.ceilDiv(codepoints.length, columns), visibleRows);
-        double visibleRatio = (double) visibleRows / scrollbarRows;
-        int scrollbarHeight = (int) (visibleRatio * height);
-        int scrollbarY = (int) MathHelper.clampedMap(scroll, 0, scrollbarRows-visibleRows, 0, height - scrollbarHeight);
-        context.fill(getX()+width-2, getY()+scrollbarY, getX()+width-1, getY()+scrollbarY+scrollbarHeight, 0xFFA0A0A0);
+        
+        RenderSystem.enableBlend();
+        context.drawGuiTexture(SCROLLER_BACKGROUND_TEXTURE, scrollbarX, getY(), SCROLLBAR_WIDTH, getHeight());
+        context.drawGuiTexture(SCROLLER_TEXTURE, scrollbarX, scrollbarY, SCROLLBAR_WIDTH, scrollbarHeight);
+        RenderSystem.disableBlend();
     }
 
     private void drawBackground(DrawContext context) {
@@ -65,9 +88,9 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
         // remove alpha of color and apply it as fading to black instead
         color = ColorHelper.Argb.mixColor(color, ColorHelper.Argb.getArgb(255, alpha, alpha, alpha));
         color |= 0xFF000000;
-        context.fill(getX(), getY(), getX()+this.width, getY()+this.height, color);
+        context.fill(getX(), getY(), getRight(), getBottom(), color);
         
-        int visibleSymbols = codepoints.length-(scroll*columns);
+        int visibleSymbols = codepoints.length-(getScrolledRows()*columns);
         
         for (int i = 0; i <= columns; i++) {
             int leftSymbols = visibleSymbols - i;
@@ -98,6 +121,7 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
 
     @Override
     public void refresh() {
+        calculateScrollbarPos();
         refreshButtons();
     }
 
@@ -117,13 +141,13 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
             codepoints[i] |= (blockCycleColorIndex << 24);
         }
         
-        this.refreshButtons();
+        this.totalRows = MathHelper.ceilDiv(codepoints.length, columns);
+        this.refresh();
     }
 
-    public void refreshButtons() {
-        // TODO use scrollbar widget
+    private void refreshButtons() {
         this.clearElements();
-        int codepointIndex = scroll*columns;
+        int codepointIndex = getScrolledRows()*columns;
         int widgetIndex = 0;
         IntUnaryOperator widthGetter = ((TextRendererAccess) textRenderer).getCodepointWidthGetter(Style.EMPTY);
         while(codepointIndex < codepoints.length && widgetIndex < columns*visibleRows) {
@@ -154,13 +178,61 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
     }
 
     protected void onRefreshed() {}
+    
+    private void setScroll(double scroll) {
+        this.scroll = MathHelper.clamp(scroll, 0, maxScroll);
+    }
+    
+    private int getScrolledRows() {
+        return (int) scroll;
+    }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        scroll -= ((int) verticalAmount * (Screen.hasControlDown() ? visibleRows : 1));
-        this.scroll = MathHelper.clamp(scroll, 0, Math.max(MathHelper.ceilDiv(codepoints.length, columns)-visibleRows, 0));
-        this.refreshButtons();
+        setScroll(scroll - (verticalAmount * (Screen.hasControlDown() ? visibleRows : 1)));
+        this.refresh();
         return true;
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if(super.mouseClicked(mouseX, mouseY, button)) return true;
+        if(mouseX >= scrollbarX && mouseX < scrollbarX+SCROLLBAR_WIDTH && mouseY >= scrollbarY && mouseY < scrollbarY+scrollbarHeight) {
+            scrolling = button == 0;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if(super.mouseReleased(mouseX, mouseY, button)) return true;
+        if(button == 0) {
+            scrolling = false;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)) {
+            return true;
+        }
+        if (button == 0 && this.scrolling) {
+            if (mouseY < (double)this.getY()) {
+                scroll = 0;
+            } else if (mouseY > (double)this.getBottom()) {
+                scroll = maxScroll;
+            } else {
+                double scrolledRows = (int) MathHelper.map(deltaY, 0, height-scrollbarHeight, 0, maxScroll);
+                setScroll(scroll + scrolledRows);
+            }
+            
+            refresh();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -172,7 +244,7 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
         if(keyCode == GLFW.GLFW_KEY_ESCAPE && selectionStart != -1) {
             selectionStart = -1;
             selectionEnd = -1;
-            refreshButtons();
+            refresh();
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -187,10 +259,8 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
         if(!hasSelection()) return;
         IntStream selectedSymbols = getSelectedSymbols();
         SymbolChat.config.toggleFavorite(selectedSymbols.mapToObj(Character::toString));
-        refreshButtons();
+        refresh();
     }
-
-    // TODO does copy and fav work?
 
     public IntStream getSelectedSymbols() {
         IntStream.Builder intStreamBuilder = IntStream.builder();
