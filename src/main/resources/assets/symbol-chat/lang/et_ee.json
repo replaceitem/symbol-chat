@@ -24,12 +24,12 @@
   "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Kopeeri siia sümboleid, et neid näha lemmikute sümbolite seas",
   "text.autoconfig.symbol-chat.option.custom_kaomojis": "Kohandatud kaomojis",
   
-  "symbolchat.no_favorite_symbols": "Lemmiksümboleid pole määratud. Saate valida lemmiksümboleid, tehes neile paremklõpsu või lisades need ClothConfig'i konfiguratsioonis, mis on kättesaadav ModMenu ekraanilt.",
-  "symbolchat.no_clothconfig": "Paigalda ClothConfig lemmiksümbolitele.",
-  "symbolchat.no_search_results": "Sümboleid ei leitud.",
-  "symbolchat.search": "Otsi",
-  "symbolchat.page": "Lehekülg",
-  "symbolchat.show_blocks": "Näita blokke",
+  "symbolchat.symbol_panel.no_favorite_symbols": "Lemmiksümboleid pole määratud. Saate valida lemmiksümboleid, tehes neile paremklõpsu või lisades need ClothConfig'i konfiguratsioonis, mis on kättesaadav ModMenu ekraanilt.",
+  "symbolchat.symbol_panel.no_clothconfig": "Paigalda ClothConfig lemmiksümbolitele.",
+  "symbolchat.symbol_panel.no_search_results": "Sümboleid ei leitud.",
+  "symbolchat.symbol_panel.search": "Otsi",
+  "symbolchat.unicode_table.page": "Lehekülg",
+  "symbolchat.unicode_table.show_blocks": "Näita blokke",
   
   "symbolchat.tab.symbol-chat.faces_people": "Näod & Inimesed",
   "symbolchat.tab.symbol-chat.nature_food": "Loodus & Toit",

@@ -22,9 +22,9 @@ import java.util.stream.Stream;
 public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolButtonWidget.Context {
     
     private static final int SEARCH_BAR_HEIGHT = 10;
-    public static final Text NO_RESULTS = Text.translatable("symbolchat.no_search_results");
-    public static final Text NO_FAVORITE_SYMBOLS = Text.translatable("symbolchat.no_favorite_symbols");
-    public static final Text NO_CLOTHCONFIG = Text.translatable("symbolchat.no_clothconfig");
+    public static final Text NO_RESULTS = Text.translatable("symbolchat.symbol_panel.no_search_results");
+    public static final Text NO_FAVORITE_SYMBOLS = Text.translatable("symbolchat.symbol_panel.no_favorite_symbols");
+    public static final Text NO_CLOTHCONFIG = Text.translatable("symbolchat.symbol_panel.no_clothconfig");
 
     private final SymbolSelectionPanel symbolSelectionPanel;
 

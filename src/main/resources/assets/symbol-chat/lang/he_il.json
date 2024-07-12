@@ -12,8 +12,8 @@
   "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "באפשרותך להדביק סמלים כאן, שיופיעו בכרטיסיה סמלים מותאמים אישית",
   "text.autoconfig.symbol-chat.option.custom_kaomojis": "kaomojis מותאמים אישית",
   
-  "symbolchat.no_custom_symbols": "לא צוינו סמלים. באפשרותך להוסיף סמלים בתצורת ClothConfig הנגישה ממסך ModMenu.",
-  "symbolchat.no_clothconfig": "התקן את ClothConfig כדי להוסיף סמלים.",
+  "symbolchat.symbol_panel.no_favorite_symbols": "לא צוינו סמלים. באפשרותך להוסיף סמלים בתצורת ClothConfig הנגישה ממסך ModMenu.",
+  "symbolchat.symbol_panel.no_clothconfig": "התקן את ClothConfig כדי להוסיף סמלים.",
   
   "symbolchat.tab.symbol-chat.people_nature": "אנשים וטבע",
   "symbolchat.tab.symbol-chat.objects": "חפצים",

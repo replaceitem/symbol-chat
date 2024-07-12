@@ -65,36 +65,36 @@ public class UnicodeTableScreen extends Screen {
         {
             DirectionalLayoutWidget buttonRow = adder.add(new DirectionalLayoutWidget(0,0, DirectionalLayoutWidget.DisplayAxis.HORIZONTAL));
             copySelectedButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> unicodeTable.copySelected(), true).texture(COPY_TEXTURE, 16, 16).dimension(20, 20).build();
-            copySelectedButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.copy_to_clipboard")));
+            copySelectedButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.unicode_table.copy_to_clipboard")));
             buttonRow.add(copySelectedButton);
 
             favoriteSymbolButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> unicodeTable.favoriteSymbols(), true).texture(FAVORITE_TEXTURE, 16, 16).dimension(20, 20).build();
             buttonRow.add(favoriteSymbolButton);
             if (!SymbolChat.clothConfigEnabled) {
-                favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.no_clothconfig")));
+                favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.symbol_panel.no_clothconfig")));
                 favoriteSymbolButton.active = false;
             } else {
-                favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.favorite_symbol")));
+                favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.unicode_table.favorite_symbol")));
             }
         }
 
 
         adder.add(EmptyWidget.ofHeight(6));
-        adder.add(new TextWidget(Text.translatable("symbolchat.view").styled(style -> style.withUnderline(true)), this.textRenderer));
+        adder.add(new TextWidget(Text.translatable("symbolchat.unicode_table.view").styled(style -> style.withUnderline(true)), this.textRenderer));
         
-        showBlocksCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.show_blocks"), textRenderer).callback((checkbox, checked) -> unicodeTable.setShowBlocks(checked)).build();
+        showBlocksCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.show_blocks"), textRenderer).callback((checkbox, checked) -> unicodeTable.setShowBlocks(checked)).build();
         unicodeTable.setShowBlocks(showBlocksCheckbox.isChecked());
         adder.add(showBlocksCheckbox);
         
-        textShadowCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.text_shadow"), textRenderer).checked(true).callback((checkbox, checked) -> unicodeTable.setRenderTextShadow(checked)).build();
+        textShadowCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.text_shadow"), textRenderer).checked(true).callback((checkbox, checked) -> unicodeTable.setRenderTextShadow(checked)).build();
         unicodeTable.setRenderTextShadow(textShadowCheckbox.isChecked());
         adder.add(textShadowCheckbox);
         
         adder.add(EmptyWidget.ofHeight(6));
-        adder.add(new TextWidget(Text.translatable("symbolchat.filter").styled(style -> style.withUnderline(true)), this.textRenderer));
+        adder.add(new TextWidget(Text.translatable("symbolchat.unicode_table.filter").styled(style -> style.withUnderline(true)), this.textRenderer));
         
         {
-            TextWidget searchLabel = new TextWidget(Text.translatable("symbolchat.search"), this.textRenderer);
+            TextWidget searchLabel = new TextWidget(Text.translatable("symbolchat.unicode_table.search"), this.textRenderer);
             searchTextField = new TextFieldWidget(this.textRenderer, widgetWidth - searchLabel.getWidth(), 12, Text.empty());
             searchTextField.setChangedListener(s -> this.reloadSymbols());
 
@@ -106,18 +106,18 @@ public class UnicodeTableScreen extends Screen {
             pageSpinner = IntSpinnerWidget.builder(this.textRenderer).value(0).min(0).changedListener(optionalInt -> reloadSymbols()).build();
 
             SimplePositioningWidget pageRow = adder.add(new SimplePositioningWidget(widgetWidth, 0));
-            pageRow.add(new TextWidget(Text.translatable("symbolchat.page"), this.textRenderer), Positioner::alignLeft);
+            pageRow.add(new TextWidget(Text.translatable("symbolchat.unicode_table.page"), this.textRenderer), Positioner::alignLeft);
             pageRow.add(pageSpinner, Positioner::alignRight);
         }
         {
             widthSpinner = IntSpinnerWidget.builder(this.textRenderer).value("").changedListener(optionalInt -> reloadSymbols()).build();
 
             SimplePositioningWidget pageRow = adder.add(new SimplePositioningWidget(widgetWidth, 0));
-            pageRow.add(new TextWidget(Text.translatable("symbolchat.symbol_width"), this.textRenderer), Positioner::alignLeft);
+            pageRow.add(new TextWidget(Text.translatable("symbolchat.unicode_table.symbol_width"), this.textRenderer), Positioner::alignLeft);
             pageRow.add(widthSpinner, Positioner::alignRight);
         }
         
-        hideMissingGlyphsCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.hide_missing_glyphs"), textRenderer).callback((checkbox, checked) -> reloadSymbols()).build();
+        hideMissingGlyphsCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.hide_missing_glyphs"), textRenderer).callback((checkbox, checked) -> reloadSymbols()).build();
         adder.add(hideMissingGlyphsCheckbox);
 
         adder.refreshPositions();

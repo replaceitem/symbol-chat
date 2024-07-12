@@ -17,9 +17,9 @@
     "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Vous pouvez coller ici des symboles personnalisés, qui apparaîtront dans l'onglet des symboles personnalisés",
     "text.autoconfig.symbol-chat.option.custom_kaomojis": "Kaomojis personnalisés",
 
-    "symbolchat.no_custom_symbols": "Aucun symbole personnalisé spécifié. Vous pouvez ajouter des symboles dans la configuration de ClothConfig accessible depuis l'écran de ModMenu.",
-    "symbolchat.no_clothconfig": "Installez ClothConfig pour ajouter des symboles personnalisés.",
-    "symbolchat.search": "Recherche",
+    "symbolchat.symbol_panel.no_favorite_symbols": "Aucun symbole personnalisé spécifié. Vous pouvez ajouter des symboles dans la configuration de ClothConfig accessible depuis l'écran de ModMenu.",
+    "symbolchat.symbol_panel.no_clothconfig": "Installez ClothConfig pour ajouter des symboles personnalisés.",
+    "symbolchat.symbol_panel.search": "Recherche",
 
     "symbolchat.tab.symbol-chat.people_nature": "Personnes et Nature",
     "symbolchat.tab.symbol-chat.objects": "Objets",

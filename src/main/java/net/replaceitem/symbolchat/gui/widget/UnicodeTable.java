@@ -175,10 +175,10 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
             Tooltip tooltip = Tooltip.of(Text.empty()
                     .append(Text.literal(Integer.toHexString(codePoint)))
                     .append("\n\n" + Util.getCapitalizedSymbolName(codePoint) + "\n")
-                    .append(Text.translatable("symbolchat.symbol_tooltip.width", widthGetter.applyAsInt(codePoint)))
+                    .append(Text.translatable("symbolchat.unicode_table.symbol_tooltip.width", widthGetter.applyAsInt(codePoint)))
                     .append("\n")
                     .append(block == null ?
-                            Text.translatable("symbolchat.symbol_tooltip.unknown_block").styled(style -> style.withColor(Formatting.GRAY).withItalic(true)) :
+                            Text.translatable("symbolchat.unicode_table.symbol_tooltip.unknown_block").styled(style -> style.withColor(Formatting.GRAY).withItalic(true)) :
                             Text.literal(block.toString()).styled(style -> style.withColor(blockColor))
                     ));
 

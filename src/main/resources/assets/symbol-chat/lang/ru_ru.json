@@ -17,9 +17,9 @@
   "text.autoconfig.symbol-chat.option.custom_symbols.@Tooltip": "Впишите сюда свои собственные символы, и они появятся в соответствующей вкладке.",
   "text.autoconfig.symbol-chat.option.custom_kaomojis": "Пользовательские каомодзи",
 
-  "symbolchat.no_custom_symbols": "Пользовательских символов не обнаружено. Вы можете добавить их в настройках мода в ModMenu, доступных через ClothConfig.",
-  "symbolchat.no_clothconfig": "Установите ClothConfig для добавления символов.",
-  "symbolchat.search": "Поиск",
+  "symbolchat.symbol_panel.no_favorite_symbols": "Пользовательских символов не обнаружено. Вы можете добавить их в настройках мода в ModMenu, доступных через ClothConfig.",
+  "symbolchat.symbol_panel.no_clothconfig": "Установите ClothConfig для добавления символов.",
+  "symbolchat.symbol_panel.search": "Поиск",
 
   "symbolchat.tab.symbol-chat.people_nature": "Природа и люди",
   "symbolchat.tab.symbol-chat.objects": "Предметы",

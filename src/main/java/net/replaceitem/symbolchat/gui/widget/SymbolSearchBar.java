@@ -8,7 +8,7 @@ import net.minecraft.text.Text;
 
 public class SymbolSearchBar extends TextFieldWidget {
 
-    public static final Text HINT_TEXT = Text.translatable("symbolchat.search");
+    public static final Text HINT_TEXT = Text.translatable("symbolchat.symbol_panel.search");
 
     public SymbolSearchBar(int x, int y, int width, int height) {
         super(MinecraftClient.getInstance().textRenderer, x, y, width, height, Text.empty());
