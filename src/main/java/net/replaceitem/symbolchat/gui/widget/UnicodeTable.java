@@ -172,12 +172,15 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
             String symbol = Util.stringFromCodePoint(codePoint);
             Character.UnicodeBlock block = Character.UnicodeBlock.of(codePoint);
 
-            // TODO make this translatable
             Tooltip tooltip = Tooltip.of(Text.empty()
                     .append(Text.literal(Integer.toHexString(codePoint)))
                     .append("\n\n" + Util.getCapitalizedSymbolName(codePoint) + "\n")
-                    .append("Width: " + widthGetter.applyAsInt(codePoint) + "\n")
-                    .append(block == null ? Text.literal("UNKNOWN BLOCK").formatted(Formatting.GRAY) : Text.literal(block.toString()).styled(style -> style.withColor(blockColor))));
+                    .append(Text.translatable("symbolchat.symbol_tooltip.width", widthGetter.applyAsInt(codePoint)))
+                    .append("\n")
+                    .append(block == null ?
+                            Text.translatable("symbolchat.symbol_tooltip.unknown_block").styled(style -> style.withColor(Formatting.GRAY).withItalic(true)) :
+                            Text.literal(block.toString()).styled(style -> style.withColor(blockColor))
+                    ));
 
             int x = widgetIndex % columns * GRID_SPCAING + 1;
             int y = widgetIndex / columns * GRID_SPCAING + 1;

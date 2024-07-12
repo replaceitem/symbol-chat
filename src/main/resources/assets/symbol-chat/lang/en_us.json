@@ -41,6 +41,8 @@
   "symbolchat.text_shadow": "Text Shadow",
   "symbolchat.unicode_table": "Unicode Table",
   "symbolchat.toggle_symbol_panel": "Toggle symbol panel",
+  "symbolchat.symbol_tooltip.width": "Width: %d",
+  "symbolchat.symbol_tooltip.unknown_block": "UNKNOWN BLOCK",
   
   "symbolchat.tab.symbol-chat.faces_people": "Faces & People",
   "symbolchat.tab.symbol-chat.nature_food": "Nature & Food",

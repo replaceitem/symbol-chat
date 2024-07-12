@@ -38,8 +38,11 @@
   "symbolchat.symbol_width": "Symbolbreite",
   "symbolchat.show_blocks": "Blöcke anzeigen",
   "symbolchat.hide_missing_glyphs": "Fehlende Zeichen anzeigen",
+  "symbolchat.text_shadow": "Textschatten",
   "symbolchat.unicode_table": "Unicode Tabelle",
   "symbolchat.toggle_symbol_panel": "Symbolpanel umschalten",
+  "symbolchat.symbol_tooltip.width": "Breite: %d",
+  "symbolchat.symbol_tooltip.unknown_block": "UNBEKANNTER BLOCK",
 
   "symbolchat.tab.symbol-chat.faces_people": "Gesichter & Menschen",
   "symbolchat.tab.symbol-chat.nature_food": "Natur & Lebensmittel",
@@ -78,5 +81,5 @@
 
 
   "modmenu.summaryTranslation.symbol-chat": "Symbolmenü und Unicode Schriftarten.",
-  "modmenu.descriptionTranslation.symbol-chat": "A client side mod that adds a symbol/emoji menu as well as writing in different unicode fonts."
+  "modmenu.descriptionTranslation.symbol-chat": "Ein Clientseitiger Mod, der eine Symbol/Emojimenü hinzufügt und das Schreiben in verschiedenen Unicode Schriften."
 }
