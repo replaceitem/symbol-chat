@@ -77,7 +77,7 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
                     symbolSelectionPanel.toggleVisible();
                     button.setOutlined(!button.isOutlined());
                 },
-                textSupplier -> Text.translatable("symbolchat.toggle_symbol_panel")
+                textSupplier -> Text.translatable("symbolchat.symbol_panel.toggle_symbol_panel")
         );
         symbolButtonWidget.setPosition(symbolButtonX, symbolButtonY);
         symbolButtonWidget.setOutlined(symbolSelectionPanel.isVisible());
