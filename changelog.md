@@ -1,4 +1,4 @@
-![New unicode table screen](https://github.com/replaceitem/symbol-chat/raw/master/images/unicode.png)
+![New unicode table screen](https://raw.githubusercontent.com/replaceitem/symbol-chat/96199f3da5261124a0f47723f63c4ea1f807d440/images/unicode.png)
 
 * Added some number fraction symbols: ⅑⅒⅟↉⅕⅖⅗⅘⅙⅚⅐
 * Reworked unicode screen with many new settings and visuals
