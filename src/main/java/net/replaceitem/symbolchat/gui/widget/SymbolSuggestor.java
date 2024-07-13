@@ -122,7 +122,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
             if(this.getFocused() instanceof PasteSymbolButtonWidget pasteSymbolButtonWidget) {
                 focused = pasteSymbolButtonWidget;
             } else if(!this.symbolButtons.isEmpty()) {
-                focused = this.symbolButtons.get(0);
+                focused = this.symbolButtons.getFirst();
             } else return false;
             focused.onClick(0);
             this.hide();

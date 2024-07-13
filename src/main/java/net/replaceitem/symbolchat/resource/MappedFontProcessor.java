@@ -131,8 +131,8 @@ public class MappedFontProcessor extends FontProcessor {
         }
         
         static class Sequence extends CodepointIterator {
-            List<String> sequence;
-            int index = 0;
+            private final List<String> sequence;
+            private int index = 0;
 
             public Sequence(List<String> sequence) {
                 this.sequence = sequence;

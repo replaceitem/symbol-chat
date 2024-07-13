@@ -73,6 +73,6 @@ public class FlatIconButtonWidget extends TextIconButtonWidget.IconOnly {
         @Override
         default void onPress(ButtonWidget button) {
             if(button instanceof FlatIconButtonWidget flatIconButtonWidget) this.onPress(flatIconButtonWidget);
-        };
+        }
     }
 }

@@ -50,7 +50,7 @@ public class FontManager implements SimpleSynchronousResourceReloadListener {
                 FontProcessor font = readFont(reader, identifier);
                 fonts.add(font);
             } catch (IOException | JsonParseException e) {
-                SymbolChat.LOGGER.error("Could not load symbol tab " + identifier, e);
+                SymbolChat.LOGGER.error("Could not load symbol tab {}", identifier, e);
             }
         }
         fonts.sort(Comparator.comparingInt(value -> value.order));

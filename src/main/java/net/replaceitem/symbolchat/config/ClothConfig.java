@@ -7,7 +7,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "CanBeFinal"})
 @Config(name = "symbol-chat")
 public class ClothConfig implements ConfigData {
     @ConfigEntry.ColorPicker(allowAlpha = true)

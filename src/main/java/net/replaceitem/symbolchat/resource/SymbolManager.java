@@ -49,7 +49,7 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
                 SymbolTab symbolTab = readTab(manager, symbolTabReader, identifier);
                 tabs.add(symbolTab);
             } catch (IOException | JsonParseException e) {
-                SymbolChat.LOGGER.error("Could not load symbol tab " + identifier, e);
+                SymbolChat.LOGGER.error("Could not load symbol tab {}", identifier, e);
             }
         }
         tabs.sort(SymbolTab::compareTo);
@@ -73,7 +73,7 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
     }
 
     @NotNull
-    private SymbolTab readTab(ResourceManager manager, BufferedReader symbolTabReader, Identifier identifier) throws IOException {
+    private SymbolTab readTab(ResourceManager manager, BufferedReader symbolTabReader, Identifier identifier) {
         JsonObject object = JsonHelper.deserialize(symbolTabReader);
         String icon = JsonHelper.getString(object, "icon");
         int order = JsonHelper.getInt(object, "order");
@@ -102,7 +102,7 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
             try {
                 symbols.add(readSymbolList(manager, identifier, type));
             } catch (IOException | JsonParseException e) {
-                SymbolChat.LOGGER.error("Could not load symbols " + identifier, e);
+                SymbolChat.LOGGER.error("Could not load symbols {}", identifier, e);
             }
         }
         return symbols;

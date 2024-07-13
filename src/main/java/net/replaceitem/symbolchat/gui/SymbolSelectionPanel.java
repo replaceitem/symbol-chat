@@ -18,7 +18,7 @@ public class SymbolSelectionPanel extends ContainerWidgetImpl {
 
     private static final int MIN_COLUMNS = 8;
 
-    protected SymbolInsertable symbolInsertable;
+    protected final SymbolInsertable symbolInsertable;
     
     public static int getWidthForTabs(int tabCount) {
         int columns = Math.max(tabCount, MIN_COLUMNS);
