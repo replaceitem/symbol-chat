@@ -2,7 +2,6 @@ package net.replaceitem.symbolchat;
 
 import com.ibm.icu.lang.UCharacter;
 
-import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -13,15 +12,11 @@ public class Util {
      * @return The provided string, with capitalization applied to the first character of each word.
      */
     public static String generateCapitalization(String string) {
-        // Todo this can surely be optimized
-        if(string == null) string = "Null";
-        StringBuilder newString = new StringBuilder();
-        String lower = string.toLowerCase(Locale.ROOT);
-        newString.append(string.charAt(0));
-        for (int i = 1; i < string.length(); i++) {
-            newString.append(UCharacter.isUAlphabetic(string.charAt(i-1)) ? lower.charAt(i) : string.charAt(i));
+        char[] charArray = string.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            if(i == 0 || charArray[i-1]==' ') charArray[i] = Character.toTitleCase(charArray[i]);
         }
-        return newString.toString();
+        return new String(charArray);
     }
 
 
@@ -37,12 +32,26 @@ public class Util {
         return string.codePointCount(0, string.length());
     }
 
+    /**
+     * @return The name of the codepoint in all lowercase
+     */
+    public static String getCodepointName(int codepoint) {
+        String name = UCharacter.getName(codepoint);
+        if(name != null) return name.toLowerCase();
+        name = Character.getName(codepoint);
+        if(name != null) return name.toLowerCase();
+        return UCharacter.getExtendedName(codepoint).toLowerCase();
+    }
 
     public static String getCapitalizedSymbolName(int codePoint) {
-        return generateCapitalization(UCharacter.getName(codePoint));
+        return generateCapitalization(getCodepointName(codePoint));
     }
     
     public static String getCapitalizedSymbolName(String symbol) {
         return symbol.codePoints().mapToObj(Util::getCapitalizedSymbolName).collect(Collectors.joining(", "));
+    }
+
+    public static String getPrettySymbolName(int codePoint) {
+        return getCapitalizedSymbolName(codePoint);
     }
 }

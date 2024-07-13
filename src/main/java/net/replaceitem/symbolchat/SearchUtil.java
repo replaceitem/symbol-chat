@@ -1,6 +1,5 @@
 package net.replaceitem.symbolchat;
 
-import com.ibm.icu.lang.UCharacter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,8 +12,8 @@ public class SearchUtil {
     @NotNull
     public static Stream<String> performSearch(@NotNull Stream<String> symbols, @Nullable String search) {
         if(search == null || search.isBlank()) return symbols;
-        String upperSearch = search.toUpperCase();
-        List<String> searchWords = Arrays.stream(upperSearch.split(" ")).toList();
+        String lowerSearch = search.toLowerCase();
+        List<String> searchWords = Arrays.stream(lowerSearch.split(" ")).toList();
         record CachedPriorityComparable<T>(T element, double priority) implements Comparable<CachedPriorityComparable<?>> {
             @Override
             public int compareTo(@NotNull CachedPriorityComparable other) {
@@ -24,7 +23,7 @@ public class SearchUtil {
         return symbols
                 .map(symbol -> new CachedPriorityComparable<>(
                         symbol,
-                        getSearchOrder(symbol, upperSearch, searchWords)
+                        getSearchOrder(symbol, lowerSearch, searchWords)
                 ))
                 .filter(item -> item.priority() >= 0)
                 .sorted()
@@ -39,7 +38,7 @@ public class SearchUtil {
      */
     private static double getSearchOrder(String symbol, String searchString, List<String> searchWords) {
         if(searchWords.isEmpty()) return -1;
-        String symbolName = symbol.codePoints().mapToObj(UCharacter::getName).collect(Collectors.joining(" "));
+        String symbolName = symbol.codePoints().mapToObj(Util::getCodepointName).collect(Collectors.joining(" "));
         if(symbolName.startsWith(searchString)) return Integer.MAX_VALUE - symbolName.length(); // until current search a perfect match -> highest priority sorted by symbol name length
         double sum = searchWords.stream().mapToDouble(searchWord -> getRelevance(symbolName, searchWord)).sum();
         if(sum < 0) return -1;

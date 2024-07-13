@@ -1,6 +1,5 @@
 package net.replaceitem.symbolchat.gui.widget;
 
-import com.ibm.icu.impl.UCharacterProperty;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.lang.UProperty;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -9,6 +8,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -149,7 +149,7 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
         int blockCycleColorIndex = CYCLING_BLOCK_COLORS.length-1;
         int currentBlockIndex = -1;
         for (int i = 0; i < codepoints.length; i++) {
-            int newBlockIndex = UCharacterProperty.INSTANCE.getIntPropertyValue(codepoints[i], UProperty.BLOCK);
+            int newBlockIndex = UCharacter.getIntPropertyValue(codepoints[i], UProperty.BLOCK);
             if (newBlockIndex != currentBlockIndex) {
                 blockCycleColorIndex = (blockCycleColorIndex + 1) % CYCLING_BLOCK_COLORS.length;
                 currentBlockIndex = newBlockIndex;
@@ -173,15 +173,17 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
             String symbol = Util.stringFromCodePoint(codePoint);
             UCharacter.UnicodeBlock block = UCharacter.UnicodeBlock.of(codePoint);
 
-            Tooltip tooltip = Tooltip.of(Text.empty()
+            MutableText tooltipText = Text.empty()
                     .append(Text.literal(Integer.toHexString(codePoint)))
-                    .append("\n\n" + Util.getCapitalizedSymbolName(codePoint) + "\n")
+                    .append("\n\n" + Util.getPrettySymbolName(codePoint) + "\n")
                     .append(Text.translatable("symbolchat.unicode_table.symbol_tooltip.width", widthGetter.applyAsInt(codePoint)))
                     .append("\n")
                     .append(block == null ?
                             Text.translatable("symbolchat.unicode_table.symbol_tooltip.unknown_block").styled(style -> style.withColor(Formatting.GRAY).withItalic(true)) :
                             Text.literal(block.toString()).styled(style -> style.withColor(blockColor))
-                    ));
+                    );
+
+            Tooltip tooltip = Tooltip.of(tooltipText);
 
             int x = widgetIndex % columns * GRID_SPCAING + 1;
             int y = widgetIndex / columns * GRID_SPCAING + 1;

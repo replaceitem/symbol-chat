@@ -3,7 +3,6 @@ package net.replaceitem.symbolchat;
 import com.ibm.icu.lang.UCharacter;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.Locale;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.stream.IntStream;
@@ -43,14 +42,13 @@ public class UnicodeSearch {
     }
     
     private static IntPredicate getSearchFilter(String searchTerm) {
-        searchTerm = searchTerm.toUpperCase(Locale.ROOT);
+        searchTerm = searchTerm.toLowerCase();
         String[] searchTerms = searchTerm.trim().split("\\s+");
         return cp -> isRelevant(cp, searchTerms);
     }
 
     private static boolean isRelevant(int codepoint, String[] searchTerms) {
-        String name = UCharacter.getName(codepoint);
-        if(name == null) return false;
+        String name = Util.getCodepointName(codepoint);
         for (String s : searchTerms) {
             if(!name.contains(s)) return false;
         }
