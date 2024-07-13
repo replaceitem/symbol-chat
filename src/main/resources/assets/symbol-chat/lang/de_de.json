@@ -41,7 +41,7 @@
   "symbolchat.tab.symbol-chat.things": "Dinge",
   "symbolchat.unicode_table": "Unicode Tabelle",
   "symbolchat.unicode_table.copy_to_clipboard": "In die Zwischenablage kopieren",
-  "symbolchat.unicode_table.favorite_symbol": "Symbol favorisieren",
+  "symbolchat.unicode_table.favorite_symbol": "Symbol-Favorisierung für Auswahl umschalten",
   "symbolchat.unicode_table.filter": "Filter",
   "symbolchat.unicode_table.font": "Schriftart",
   "symbolchat.unicode_table.hide_missing_glyphs": "Fehlende Zeichen anzeigen",
