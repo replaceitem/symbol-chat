@@ -1,5 +1,6 @@
 package net.replaceitem.symbolchat.config;
 
+import com.ibm.icu.lang.UCharacter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.client.gui.screen.Screen;
@@ -127,7 +128,7 @@ public class ClothConfigProvider extends ConfigProvider {
 
     @Override
     public void toggleFavorite(Stream<String> symbolStream) {
-        Stream<String> current = this.config.custom_symbols.codePoints().mapToObj(Character::toString);
+        Stream<String> current = this.config.custom_symbols.codePoints().mapToObj(UCharacter::toString);
         List<String> toToggle = symbolStream.toList();
         HashSet<String> forRemoval = new HashSet<>();
         toToggle.stream().filter(value -> SymbolChat.symbolManager.isFavorite(value)).forEach(forRemoval::add);

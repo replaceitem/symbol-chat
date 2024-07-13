@@ -1,5 +1,6 @@
 package net.replaceitem.symbolchat;
 
+import com.ibm.icu.lang.UCharacter;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.util.math.MathHelper;
@@ -80,7 +81,7 @@ public interface SymbolSuggestable {
         if(colonIndex == -1) return null;
         if(colonIndex > 0) {
             char beforeColon = text.charAt(colonIndex - 1);
-            if (!Character.isWhitespace(beforeColon) && beforeColon != '\n') return null;
+            if (!UCharacter.isWhitespace(beforeColon) && beforeColon != '\n') return null;
         }
         int spaceIndex = text.lastIndexOf(' ', cursor-1);
         if(spaceIndex >= colonIndex) return null;

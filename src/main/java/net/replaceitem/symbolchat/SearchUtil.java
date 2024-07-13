@@ -1,5 +1,6 @@
 package net.replaceitem.symbolchat;
 
+import com.ibm.icu.lang.UCharacter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +39,7 @@ public class SearchUtil {
      */
     private static double getSearchOrder(String symbol, String searchString, List<String> searchWords) {
         if(searchWords.isEmpty()) return -1;
-        String symbolName = symbol.codePoints().mapToObj(Character::getName).collect(Collectors.joining(" "));
+        String symbolName = symbol.codePoints().mapToObj(UCharacter::getName).collect(Collectors.joining(" "));
         if(symbolName.startsWith(searchString)) return Integer.MAX_VALUE - symbolName.length(); // until current search a perfect match -> highest priority sorted by symbol name length
         double sum = searchWords.stream().mapToDouble(searchWord -> getRelevance(symbolName, searchWord)).sum();
         if(sum < 0) return -1;

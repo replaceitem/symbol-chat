@@ -1,15 +1,12 @@
 package net.replaceitem.symbolchat.resource;
 
+import com.ibm.icu.lang.UCharacter;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -64,7 +61,7 @@ public class SymbolList {
 
         private static final Map<String, SplitType> TYPES = new HashMap<>();
         
-        public static final SplitType CODEPOINT = register("codepoint", new SplitType(reader -> reader.lines().flatMapToInt(String::codePoints).mapToObj(Character::toString).toList()));
+        public static final SplitType CODEPOINT = register("codepoint", new SplitType(reader -> reader.lines().flatMapToInt(String::codePoints).mapToObj(UCharacter::toString).toList()));
         public static final SplitType LINE = register("line", new SplitType(reader -> reader.lines().toList()));
 
         public SplitType(Function<BufferedReader, List<String>> splitter) {

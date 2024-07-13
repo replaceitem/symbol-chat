@@ -1,5 +1,7 @@
 package net.replaceitem.symbolchat;
 
+import com.ibm.icu.lang.UCharacter;
+
 import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -11,19 +13,20 @@ public class Util {
      * @return The provided string, with capitalization applied to the first character of each word.
      */
     public static String generateCapitalization(String string) {
+        // Todo this can surely be optimized
         if(string == null) string = "Null";
         StringBuilder newString = new StringBuilder();
         String lower = string.toLowerCase(Locale.ROOT);
         newString.append(string.charAt(0));
         for (int i = 1; i < string.length(); i++) {
-            newString.append(Character.isAlphabetic(string.charAt(i-1)) ? lower.charAt(i) : string.charAt(i));
+            newString.append(UCharacter.isUAlphabetic(string.charAt(i-1)) ? lower.charAt(i) : string.charAt(i));
         }
         return newString.toString();
     }
 
 
     public static String stringFromCodePoint(int num) {
-        return new String(Character.toChars(num));
+        return UCharacter.toString(num);
     }
 
     public static String stringFromCodePoints(IntStream codepoints) {
@@ -36,7 +39,7 @@ public class Util {
 
 
     public static String getCapitalizedSymbolName(int codePoint) {
-        return generateCapitalization(Character.getName(codePoint));
+        return generateCapitalization(UCharacter.getName(codePoint));
     }
     
     public static String getCapitalizedSymbolName(String symbol) {

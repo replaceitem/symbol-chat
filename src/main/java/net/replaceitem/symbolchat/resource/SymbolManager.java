@@ -1,10 +1,7 @@
 package net.replaceitem.symbolchat.resource;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
+import com.ibm.icu.lang.UCharacter;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceFinder;
@@ -17,12 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static net.replaceitem.symbolchat.SymbolChat.NAMESPACE;
@@ -132,12 +124,12 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
 
     public void onConfigReload(ClothConfigProvider config) {
         favoritesList.clear();
-        config.getFavoriteSymbols().codePoints().mapToObj(Character::toString).forEach(favoritesList::addSymbol);
+        config.getFavoriteSymbols().codePoints().mapToObj(UCharacter::toString).forEach(favoritesList::addSymbol);
         customKaomojisList.clear();
         config.getCustomKaomojis().forEach(customKaomojisList::addSymbol);
     }
 
     public boolean isOnlyFavorites(SymbolTab tab) {
-        return tab.getSymbols().size() == 1 && tab.getSymbols().get(0) == favoritesList;
+        return tab.getSymbols().size() == 1 && tab.getSymbols().getFirst() == favoritesList;
     }
 }

@@ -1,5 +1,8 @@
 package net.replaceitem.symbolchat.gui.widget;
 
+import com.ibm.icu.impl.UCharacterProperty;
+import com.ibm.icu.lang.UCharacter;
+import com.ibm.icu.lang.UProperty;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -143,15 +146,13 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
     public void setCodepoints(int[] codepoints) {
         this.codepoints = codepoints;
 
-        // TODO optimize by finding the end of current codepoint and skipping there, instead of getting block for each
-        // TODO use UCharacter for more power
         int blockCycleColorIndex = CYCLING_BLOCK_COLORS.length-1;
-        Character.UnicodeBlock currentBlock = null;
+        int currentBlockIndex = -1;
         for (int i = 0; i < codepoints.length; i++) {
-            Character.UnicodeBlock newBlock = Character.UnicodeBlock.of(codepoints[i]);
-            if (newBlock != currentBlock) {
+            int newBlockIndex = UCharacterProperty.INSTANCE.getIntPropertyValue(codepoints[i], UProperty.BLOCK);
+            if (newBlockIndex != currentBlockIndex) {
                 blockCycleColorIndex = (blockCycleColorIndex + 1) % CYCLING_BLOCK_COLORS.length;
-                currentBlock = newBlock;
+                currentBlockIndex = newBlockIndex;
             }
             codepoints[i] |= (blockCycleColorIndex << 24);
         }
@@ -170,7 +171,7 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
             int codePoint = value & 0x00FFFFFF;
             int blockColor = CYCLING_BLOCK_COLORS[(value & 0xFF000000) >> 24];
             String symbol = Util.stringFromCodePoint(codePoint);
-            Character.UnicodeBlock block = Character.UnicodeBlock.of(codePoint);
+            UCharacter.UnicodeBlock block = UCharacter.UnicodeBlock.of(codePoint);
 
             Tooltip tooltip = Tooltip.of(Text.empty()
                     .append(Text.literal(Integer.toHexString(codePoint)))
@@ -276,7 +277,7 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
     public void favoriteSymbols() {
         if(!hasSelection()) return;
         IntStream selectedSymbols = getSelectedSymbols();
-        SymbolChat.config.toggleFavorite(selectedSymbols.mapToObj(Character::toString));
+        SymbolChat.config.toggleFavorite(selectedSymbols.mapToObj(UCharacter::toString));
         refresh();
     }
 

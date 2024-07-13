@@ -1,5 +1,6 @@
 package net.replaceitem.symbolchat;
 
+import com.ibm.icu.lang.UCharacter;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Locale;
@@ -15,13 +16,13 @@ public class UnicodeSearch {
     }
 
     public static UnicodeSearch ofPage(int page) {
-        int start = MathHelper.clamp(page << 16, 0, Character.MAX_CODE_POINT - 1);
-        int end = MathHelper.clamp((page + 1) << 16, 0, Character.MAX_CODE_POINT - 1);
+        int start = MathHelper.clamp(page << 16, 0, UCharacter.MAX_CODE_POINT - 1);
+        int end = MathHelper.clamp((page + 1) << 16, 0, UCharacter.MAX_CODE_POINT - 1);
         return new UnicodeSearch(IntStream.range(start, end));
     }
     
     public static UnicodeSearch ofAll() {
-        return new UnicodeSearch(IntStream.rangeClosed(0, Character.MAX_CODE_POINT));
+        return new UnicodeSearch(IntStream.rangeClosed(0, UCharacter.MAX_CODE_POINT));
     }
     
     public UnicodeSearch search(String searchTerm) {
@@ -48,7 +49,7 @@ public class UnicodeSearch {
     }
 
     private static boolean isRelevant(int codepoint, String[] searchTerms) {
-        String name = Character.getName(codepoint);
+        String name = UCharacter.getName(codepoint);
         if(name == null) return false;
         for (String s : searchTerms) {
             if(!name.contains(s)) return false;
