@@ -13,7 +13,10 @@ import net.replaceitem.symbolchat.TextRendererAccess;
 import net.replaceitem.symbolchat.UnicodeSearch;
 import net.replaceitem.symbolchat.gui.widget.IntSpinnerWidget;
 import net.replaceitem.symbolchat.gui.widget.UnicodeTable;
+import net.replaceitem.symbolchat.mixin.FontManagerAccessor;
+import net.replaceitem.symbolchat.mixin.MinecraftClientAccessor;
 
+import java.util.List;
 import java.util.OptionalInt;
 
 public class UnicodeTableScreen extends Screen {
@@ -31,9 +34,6 @@ public class UnicodeTableScreen extends Screen {
 
     private ButtonWidget copySelectedButton;
     private ButtonWidget favoriteSymbolButton;
-    
-    private CheckboxWidget showBlocksCheckbox;
-    private CheckboxWidget textShadowCheckbox;
 
     private TextFieldWidget searchTextField;
     private IntSpinnerWidget pageSpinner;
@@ -81,12 +81,25 @@ public class UnicodeTableScreen extends Screen {
 
         adder.add(EmptyWidget.ofHeight(6));
         adder.add(new TextWidget(Text.translatable("symbolchat.unicode_table.view").styled(style -> style.withUnderline(true)), this.textRenderer));
-        
-        showBlocksCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.show_blocks"), textRenderer).callback((checkbox, checked) -> unicodeTable.setShowBlocks(checked)).build();
+
+        {
+            adder.add(new TextWidget(Text.translatable("symbolchat.unicode_table.font"), this.textRenderer));
+
+            assert client != null;
+            List<Identifier> fonts = ((FontManagerAccessor) ((MinecraftClientAccessor) client).getFontManager()).getFontStorages().keySet().stream().sorted().toList();
+            CyclingButtonWidget<Identifier> fontButton = CyclingButtonWidget.<Identifier>builder(Text::of).values(fonts).omitKeyText().build(0, 0, widgetWidth, 20, Text.empty(), (button, value) -> {
+                unicodeTable.setFont(value);
+                reloadSymbols();
+            });
+            fontButton.setValue(Style.DEFAULT_FONT_ID);
+            adder.add(fontButton);
+        }
+
+        CheckboxWidget showBlocksCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.show_blocks"), textRenderer).callback((checkbox, checked) -> unicodeTable.setShowBlocks(checked)).build();
         unicodeTable.setShowBlocks(showBlocksCheckbox.isChecked());
         adder.add(showBlocksCheckbox);
-        
-        textShadowCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.text_shadow"), textRenderer).checked(true).callback((checkbox, checked) -> unicodeTable.setRenderTextShadow(checked)).build();
+
+        CheckboxWidget textShadowCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.text_shadow"), textRenderer).checked(true).callback((checkbox, checked) -> unicodeTable.setRenderTextShadow(checked)).build();
         unicodeTable.setRenderTextShadow(textShadowCheckbox.isChecked());
         adder.add(textShadowCheckbox);
         
@@ -133,9 +146,9 @@ public class UnicodeTableScreen extends Screen {
         search = search.search(searchTextField.getText());
 
         OptionalInt width = widthSpinner.getValue();
-        if(width.isPresent()) search = search.filterWidth(width.getAsInt(), ((TextRendererAccess) textRenderer).getCodepointWidthGetter(Style.EMPTY));
+        if(width.isPresent()) search = search.filterWidth(width.getAsInt(), ((TextRendererAccess) textRenderer).getCodepointWidthGetter(unicodeTable.getStyle()));
         
-        if(hideMissingGlyphsCheckbox.isChecked()) search = search.filter(((TextRendererAccess) textRenderer).getMissingGlyphPredicate(Style.EMPTY).negate());
+        if(hideMissingGlyphsCheckbox.isChecked()) search = search.filter(((TextRendererAccess) textRenderer).getMissingGlyphPredicate(unicodeTable.getStyle()).negate());
         
         unicodeTable.setCodepoints(search.collect());
     }

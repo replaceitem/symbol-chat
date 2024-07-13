@@ -30,6 +30,8 @@ import static net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWid
 public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButtonWidget.Context {
 
     private final TextRenderer textRenderer;
+    
+    private Style style = Style.EMPTY;
 
     private boolean renderTextShadow;
     private boolean showBlocks;
@@ -44,6 +46,7 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
     
     private final int columns;
     private final int visibleRows;
+    private int totalRows;
     
     private int selectionStart = -1;
     private int selectionEnd = -1;
@@ -55,7 +58,6 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
     private static final Identifier SCROLLER_TEXTURE = Identifier.ofVanilla("widget/scroller");
     private static final Identifier SCROLLER_BACKGROUND_TEXTURE = Identifier.ofVanilla("widget/scroller_background");
     private static final int[] CYCLING_BLOCK_COLORS = new int[] {0xFF800000,0xFF808000,0xFF008000,0xFF008080,0xFF000080,0xFF800080};
-    private int totalRows;
 
     public UnicodeTable(TextRenderer textRenderer, int x, int y, int width, int height) {
         super(x, y, width, height);
@@ -143,6 +145,14 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
         refreshButtons();
     }
 
+    public void setFont(Identifier value) {
+        this.style = Style.EMPTY.withFont(value);
+    }
+
+    public Style getStyle() {
+        return style;
+    }
+
     public void setCodepoints(int[] codepoints) {
         this.codepoints = codepoints;
 
@@ -165,7 +175,7 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
         this.clearElements();
         int codepointIndex = getScrolledRows()*columns;
         int widgetIndex = 0;
-        IntUnaryOperator widthGetter = ((TextRendererAccess) textRenderer).getCodepointWidthGetter(Style.EMPTY);
+        IntUnaryOperator widthGetter = ((TextRendererAccess) textRenderer).getCodepointWidthGetter(style);
         while(codepointIndex < codepoints.length && widgetIndex < columns*visibleRows) {
             int value = codepoints[codepointIndex];
             int codePoint = value & 0x00FFFFFF;
@@ -305,6 +315,7 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
             this.index = index;
             this.marked = index >= selectionStart && index <= selectionEnd;
             this.blockColor = blockColor;
+            this.setMessage(Text.literal(symbol).setStyle(style));
         }
 
         @Override

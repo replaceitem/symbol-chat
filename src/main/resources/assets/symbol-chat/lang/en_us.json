@@ -43,6 +43,7 @@
   "symbolchat.unicode_table.copy_to_clipboard": "Copy to Clipboard",
   "symbolchat.unicode_table.favorite_symbol": "Favorite Symbol",
   "symbolchat.unicode_table.filter": "Filter",
+  "symbolchat.unicode_table.font": "Font",
   "symbolchat.unicode_table.hide_missing_glyphs": "Hide missing glyphs",
   "symbolchat.unicode_table.page": "Page",
   "symbolchat.unicode_table.search": "Search",

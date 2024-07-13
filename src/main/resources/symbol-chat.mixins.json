@@ -14,9 +14,11 @@
         "PageContentAccessor",
         "ScreensMixin",
         "TextFieldWidgetAccessor",
-        "TextRendererMixin"
+        "TextRendererMixin",
+        "FontManagerAccessor",
+        "MinecraftClientAccessor"
     ],
     "injectors": {
         "defaultRequire": 1
-  }
+    }
 }

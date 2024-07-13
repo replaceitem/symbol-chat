@@ -2,6 +2,7 @@ package net.replaceitem.symbolchat.mixin;
 
 import net.minecraft.client.font.BuiltinEmptyGlyph;
 import net.minecraft.client.font.FontStorage;
+import net.minecraft.client.font.Glyph;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.Style;
 import net.minecraft.util.Identifier;
@@ -26,7 +27,10 @@ public abstract class TextRendererMixin implements TextRendererAccess {
     @Override
     public IntPredicate getMissingGlyphPredicate(Style style) {
         FontStorage fontStorage = this.getFontStorage(style.getFont());
-        return codepoint -> fontStorage.getGlyph(codepoint, validateAdvance) == BuiltinEmptyGlyph.MISSING;
+        return codepoint -> {
+            Glyph glyph = fontStorage.getGlyph(codepoint, validateAdvance);
+            return glyph == BuiltinEmptyGlyph.MISSING || glyph == BuiltinEmptyGlyph.WHITE;
+        };
     }
 
     @Unique
