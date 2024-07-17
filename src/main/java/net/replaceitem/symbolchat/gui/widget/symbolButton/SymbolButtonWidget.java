@@ -47,6 +47,11 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     }
 
     @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        return false; // default behaviour consumes any release event which is problematic when trying to un-set ScrollableWidget.scrollbarDragged
+    }
+
+    @Override
     protected boolean isValidClickButton(int button) {
         return super.isValidClickButton(button) || button == GLFW.GLFW_MOUSE_BUTTON_2;
     }

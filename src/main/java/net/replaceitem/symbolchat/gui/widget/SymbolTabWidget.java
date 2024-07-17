@@ -3,13 +3,12 @@ package net.replaceitem.symbolchat.gui.widget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ScrollableWidget;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.SearchUtil;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.gui.container.ContainerWidgetImpl;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
+import net.replaceitem.symbolchat.gui.container.ContainerWidgetImpl;
 import net.replaceitem.symbolchat.gui.container.GridLayoutContainer;
 import net.replaceitem.symbolchat.gui.container.ScrollableContainer;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
@@ -34,7 +33,7 @@ public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolB
 
     @Nullable
     private SymbolSearchBar searchBar;
-    protected final ScrollableWidget scrollableWidget;
+    protected final ScrollableContainer scrollableWidget;
     protected final GridLayoutContainer symbolContainer;
 
     public SymbolTabWidget(int x, int y, int width, int height, SymbolTab symbolTab, SymbolSelectionPanel symbolSelectionPanel, int panelColumns) {
@@ -45,7 +44,7 @@ public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolB
         this.symbolContainer = new GridLayoutContainer(0, 0, 0, 0, columns);
         this.symbolContainer.setSpacing(1);
         int offset = this.tab.hasSearchBar() ? SEARCH_BAR_HEIGHT+2 : 0;
-        this.scrollableWidget = new ScrollableContainer(getX(), getY() + offset, this.getWidth(), this.getHeight()-offset, symbolContainer);
+        this.scrollableWidget = new ScrollableContainer(getX()+1, getY() + offset, this.getWidth()-1, this.getHeight()-offset, symbolContainer);
         this.addChildren(scrollableWidget);
         if(tab.hasSearchBar()) {
             this.searchBar = new SymbolSearchBar(this.getX() + 2, this.getY() + 1, getWidth() - 4, SEARCH_BAR_HEIGHT);

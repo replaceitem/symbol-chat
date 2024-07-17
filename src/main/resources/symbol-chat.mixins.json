@@ -16,7 +16,8 @@
         "TextFieldWidgetAccessor",
         "TextRendererMixin",
         "FontManagerAccessor",
-        "MinecraftClientAccessor"
+        "MinecraftClientAccessor",
+        "ScrollableWidgetAccessor"
     ],
     "injectors": {
         "defaultRequire": 1

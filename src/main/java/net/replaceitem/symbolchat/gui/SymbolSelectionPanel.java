@@ -5,12 +5,15 @@ import net.minecraft.client.gui.DrawContext;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.gui.container.ContainerWidgetImpl;
+import net.replaceitem.symbolchat.gui.container.ScrollableContainer;
 import net.replaceitem.symbolchat.gui.widget.SymbolTabWidget;
 import net.replaceitem.symbolchat.gui.widget.TabSelectionWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import net.replaceitem.symbolchat.resource.SymbolTab;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class SymbolSelectionPanel extends ContainerWidgetImpl {
     private final TabSelectionWidget tabSelectionWidget;
@@ -22,7 +25,7 @@ public class SymbolSelectionPanel extends ContainerWidgetImpl {
     
     public static int getWidthForTabs(int tabCount) {
         int columns = Math.max(tabCount, MIN_COLUMNS);
-        return columns * (SymbolButtonWidget.GRID_SPCAING) + 1;
+        return columns * (SymbolButtonWidget.GRID_SPCAING) + 1 + ScrollableContainer.SCROLLBAR_WIDTH;
     }
 
     public SymbolSelectionPanel(int x, int y, int height, SymbolInsertable symbolInsertable) {
@@ -57,7 +60,7 @@ public class SymbolSelectionPanel extends ContainerWidgetImpl {
     private void addTab(SymbolTab tab, int columns) {
         int tabY = this.getY() + tabSelectionWidget.getHeight() + 2;
         int tabHeight = this.height - (tabSelectionWidget.getHeight() + 2) - 1;
-        SymbolTabWidget tabWidget = new SymbolTabWidget(this.getX() + 1, tabY, width, tabHeight, tab, this, columns);
+        SymbolTabWidget tabWidget = new SymbolTabWidget(this.getX(), tabY, width, tabHeight, tab, this, columns);
         this.tabs.add(tabWidget);
         this.tabSelectionWidget.addTab(tab);
         this.addChildren(tabWidget);
