@@ -87,7 +87,7 @@ public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolB
     protected PasteSymbolButtonWidget createButton(String symbol) {
         SymbolTab.Type type = tab.getType();
         PasteSymbolButtonWidget pasteSymbolButtonWidget = new PasteSymbolButtonWidget(getX(), getY(), this, symbol);
-        if(type.hasFullWidthButtons()) pasteSymbolButtonWidget.setWidth(this.getWidth() - 2);
+        if(type.hasFullWidthButtons()) pasteSymbolButtonWidget.setWidth(this.getWidth()-2-ScrollableContainer.SCROLLBAR_WIDTH);
         if(!type.hasTooltip()) pasteSymbolButtonWidget.setTooltip(null);
         return pasteSymbolButtonWidget;
     }

@@ -16,8 +16,6 @@ public class ScrollableContainer extends ScrollableWidget {
     public ScrollableContainer(int x, int y, int w, int h, ClickableWidget widget) {
         super(x, y, w, h, Text.empty());
         widget.setPosition(x, y);
-        widget.setWidth(w-SCROLLBAR_WIDTH);
-        widget.setHeight(h);
         this.child = widget;
         refreshPositions();
     }
