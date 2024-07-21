@@ -1,1 +1,1 @@
-* Made the scrollbar in the symbol panel draggable
+* Improved compatibility with mods adding other widgets to chat screen ([#48](https://github.com/replaceitem/symbol-chat/issues/48))
