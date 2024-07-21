@@ -39,7 +39,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     private void callSuperMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         // Directly call super.mouseClicked instead of chatField.mouseClicked first.
         // Since chatField is also in this.children(), this means that clicking the chat box will actually change focus like any other element.
-        cir.setReturnValue(super.mouseClicked(mouseX, mouseY, button));
+        if(super.mouseClicked(mouseX, mouseY, button)) cir.setReturnValue(true);
     }
     
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
