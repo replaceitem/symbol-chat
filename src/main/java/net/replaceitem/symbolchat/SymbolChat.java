@@ -28,10 +28,11 @@ public class SymbolChat implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         LOGGER = LogManager.getLogger(NAMESPACE);
-        clothConfigEnabled = FabricLoader.getInstance().isModLoaded("cloth-config2");
-        config = clothConfigEnabled ? new ClothConfigProvider() : new ConfigProvider();
         symbolManager = new SymbolManager();
         fontManager = new FontManager();
+        clothConfigEnabled = FabricLoader.getInstance().isModLoaded("cloth-config2");
+        config = clothConfigEnabled ? new ClothConfigProvider() : new ConfigProvider();
+        SymbolChat.symbolManager.onConfigReload(config);
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(symbolManager);
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(fontManager);
     }

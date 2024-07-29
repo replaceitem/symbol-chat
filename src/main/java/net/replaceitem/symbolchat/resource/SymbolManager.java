@@ -9,7 +9,7 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.config.ClothConfigProvider;
+import net.replaceitem.symbolchat.config.ConfigProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -122,7 +122,7 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
         this.listCache.put(symbolList.getId(), symbolList);
     }
 
-    public void onConfigReload(ClothConfigProvider config) {
+    public void onConfigReload(ConfigProvider config) {
         favoritesList.clear();
         config.getFavoriteSymbols().codePoints().mapToObj(UCharacter::toString).forEach(favoritesList::addSymbol);
         customKaomojisList.clear();
