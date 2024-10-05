@@ -7,6 +7,7 @@ import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceFinder;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.JsonHelper;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.config.ConfigProvider;
@@ -48,7 +49,7 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
             try(BufferedReader symbolTabReader = tabResource.getReader()) {
                 SymbolTab symbolTab = readTab(manager, symbolTabReader, identifier);
                 tabs.add(symbolTab);
-            } catch (IOException | JsonParseException e) {
+            } catch (IOException | JsonParseException | InvalidIdentifierException e) {
                 SymbolChat.LOGGER.error("Could not load symbol tab {}", identifier, e);
             }
         }
