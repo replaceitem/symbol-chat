@@ -23,11 +23,11 @@ import static net.replaceitem.symbolchat.SymbolChat.NAMESPACE;
 public class SymbolManager implements SimpleSynchronousResourceReloadListener {
     
     public static final Identifier IDENTIFIER = Identifier.of(NAMESPACE,"symbols");
-    public static final Identifier ALL_IDENTIFIER = Identifier.of(NAMESPACE, "all");
     public static final ResourceFinder SYMBOLS_FINDER = new ResourceFinder("symbols", ".txt");
     public static final ResourceFinder SYMBOL_TABS_FINDER = ResourceFinder.json("symbol_tabs");
 
     private List<SymbolTab> tabs = List.of();
+    private List<String> allSymbols = List.of();
     private final HashMap<Identifier, SymbolList> listCache = new HashMap<>();
     private final SymbolList.Mutable favoritesList = new SymbolList.Mutable(Identifier.of(NAMESPACE, "favorites"));
     private final SymbolList.Mutable customKaomojisList = new SymbolList.Mutable(Identifier.of(NAMESPACE, "custom_kaomojis"));
@@ -55,6 +55,7 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
         }
         tabs.sort(SymbolTab::compareTo);
         tabs = Collections.unmodifiableList(tabs);
+        allSymbols = tabs.stream().flatMap(SymbolTab::streamSymbols).distinct().toList();
     }
 
     public boolean isFavorite(String symbol) {
@@ -71,6 +72,10 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
     
     public Stream<String> getFavoriteSymbols() {
         return favoritesList.stream();
+    }
+
+    public Stream<String> streamAllSymbols() {
+        return allSymbols.stream();
     }
 
     @NotNull

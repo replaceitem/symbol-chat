@@ -14,8 +14,6 @@ import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
-import net.replaceitem.symbolchat.resource.SymbolManager;
-import net.replaceitem.symbolchat.resource.SymbolTab;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
@@ -74,7 +72,7 @@ public class SymbolSuggestor extends AbstractParentElement implements Drawable, 
         } else {
             Stream<String> searchStream = search.isBlank() ?
                     SymbolChat.symbolManager.getFavoriteSymbols() :
-                    SearchUtil.performSearch(SymbolChat.symbolManager.getTab(SymbolManager.ALL_IDENTIFIER).map(SymbolTab::streamSymbols).orElseGet(Stream::of), search);
+                    SearchUtil.performSearch(SymbolChat.symbolManager.streamAllSymbols(), search);
             List<String> symbols = searchStream.limit(shownSymbols).toList();
             elementCount = symbols.size();
             this.width = 1 + (SymbolButtonWidget.SYMBOL_SIZE + 1) * elementCount;
