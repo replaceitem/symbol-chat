@@ -85,7 +85,7 @@ public class ScrollableContainer extends ScrollableWidget {
 
     @Override
     protected double getDeltaYPerScroll() {
-        return Screen.hasControlDown() ? 50 : 7;
+        return Screen.hasControlDown() ? 50 : 20;
     }
 
     // overriding just to not crop scissor by 1px
