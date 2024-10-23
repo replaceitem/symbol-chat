@@ -45,6 +45,7 @@ public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolB
         this.symbolContainer.setSpacing(1);
         int offset = this.tab.hasSearchBar() ? SEARCH_BAR_HEIGHT+2 : 0;
         this.scrollableWidget = new ScrollableContainer(getX()+1, getY() + offset, this.getWidth()-1, this.getHeight()-offset, symbolContainer);
+        this.scrollableWidget.setSmoothScrolling(true);
         this.addChildren(scrollableWidget);
         if(tab.hasSearchBar()) {
             this.searchBar = new SymbolSearchBar(this.getX() + 2, this.getY() + 1, getWidth() - 4, SEARCH_BAR_HEIGHT);
@@ -63,7 +64,7 @@ public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolB
     public void refresh() {
         symbolContainer.clearElements();
         addSymbols();
-        this.symbolContainer.refreshPositions();
+        this.scrollableWidget.refreshPositions();
     }
 
     protected void addSymbols() {

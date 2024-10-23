@@ -6,12 +6,15 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.ScrollableWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.mixin.ScrollableWidgetAccessor;
 
 public class ScrollableContainer extends ScrollableWidget {
     private final ClickableWidget child;
     public final static int SCROLLBAR_WIDTH = 2;
     private boolean scrollbarHovered;
+    private boolean smoothScrolling;
+    private double scrollTarget;
 
     public ScrollableContainer(int x, int y, int w, int h, ClickableWidget widget) {
         super(x, y, w, h, Text.empty());
@@ -20,15 +23,13 @@ public class ScrollableContainer extends ScrollableWidget {
         refreshPositions();
     }
 
+    public void setSmoothScrolling(boolean smoothScrolling) {
+        this.smoothScrolling = smoothScrolling;
+    }
+
     public void refreshPositions() {
         if(this.child instanceof LayoutContainer<?> layoutContainer) layoutContainer.refreshPositions();
         this.setScrollY(getScrollY());
-    }
-
-    @Override
-    protected void setScrollY(double scrollY) {
-        super.setScrollY(scrollY);
-        this.child.setY(this.getY() - ((int) getScrollY()));
     }
 
     @Override
@@ -45,11 +46,28 @@ public class ScrollableContainer extends ScrollableWidget {
     }
 
     @Override
+    protected void setScrollY(double scrollY) {
+        super.setScrollY(scrollY);
+        if(((ScrollableWidgetAccessor) this).isScrollbarDragged()) this.scrollTarget = getScrollY();
+        this.child.setY(this.getY() - ((int) getScrollY()));
+    }
+
+    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         if(this.isWithinBounds(mouseX, mouseY)) {
             if(child.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)) return true;
         }
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        if (!this.visible) return false;
+        
+        double deltaY = verticalAmount * this.getDeltaYPerScroll();
+        
+        if(smoothScrolling) {
+            this.scrollTarget = MathHelper.clamp(this.scrollTarget - deltaY, 0, getMaxScrollY());
+        } else {
+            this.setScrollY(this.scrollTarget - deltaY);
+            this.scrollTarget = getScrollY();
+        }
+        return true;
     }
 
     @Override
@@ -88,9 +106,9 @@ public class ScrollableContainer extends ScrollableWidget {
         return Screen.hasControlDown() ? 50 : 20;
     }
 
-    // overriding just to not crop scissor by 1px
     @Override
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+        if(smoothScrolling) scrollSmooth(delta);
         scrollbarHovered = isScrollbarHovered(mouseX, mouseY);
         if (this.visible) {
             this.drawBox(context);
@@ -99,6 +117,14 @@ public class ScrollableContainer extends ScrollableWidget {
             context.disableScissor();
             this.renderOverlay(context);
         }
+    }
+
+    private void scrollSmooth(float delta) {
+        double scrollY = getScrollY();
+        if(scrollTarget == scrollY) return;
+        scrollY = MathHelper.lerp(((ScrollableWidgetAccessor) this).isScrollbarDragged() ? 1 : 1-Math.pow(2, -delta/0.4), scrollY, this.scrollTarget);
+        if(Math.abs(scrollTarget - scrollY) < 0.5) scrollY = scrollTarget;
+        this.setScrollY(scrollY);
     }
 
     private boolean isScrollbarHovered(int mouseX, int mouseY) {
