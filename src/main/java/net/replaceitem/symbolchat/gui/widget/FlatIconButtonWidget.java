@@ -6,6 +6,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextIconButtonWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -38,31 +39,22 @@ public class FlatIconButtonWidget extends TextIconButtonWidget.IconOnly {
     }
 
     public void drawOutline(DrawContext drawContext, int color) {
-        drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()-1, color);
-        drawContext.drawVerticalLine(this.getX()-1, this.getY()-1, this.getY()+height, color);
-        drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()+height, color);
-        drawContext.drawVerticalLine(this.getX()+width, this.getY()-1, this.getY()+height, color);
+        int alphaColor = ColorHelper.withAlpha((int) (this.alpha*255), color);
+        drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()-1, alphaColor);
+        drawContext.drawVerticalLine(this.getX()-1, this.getY()-1, this.getY()+height, alphaColor);
+        drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()+height, alphaColor);
+        drawContext.drawVerticalLine(this.getX()+width, this.getY()-1, this.getY()+height, alphaColor);
     }
 
     @Override
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-        RenderSystem.enableBlend();
-        RenderSystem.enableDepthTest();
-        context.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), getBackgroundColor());
+        context.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), ColorHelper.mix(getBackgroundColor(), ColorHelper.getWhite(alpha)));
         if(outlined) drawOutline(context, 0xFFFFFFFF);
         int textureX = this.getX() + this.getWidth() / 2 - this.textureWidth / 2;
         int textureY = this.getY() + this.getHeight() / 2 - this.textureHeight / 2;
         int textColor = this.isHovered() ? SymbolChat.config.getButtonTextHoverColor() : SymbolChat.config.getButtonTextColor();
         if(texture != null) {
-            context.setShaderColor(
-                    (float) ColorHelper.Argb.getRed(textColor) / 255F,
-                    (float) ColorHelper.Argb.getGreen(textColor) / 255F,
-                    (float) ColorHelper.Argb.getBlue(textColor) / 255F,
-                    (float) ColorHelper.Argb.getAlpha(textColor) / 255F
-            );
-            context.drawGuiTexture(this.texture, textureX, textureY, this.textureWidth, this.textureHeight);
-            context.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
+            context.drawGuiTexture(RenderLayer::getGuiTextured, this.texture, textureX, textureY, this.textureWidth, this.textureHeight, ColorHelper.withAlpha((int) (this.alpha*255), textColor));
         }
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         this.drawMessage(context, minecraftClient.textRenderer, textColor);

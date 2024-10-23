@@ -8,6 +8,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -84,18 +85,18 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
         
         if(scrollbarHeight != getHeight()) {
             RenderSystem.enableBlend();
-            context.drawGuiTexture(SCROLLER_BACKGROUND_TEXTURE, scrollbarX, getY(), SCROLLBAR_WIDTH, getHeight());
-            context.drawGuiTexture(SCROLLER_TEXTURE, scrollbarX, scrollbarY, SCROLLBAR_WIDTH, scrollbarHeight);
+            context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_BACKGROUND_TEXTURE, scrollbarX, getY(), SCROLLBAR_WIDTH, getHeight());
+            context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_TEXTURE, scrollbarX, scrollbarY, SCROLLBAR_WIDTH, scrollbarHeight);
             RenderSystem.disableBlend();
         }
     }
 
     private void drawBackground(DrawContext context) {
         int color = SymbolChat.config.getButtonColor();
-        int alpha = ColorHelper.Argb.getAlpha(color);
+        int alpha = ColorHelper.getAlpha(color);
         // remove alpha of color and apply it as fading to black instead
-        color = ColorHelper.Argb.mixColor(color, ColorHelper.Argb.getArgb(255, alpha, alpha, alpha));
-        color |= 0xFF000000;
+        color = ColorHelper.mix(color, ColorHelper.getArgb(255, alpha, alpha, alpha));
+        color = ColorHelper.fullAlpha(color);
 
         int visibleSymbols = codepoints.length-(getScrolledRows()*columns);
 
@@ -321,7 +322,7 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
         @Override
         protected int getBackgroundColor() {
             // when not hovered, use halved RGB values
-            return this.isHovered() ? (showBlocks ? blockColor : SymbolChat.config.getButtonHoverColor()) : ColorHelper.Argb.mixColor(blockColor, 0xFF808080);
+            return this.isHovered() ? (showBlocks ? blockColor : SymbolChat.config.getButtonHoverColor()) : ColorHelper.scaleRgb(blockColor, 0.5f);
         }
 
         @Override
