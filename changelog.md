@@ -1,2 +1,3 @@
-* Fixed symbol automcomplete not working when resourcepacks override the "all" tab ([#52](https://github.com/replaceitem/symbol-chat/issues/52))
-* Improved error message when identifier to symbol list is wrong
+* Updated to MC 1.21.3
+* Added smooth scrolling to the symbol panel
+* Increased scrolling speed
