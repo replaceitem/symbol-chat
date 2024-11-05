@@ -1,6 +1,8 @@
 package net.replaceitem.symbolchat.mixin;
 
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
@@ -8,9 +10,10 @@ import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.ScreenAccess;
+import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
-import net.replaceitem.symbolchat.gui.FontProcessingSelectionManager;
+import net.replaceitem.symbolchat.resource.FontProcessor;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
@@ -18,13 +21,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 @Mixin(AbstractSignEditScreen.class)
 public abstract class AbstractSignEditScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.SelectionManagerSymbolSuggestable {
@@ -58,14 +56,23 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
     private void updateSuggestions(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         ((ScreenAccess) this).refreshSuggestions();
     }
+    
+    @WrapOperation(method = "charTyped", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/SelectionManager;insert(C)Z"))
+    private boolean processFont(SelectionManager instance, char c, Operation<Boolean> original) {
+        FontProcessor fontProcessor = SymbolChat.fontManager.getCurrentScreenFontProcessor();
+        String string = fontProcessor.convertString(Character.toString(c));
+        instance.insert(string);
+        if(fontProcessor.isReverseDirection()) {
+            int pos = instance.getSelectionStart()-string.length();
+            instance.setSelection(pos, pos);
+        }
+        return true;
+    }
+    
+    
     @Inject(method = "keyPressed", at = @At("RETURN"))
     private void updateSuggestions(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         ((ScreenAccess) this).refreshSuggestions();
-    }
-    
-    @Redirect(method = "init", at = @At(value = "NEW", target = "net/minecraft/client/util/SelectionManager"))
-    private SelectionManager constructSelectionManager(Supplier<String> stringGetter, Consumer<String> stringSetter, Supplier<String> clipboardGetter, Consumer<String> clipboardSetter, Predicate<String> stringFilter) {
-        return new FontProcessingSelectionManager(stringGetter, stringSetter, clipboardGetter, clipboardSetter, stringFilter);
     }
     
     @Override

@@ -1,5 +1,7 @@
 package net.replaceitem.symbolchat.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -7,22 +9,18 @@ import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.ScreenAccess;
+import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
-import net.replaceitem.symbolchat.gui.FontProcessingSelectionManager;
+import net.replaceitem.symbolchat.resource.FontProcessor;
 import org.joml.Vector2i;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 @Mixin(BookEditScreen.class)
 public abstract class BookEditScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.SelectionManagerSymbolSuggestable {
@@ -56,6 +54,17 @@ public abstract class BookEditScreenMixin extends Screen implements SymbolInsert
         if(((ScreenAccess) this).handlePanelCharTyped(chr, modifiers)) cir.setReturnValue(true);
     }
     
+    @WrapOperation(method = "charTyped", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/SelectionManager;insert(Ljava/lang/String;)V"))
+    private void processFont(SelectionManager instance, String string, Operation<Void> original) {
+        FontProcessor fontProcessor = SymbolChat.fontManager.getCurrentScreenFontProcessor();
+        string = fontProcessor.convertString(string);
+        original.call(instance, string);
+        if(fontProcessor.isReverseDirection()) {
+            int pos = instance.getSelectionStart()-string.length();
+            instance.setSelection(pos, pos);
+        }
+    }
+    
     @Inject(method = "charTyped", at = @At("RETURN"))
     private void updateSuggestions(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         ((ScreenAccess) this).refreshSuggestions();
@@ -67,11 +76,6 @@ public abstract class BookEditScreenMixin extends Screen implements SymbolInsert
     @Inject(method = "mouseClicked", at = @At("RETURN"))
     private void updateSuggestions(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         ((ScreenAccess) this).refreshSuggestions();
-    }
-
-    @Redirect(method = "<init>", at = @At(value = "NEW", ordinal = 0, target = "net/minecraft/client/util/SelectionManager"))
-    private static SelectionManager constructSelectionManager(Supplier<String> stringGetter, Consumer<String> stringSetter, Supplier<String> clipboardGetter, Consumer<String> clipboardSetter, Predicate<String> stringFilter) {
-        return new FontProcessingSelectionManager(stringGetter, stringSetter, clipboardGetter, clipboardSetter, stringFilter);
     }
 
     @Override
