@@ -29,7 +29,7 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
     @Shadow private SelectionManager selectionManager;
     @Shadow private int currentRow;
     @Shadow @Final private String[] messages;
-    @Shadow @Final private SignBlockEntity blockEntity;
+    @Shadow @Final protected SignBlockEntity blockEntity;
 
     @Shadow protected abstract Vector3f getTextScale();
 
