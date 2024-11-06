@@ -18,11 +18,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.regex.PatternSyntaxException;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
@@ -85,12 +82,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     @Override
     public boolean disabled() {
         String text = this.chatField.getText();
-        try {
-            return !text.matches(SymbolChat.config.getChatSuggestionRegex());
-        } catch (PatternSyntaxException e) {
-            SymbolChat.LOGGER.error("Invalid regex provided as the Chat Suggestion Regex", e);
-            return false;
-        }
+        return !SymbolChat.config.getChatSuggestionPattern().matcher(text).matches();
     }
 
     @Override

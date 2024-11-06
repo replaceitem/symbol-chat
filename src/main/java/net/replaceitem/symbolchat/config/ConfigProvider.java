@@ -1,9 +1,12 @@
 package net.replaceitem.symbolchat.config;
 
 import net.minecraft.client.gui.screen.Screen;
+import net.replaceitem.symbolchat.SymbolChat;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
 
 public class ConfigProvider {
@@ -23,14 +26,27 @@ public class ConfigProvider {
     public boolean getKeepPanelOpen() {return false;}
     public String getChatSuggestionRegex() {return "^(/(msg|tell|w|say|me|teammsg|tm) |[^/]).*";}
     public String getFavoriteSymbols() {return "";}
-
     public List<String> getCustomKaomojis() {return List.of();}
 
     public Screen getConfigScreen(Screen parent) {
         return null;
     }
+
+    public void onConfigChange() {
+        try {
+            this.chatSuggestionPattern = Pattern.compile(getChatSuggestionRegex());
+        } catch (PatternSyntaxException e) {
+            this.chatSuggestionPattern = Pattern.compile(".*");
+            SymbolChat.LOGGER.error("Invalid regex provided as the Chat Suggestion Regex", e);
+        }
+        SymbolChat.symbolManager.onConfigReload(this);
+    }
     
-    
+    public Pattern chatSuggestionPattern;
+
+    public Pattern getChatSuggestionPattern() {
+        return chatSuggestionPattern;
+    }
     
     public void addFavorite(String symbols) {}
     public void removeFavorite(String symbol) {}

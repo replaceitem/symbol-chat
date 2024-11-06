@@ -32,7 +32,7 @@ public class SymbolChat implements ClientModInitializer {
         fontManager = new FontManager();
         clothConfigEnabled = FabricLoader.getInstance().isModLoaded("cloth-config2");
         config = clothConfigEnabled ? new ClothConfigProvider() : new ConfigProvider();
-        SymbolChat.symbolManager.onConfigReload(config);
+        config.onConfigChange();
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(symbolManager);
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(fontManager);
     }
