@@ -60,6 +60,7 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
     private FlatIconButtonWidget tableButtonWidget;
 
 
+    @Override
     public void addSymbolChatComponents() {
         int symbolButtonX = this.width - 2 - SymbolButtonWidget.SYMBOL_SIZE;
         int symbolButtonY = this.height - 2 - SymbolButtonWidget.SYMBOL_SIZE;

@@ -80,7 +80,6 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
         this.selectionManager.insert(symbol);
     }
 
-    @SuppressWarnings("ConstantValue")
     @Override
     public Vector2i getCursorPosition() {
         Vector3f textScale = this.getTextScale();

@@ -8,10 +8,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface TextFieldWidgetAccessor {
     @Accessor
     int getFirstCharacterIndex();
-
     @Accessor
     int getSelectionStart();
-
     @Accessor
     int getSelectionEnd();
 }
