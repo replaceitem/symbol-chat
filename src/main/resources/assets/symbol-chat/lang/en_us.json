@@ -45,6 +45,7 @@
   "symbolchat.unicode_table.filter": "Filter",
   "symbolchat.unicode_table.font": "Font",
   "symbolchat.unicode_table.hide_missing_glyphs": "Hide missing glyphs",
+  "symbolchat.unicode_table.jump_to": "Jump to",
   "symbolchat.unicode_table.page": "Page",
   "symbolchat.unicode_table.search": "Search",
   "symbolchat.unicode_table.show_blocks": "Show Blocks",

@@ -15,6 +15,7 @@ import net.replaceitem.symbolchat.gui.widget.IntSpinnerWidget;
 import net.replaceitem.symbolchat.gui.widget.UnicodeTable;
 import net.replaceitem.symbolchat.mixin.FontManagerAccessor;
 import net.replaceitem.symbolchat.mixin.MinecraftClientAccessor;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.OptionalInt;
@@ -102,6 +103,35 @@ public class UnicodeTableScreen extends Screen {
         CheckboxWidget textShadowCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.text_shadow"), textRenderer).checked(true).callback((checkbox, checked) -> unicodeTable.setRenderTextShadow(checked)).build();
         unicodeTable.setRenderTextShadow(textShadowCheckbox.isChecked());
         adder.add(textShadowCheckbox);
+
+        {
+            TextWidget jumpToLabel = new TextWidget(Text.translatable("symbolchat.unicode_table.jump_to"), this.textRenderer);
+            TextFieldWidget jumpToTextField = new TextFieldWidget(this.textRenderer, widgetWidth - jumpToLabel.getWidth(), 12, Text.empty()) {
+                @Override
+                public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+                    if(keyCode == GLFW.GLFW_KEY_ENTER) {
+                        int codepoint;
+                        try {
+                            codepoint = Integer.parseInt(this.getText(), 16);
+                        } catch (NumberFormatException e) {
+                            return true;
+                        }
+                        int page = (codepoint & 0xFF0000) >> 16;
+                        if(pageSpinner.getValue().isEmpty() || pageSpinner.getValue().getAsInt() != page) {
+                            pageSpinner.setValue(page);
+                        }
+                        unicodeTable.jumpTo(codepoint);
+                        return true;
+                    }
+                    return super.keyPressed(keyCode, scanCode, modifiers);
+                }
+            };
+            jumpToTextField.setChangedListener(s -> this.reloadSymbols());
+
+            SimplePositioningWidget jumpToRow = adder.add(new SimplePositioningWidget(widgetWidth, 0));
+            jumpToRow.add(jumpToLabel, Positioner::alignLeft);
+            jumpToRow.add(jumpToTextField, Positioner::alignRight);
+        }
         
         adder.add(EmptyWidget.ofHeight(6));
         adder.add(new TextWidget(Text.translatable("symbolchat.unicode_table.filter").styled(style -> style.withUnderline(true)), this.textRenderer));

@@ -306,6 +306,15 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
         return selectionStart != -1;
     }
 
+    public void jumpTo(int codepoint) {
+        int index = binarySearchCodepoints(codepoints, codepoint);
+        if(index < 0) return;
+        setScroll(Math.floorDiv(index, columns) - visibleRows / 2.0);
+        selectionEnd = index;
+        selectionStart = index;
+        refresh();
+    }
+
     private class TableButton extends PasteSymbolButtonWidget {
         private final int index;
         private final boolean marked;
@@ -358,6 +367,25 @@ public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButt
             super.onClick(button);
             return true;
         }
+    }
+
+    private static int binarySearchCodepoints(int[] arr, int key) {
+        int low = 0;
+        int high = arr.length - 1;
+
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            int midVal = arr[mid] & 0xFFFFFF;
+
+            if (midVal < key) {
+                low = mid + 1;
+            } else if (midVal > key) {
+                high = mid - 1;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
     }
 }
 
