@@ -90,7 +90,7 @@ public abstract class SmoothScrollableContainerWidget extends ContainerWidget {
     public ScreenRect getScrollbarThumbRect() {
         return new ScreenRect(
                 this.getScrollbarX(),
-                this.getScrollbarThumbY(),
+                overflows() ? this.getScrollbarThumbY() : getY(),
                 this.getScrollbarThumbWidth(),
                 this.getScrollbarThumbHeight()
         );
