@@ -8,9 +8,9 @@ import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.SearchUtil;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
-import net.replaceitem.symbolchat.gui.container.ContainerWidgetImpl;
-import net.replaceitem.symbolchat.gui.container.GridLayoutContainer;
-import net.replaceitem.symbolchat.gui.container.ScrollableContainer;
+import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
+import net.replaceitem.symbolchat.gui.container.ScrollableGridContainer;
+import net.replaceitem.symbolchat.gui.container.SmoothScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.resource.SymbolTab;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolButtonWidget.Context {
+public class SymbolTabWidget extends NonScrollableContainerWidget implements PasteSymbolButtonWidget.Context {
     
     private static final int SEARCH_BAR_HEIGHT = 10;
     public static final Text NO_RESULTS = Text.translatable("symbolchat.symbol_panel.no_search_results");
@@ -33,19 +33,17 @@ public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolB
 
     @Nullable
     private SymbolSearchBar searchBar;
-    protected final ScrollableContainer scrollableWidget;
-    protected final GridLayoutContainer symbolContainer;
+    protected final ScrollableGridContainer scrollableWidget;
 
     public SymbolTabWidget(int x, int y, int width, int height, SymbolTab symbolTab, SymbolSelectionPanel symbolSelectionPanel, int panelColumns) {
         super(x, y, width, height);
         this.tab = symbolTab;
         this.symbolSelectionPanel = symbolSelectionPanel;
         int columns = this.tab.getType().getColumns(panelColumns);
-        this.symbolContainer = new GridLayoutContainer(0, 0, 0, 0, columns);
-        this.symbolContainer.setSpacing(1);
         int offset = this.tab.hasSearchBar() ? SEARCH_BAR_HEIGHT+2 : 0;
-        this.scrollableWidget = new ScrollableContainer(getX()+1, getY() + offset, this.getWidth()-1, this.getHeight()-offset, symbolContainer);
+        this.scrollableWidget = new ScrollableGridContainer(getX()+1, getY() + offset, this.getWidth()-1, this.getHeight()-offset, columns);
         this.scrollableWidget.setSmoothScrolling(true);
+        this.scrollableWidget.setScrollbarStyle(SmoothScrollableContainerWidget.ScrollbarStyle.SLIM);
         this.addChildren(scrollableWidget);
         if(tab.hasSearchBar()) {
             this.searchBar = new SymbolSearchBar(this.getX() + 2, this.getY() + 1, getWidth() - 4, SEARCH_BAR_HEIGHT);
@@ -62,7 +60,7 @@ public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolB
 
     @Override
     public void refresh() {
-        symbolContainer.clearElements();
+        scrollableWidget.clearElements();
         addSymbols();
         this.scrollableWidget.refreshPositions();
     }
@@ -73,7 +71,7 @@ public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolB
             stream = SearchUtil.performSearch(stream, searchBar.getText());
         }
         List<PasteSymbolButtonWidget> buttons = stream.map(this::createButton).toList();
-        buttons.forEach(symbolContainer::addChildren);
+        buttons.forEach(scrollableWidget::add);
         this.emptyText = this.getEmptyText(buttons.isEmpty());
     }
     
@@ -88,7 +86,7 @@ public class SymbolTabWidget extends ContainerWidgetImpl implements PasteSymbolB
     protected PasteSymbolButtonWidget createButton(String symbol) {
         SymbolTab.Type type = tab.getType();
         PasteSymbolButtonWidget pasteSymbolButtonWidget = new PasteSymbolButtonWidget(getX(), getY(), this, symbol);
-        if(type.hasFullWidthButtons()) pasteSymbolButtonWidget.setWidth(this.getWidth()-2-ScrollableContainer.SCROLLBAR_WIDTH);
+        if(type.hasFullWidthButtons()) pasteSymbolButtonWidget.setWidth(this.getWidth()-2-SmoothScrollableContainerWidget.ScrollbarStyle.SLIM.getWidth());
         if(!type.hasTooltip()) pasteSymbolButtonWidget.setTooltip(null);
         return pasteSymbolButtonWidget;
     }

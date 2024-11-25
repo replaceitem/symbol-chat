@@ -13,6 +13,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
+import net.replaceitem.symbolchat.gui.container.ScrollableGridContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +21,14 @@ import java.util.List;
 public class DropDownWidget<T> extends ClickableWidget implements Drawable, Element, Narratable {
 
     public final List<DropDownElementWidget<T>> elements;
-    private final ScrollableGridWidget scrollableGridWidget;
+    private final ScrollableGridContainer scrollableGridWidget;
     public int selected;
     public boolean expanded;
 
     public DropDownWidget(int x, int y, int width, int height, List<T> elementList, int defaultSelection) {
         super(x, y, width, height, Text.empty());
         this.elements = new ArrayList<>();
-        this.scrollableGridWidget = new ScrollableGridWidget(this.getX(), this.getY()+this.getHeight(), this.width, 200, 1);
+        this.scrollableGridWidget = new ScrollableGridContainer(this.getX(), this.getY()+this.getHeight(), this.width, 200, 1);
         this.scrollableGridWidget.setBackgroundColor(SymbolChat.config.getHudColor());
         for(int i = 0; i < elementList.size(); i++) {
             DropDownElementWidget<T> element = new DropDownElementWidget<>(0, 0, this.width - 2, this.height, elementList.get(i), i, this);

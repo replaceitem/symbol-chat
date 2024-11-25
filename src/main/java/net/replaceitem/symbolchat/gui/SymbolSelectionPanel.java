@@ -2,10 +2,11 @@ package net.replaceitem.symbolchat.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
-import net.replaceitem.symbolchat.gui.container.ContainerWidgetImpl;
-import net.replaceitem.symbolchat.gui.container.ScrollableContainer;
+import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
+import net.replaceitem.symbolchat.gui.container.SmoothScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.widget.SymbolTabWidget;
 import net.replaceitem.symbolchat.gui.widget.TabSelectionWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class SymbolSelectionPanel extends ContainerWidgetImpl {
+public class SymbolSelectionPanel extends NonScrollableContainerWidget {
     private final TabSelectionWidget tabSelectionWidget;
     private final List<SymbolTabWidget> tabs = new ArrayList<>();
 
@@ -25,7 +26,7 @@ public class SymbolSelectionPanel extends ContainerWidgetImpl {
     
     public static int getWidthForTabs(int tabCount) {
         int columns = Math.max(tabCount, MIN_COLUMNS);
-        return columns * (SymbolButtonWidget.GRID_SPCAING) + 1 + ScrollableContainer.SCROLLBAR_WIDTH;
+        return columns * (SymbolButtonWidget.GRID_SPCAING) + 1 + SmoothScrollableContainerWidget.ScrollbarStyle.SLIM.getWidth();
     }
 
     public SymbolSelectionPanel(int x, int y, int height, SymbolInsertable symbolInsertable) {
@@ -41,6 +42,7 @@ public class SymbolSelectionPanel extends ContainerWidgetImpl {
                 getCurrentTab().ifPresent(SymbolTabWidget::refresh);
             }
         };
+        this.tabSelectionWidget.setTab(SymbolChat.selectedTab);
         this.addChildren(tabSelectionWidget);
 
         for (SymbolTab tab : SymbolChat.symbolManager.getTabs()) {

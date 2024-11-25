@@ -19,7 +19,7 @@ import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.TextRendererAccess;
 import net.replaceitem.symbolchat.Util;
-import net.replaceitem.symbolchat.gui.container.ContainerWidgetImpl;
+import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import org.lwjgl.glfw.GLFW;
 
@@ -28,7 +28,7 @@ import java.util.stream.IntStream;
 
 import static net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget.GRID_SPCAING;
 
-public class UnicodeTable extends ContainerWidgetImpl implements PasteSymbolButtonWidget.Context {
+public class UnicodeTable extends NonScrollableContainerWidget implements PasteSymbolButtonWidget.Context {
 
     private final TextRenderer textRenderer;
     

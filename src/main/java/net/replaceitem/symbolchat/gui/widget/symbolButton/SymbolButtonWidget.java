@@ -39,7 +39,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!this.active || !this.visible) return false;
-        if (this.isValidClickButton(button) && this.clicked(mouseX, mouseY)) {
+        if (this.isValidClickButton(button) && this.isMouseOver(mouseX, mouseY)) {
             this.playDownSound(MinecraftClient.getInstance().getSoundManager());
             return this.onClick(button);
         }
@@ -70,14 +70,18 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
                 drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bg);
             }
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-            int textColor = this.isHovered() ? SymbolChat.config.getButtonTextHoverColor() : SymbolChat.config.getButtonTextColor();
+            int textColor = this.isHighlighted() ? SymbolChat.config.getButtonTextHoverColor() : SymbolChat.config.getButtonTextColor();
             drawSymbol(drawContext, textRenderer, this.getMessage(), textColor);
             this.renderOverlay(drawContext);
         }
     }
+    
+    protected boolean isHighlighted() {
+        return this.isHovered();
+    }
 
     protected int getBackgroundColor() {
-        return this.isHovered() ? SymbolChat.config.getButtonHoverColor() : SymbolChat.config.getButtonColor();
+        return this.isHighlighted() ? SymbolChat.config.getButtonHoverColor() : SymbolChat.config.getButtonColor();
     }
     
     protected boolean shouldRenderBackground() {

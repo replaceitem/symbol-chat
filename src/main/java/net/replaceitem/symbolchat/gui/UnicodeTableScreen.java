@@ -11,6 +11,7 @@ import net.minecraft.util.Identifier;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.TextRendererAccess;
 import net.replaceitem.symbolchat.UnicodeSearch;
+import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.widget.IntSpinnerWidget;
 import net.replaceitem.symbolchat.gui.widget.UnicodeTable;
 import net.replaceitem.symbolchat.mixin.FontManagerAccessor;

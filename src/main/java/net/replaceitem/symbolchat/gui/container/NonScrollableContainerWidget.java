@@ -1,9 +1,6 @@
 package net.replaceitem.symbolchat.gui.container;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Narratable;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.ContainerWidget;
@@ -14,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ContainerWidgetImpl extends ContainerWidget {
-    private final List<Element> children = new ArrayList<>();
+public class NonScrollableContainerWidget extends ContainerWidget {
+    private final List<ClickableWidget> children = new ArrayList<>();
     
-    public ContainerWidgetImpl(int x, int y, int width, int height) {
+    public NonScrollableContainerWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Text.empty());
     }
     
-    public void addChildren(Element element) {
+    public void addChildren(ClickableWidget element) {
         this.children.add(element);
     }
 
@@ -52,19 +49,39 @@ public class ContainerWidgetImpl extends ContainerWidget {
         Element focused = getFocused();
         if(focused instanceof Narratable narratable) narratable.appendNarrations(builder);
     }
+//
+//    @Override
+//    public void setFocused(boolean focused) {
+//        Element focusedElement = this.getFocused();
+//        if(focusedElement != null) focusedElement.setFocused(focused);
+//    }
 
     @Override
-    public void setFocused(boolean focused) {
-        Element focusedElement = this.getFocused();
-        if(focusedElement != null) focusedElement.setFocused(focused);
-    }
-
-    @Override
-    public List<? extends Element> children() {
+    public List<ClickableWidget> children() {
         return this.children;
     }
     
     public void clearElements() {
         this.children.clear();
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        return this.hoveredElement(mouseX, mouseY).filter(element -> element.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)).isPresent();
+    }
+
+    @Override
+    protected int getContentsHeightWithPadding() {
+        return height;
+    }
+
+    @Override
+    protected double getDeltaYPerScroll() {
+        return 0;
+    }
+
+    @Override
+    protected boolean overflows() {
+        return false;
     }
 }
