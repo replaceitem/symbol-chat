@@ -15,17 +15,12 @@ import java.util.List;
 public class ScrollableGridContainer extends ScrollableLayoutContainer<GridWidget> {
     private GridWidget.Adder adder;
     private final int columns;
-    private int backgroundColor = 0;
     private final List<ClickableWidget> children = new ArrayList<>();
 
     public ScrollableGridContainer(int x, int y, int w, int h, int columns) {
         super(x, y, w, h, new GridWidget(x, y));
         this.columns = columns;
         this.clearElements();
-    }
-
-    public void setBackgroundColor(int backgroundColor) {
-        this.backgroundColor = backgroundColor;
     }
 
     public void clearElements() {
@@ -47,11 +42,6 @@ public class ScrollableGridContainer extends ScrollableLayoutContainer<GridWidge
     @Override
     public List<? extends Element> children() {
         return children;
-    }
-
-    @Override
-    protected double getDeltaYPerScroll() {
-        return Screen.hasControlDown() ? 50 : 7;
     }
 
     @Override

@@ -23,13 +23,6 @@ public class NonScrollableContainerWidget extends ContainerWidget {
     }
 
     @Override
-    public void forEachChild(Consumer<ClickableWidget> consumer) {
-        for (Element child : this.children) {
-            if(child instanceof Widget widget) widget.forEachChild(consumer);
-        }
-    }
-
-    @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         for (Element child : this.children) {
             if(child instanceof Drawable drawable) drawable.render(context, mouseX, mouseY, delta);
@@ -49,12 +42,6 @@ public class NonScrollableContainerWidget extends ContainerWidget {
         Element focused = getFocused();
         if(focused instanceof Narratable narratable) narratable.appendNarrations(builder);
     }
-//
-//    @Override
-//    public void setFocused(boolean focused) {
-//        Element focusedElement = this.getFocused();
-//        if(focusedElement != null) focusedElement.setFocused(focused);
-//    }
 
     @Override
     public List<ClickableWidget> children() {
@@ -68,6 +55,22 @@ public class NonScrollableContainerWidget extends ContainerWidget {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         return this.hoveredElement(mouseX, mouseY).filter(element -> element.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)).isPresent();
+    }
+
+    @Override
+    public void setX(int x) {
+        for (ClickableWidget child : children) {
+            child.setX(child.getX() - this.getX() + x);
+        }
+        super.setX(x);
+    }
+
+    @Override
+    public void setY(int y) {
+        for (ClickableWidget child : children) {
+            child.setY(child.getY() - this.getY() + y);
+        }
+        super.setY(y);
     }
 
     @Override
