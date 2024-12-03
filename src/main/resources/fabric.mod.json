@@ -28,7 +28,7 @@
   ],
   "accessWidener": "symbol-chat.accesswidener",
   "depends": {
-    "minecraft": ">=1.21.2",
+    "minecraft": ">=1.21.4",
     "fabricloader": ">=0.15.10",
     "java": ">=21",
     "fabric": "*"
