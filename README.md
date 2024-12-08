@@ -49,8 +49,12 @@ Symbols can be un-favorited by just right-clicking it again.
 ## Symbol suggestions
 
 For inserting symbols faster, you can use the symbol suggestion popup, which works similar to other chat platforms.
-By typing a colon (`:`), a popup will open and shows symbols that match with what you type after.
+By typing a colon (`:`), a popup will open and show favorite symbols. If you then type something after the colon,
+you can search for symbols that match with what you type.
 For example, if you type `:cro` it will suggest a crown, crocodile, croissant, cross and crossed flags.
+You can press <kbd>⇥ Tab</kbd> to insert the first suggestion. If you press <kbd>↑</kbd>, you can then select one
+with the arrow keys <kbd>←</kbd> and <kbd>→</kbd>.
+To insert the selected symbol, press <kbd>⇥ Tab</kbd> or <kbd>⏎ Enter</kbd>. 
 
 ![Symbol menu](https://github.com/replaceitem/symbol-chat/raw/master/images/suggestion.png)
 
