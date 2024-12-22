@@ -22,7 +22,7 @@ import java.util.List;
 
 public class DropDownWidget<T> extends NonScrollableContainerWidget implements Drawable, Element, Narratable {
 
-    public final List<DropDownElementWidget<T>> elements;
+    public final List<DropDownElementWidget> elements;
     private final Button buttonWidget;
     private final ScrollableGridContainer scrollableGridWidget;
     public int selected;
@@ -38,7 +38,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
         this.scrollableGridWidget.setSmoothScrolling(true);
         this.scrollableGridWidget.visible = this.expanded;
         for(int i = 0; i < elementList.size(); i++) {
-            DropDownElementWidget<T> element = new DropDownElementWidget<>(0, 0, this.width - 2 - this.scrollableGridWidget.getScrollbarThumbWidth(), this.height, elementList.get(i), i);
+            DropDownElementWidget element = new DropDownElementWidget(0, 0, this.width - 2 - this.scrollableGridWidget.getScrollbarThumbWidth(), this.height, elementList.get(i), i);
             this.elements.add(element);
             this.scrollableGridWidget.add(element);
         }
@@ -58,10 +58,6 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         context.fill(getX(), buttonWidget.getBottom(), getRight(), getBottom(), SymbolChat.config.getButtonColor());
         super.renderWidget(context, mouseX, mouseY, delta);
-    }
-
-    public Text getTextForElement(T element) {
-        return Text.literal(element.toString());
     }
 
     public void changeSelected(int index) {
@@ -100,7 +96,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
         }
     }
 
-    public class DropDownElementWidget<T> extends ClickableWidget implements Drawable, Element, Narratable {
+    public class DropDownElementWidget extends ClickableWidget implements Drawable, Element, Narratable {
         private final T element;
         private final int index;
     
