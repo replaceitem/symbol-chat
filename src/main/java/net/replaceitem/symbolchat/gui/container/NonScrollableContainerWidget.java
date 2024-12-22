@@ -4,12 +4,10 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.ContainerWidget;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class NonScrollableContainerWidget extends ContainerWidget {
     private final List<ClickableWidget> children = new ArrayList<>();

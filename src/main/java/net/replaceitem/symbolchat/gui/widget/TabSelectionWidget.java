@@ -11,9 +11,6 @@ import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.*;
 import net.replaceitem.symbolchat.resource.*;
 
-import java.util.*;
-import java.util.function.*;
-
 public class TabSelectionWidget extends NonScrollableContainerWidget {
 
     private static final int HEIGHT = SymbolButtonWidget.GRID_SPCAING;
