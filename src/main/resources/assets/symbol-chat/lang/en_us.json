@@ -73,6 +73,8 @@
   "text.autoconfig.symbol-chat.option.hud_color": "HUD color",
   "text.autoconfig.symbol-chat.option.hud_position": "HUD Position",
   "text.autoconfig.symbol-chat.option.hud_position.@Tooltip": "Position of the font selection and settings button",
+  "text.autoconfig.symbol-chat.option.symbol_button_position": "Symbol Button Position",
+  "text.autoconfig.symbol-chat.option.symbol_button_position.@Tooltip": "Position of the symbol panel button",
   "text.autoconfig.symbol-chat.option.keep_panel_open": "Keep panel open",
   "text.autoconfig.symbol-chat.option.max_symbol_suggestions": "Maximum symbol suggestions",
   "text.autoconfig.symbol-chat.option.symbol_panel_height": "Symbol Panel height",

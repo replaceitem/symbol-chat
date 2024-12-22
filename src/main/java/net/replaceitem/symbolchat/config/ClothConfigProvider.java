@@ -84,8 +84,13 @@ public class ClothConfigProvider extends ConfigProvider {
     public SymbolTooltipMode getSymbolTooltipMode() {return config.symbol_tooltip_mode;}
 
     @Override
-    public HudPosition getHudPosition() {
+    public HudSide getHudPosition() {
         return config.hud_position;
+    }
+
+    @Override
+    public HudCorner getSymbolButtonPosition() {
+        return config.symbol_button_position;
     }
 
     @Override

@@ -22,7 +22,8 @@ public class ConfigProvider {
     public int getSymbolPanelHeight() {return 200;}
     public int getMaxSymbolSuggestions() {return 5;}
     public SymbolTooltipMode getSymbolTooltipMode() {return SymbolTooltipMode.DELAYED;}
-    public HudPosition getHudPosition() {return HudPosition.RIGHT;}
+    public HudSide getHudPosition() {return HudSide.RIGHT;}
+    public HudCorner getSymbolButtonPosition() {return HudCorner.BOTTOM_RIGHT;}
     public boolean getKeepPanelOpen() {return false;}
     public String getChatSuggestionRegex() {return "^(/(msg|tell|w|say|me|teammsg|tm) |[^/]).*";}
     public String getFavoriteSymbols() {return "";}
@@ -70,8 +71,33 @@ public class ConfigProvider {
         }
     }
 
-    public enum HudPosition {
+    public enum HudSide {
         LEFT,
         RIGHT
+    }
+    public enum HudVerticalSide {
+        TOP, BOTTOM
+    }
+    public enum HudCorner {
+        TOP_LEFT(HudVerticalSide.TOP, HudSide.LEFT),
+        TOP_RIGHT(HudVerticalSide.TOP, HudSide.RIGHT),
+        BOTTOM_RIGHT(HudVerticalSide.BOTTOM, HudSide.RIGHT),
+        BOTTOM_LEFT(HudVerticalSide.BOTTOM, HudSide.LEFT);
+        
+        private final HudVerticalSide vertical;
+        private final HudSide horizontal;
+
+        HudCorner(HudVerticalSide vertical, HudSide horizontal) {
+            this.horizontal = horizontal;
+            this.vertical = vertical;
+        }
+
+        public HudVerticalSide getVertical() {
+            return vertical;
+        }
+
+        public HudSide getHorizontal() {
+            return horizontal;
+        }
     }
 }
