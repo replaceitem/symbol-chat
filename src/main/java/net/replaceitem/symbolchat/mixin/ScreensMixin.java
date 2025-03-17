@@ -16,7 +16,7 @@ import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
-import net.replaceitem.symbolchat.config.ConfigProvider;
+import net.replaceitem.symbolchat.config.Reconfig;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.UnicodeTableScreen;
 import net.replaceitem.symbolchat.gui.widget.DropDownWidget;
@@ -65,8 +65,8 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
 
     @Override
     public void addSymbolChatComponents() {
-        ConfigProvider.HudSide hudPosition = SymbolChat.config.getHudPosition();
-        ConfigProvider.HudCorner symbolButtonPosition = SymbolChat.config.getSymbolButtonPosition();
+        Reconfig.HudSide hudPosition = SymbolChat.reconfig.hudPosition.get();
+        Reconfig.HudCorner symbolButtonPosition = SymbolChat.reconfig.symbolButtonPosition.get();
         
         int padding = 2;
         int hudButtonsHeight = 15;
@@ -79,7 +79,7 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
             case TOP -> padding + (symbolButtonPosition.getHorizontal() == hudPosition ? hudButtonsHeight + padding : 0);
             case BOTTOM -> this.height - padding - SymbolButtonWidget.SYMBOL_SIZE;
         };
-        int panelHeight = SymbolChat.config.getSymbolPanelHeight();
+        int panelHeight = SymbolChat.reconfig.symbolPanelHeight.get();
         int panelWidth = SymbolSelectionPanel.getWidthForTabs(SymbolChat.symbolManager.getTabs().size());
         int panelX = switch (symbolButtonPosition.getHorizontal()) {
             case LEFT -> padding;
@@ -111,7 +111,7 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
         gridWidget.setColumnSpacing(padding);
         GridWidget.Adder adder = gridWidget.createAdder(Integer.MAX_VALUE);
 
-        if(!SymbolChat.config.getHideFontButton()) {
+        if(!SymbolChat.reconfig.hideFontButton.get()) {
             this.fontSelectionDropDown = new DropDownWidget<>(0, 0, 180, hudButtonsHeight, SymbolChat.fontManager.getFontProcessors(), SymbolChat.selectedFont) {
                 @Override
                 public void onSelection(int index, FontProcessor element) {
@@ -121,17 +121,15 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
             adder.add(fontSelectionDropDown);
         }
 
-        if(!SymbolChat.config.getHideSettingsButton()) {
+        if(!SymbolChat.reconfig.hideSettingsButton.get()) {
             settingsButtonWidget = new FlatIconButtonWidget(15, hudButtonsHeight, ScreenTexts.EMPTY, 15, hudButtonsHeight, WRENCH_TEXTURE, button -> {
-                if(SymbolChat.clothConfigEnabled) {
-                    MinecraftClient.getInstance().setScreen(SymbolChat.config.getConfigScreen(ScreensMixin.this));
-                }
-            }, textSupplier -> Text.translatable("text.autoconfig.symbol-chat.title"));
-            settingsButtonWidget.setTooltip(Tooltip.of(Text.translatable(SymbolChat.clothConfigEnabled ? "text.autoconfig.symbol-chat.title" : "symbolchat.no_clothconfig")));
+                MinecraftClient.getInstance().setScreen(SymbolChat.reconfig.config.createScreen(ScreensMixin.this));
+            }, textSupplier -> Text.translatable("reconfigure.title.symbol-chat"));
+            settingsButtonWidget.setTooltip(Tooltip.of(Text.translatable("reconfigure.title.symbol-chat")));
             adder.add(settingsButtonWidget);
         }
 
-        if(!SymbolChat.config.getHideTableButton()) {
+        if(!SymbolChat.reconfig.hideTableButton.get()) {
             tableButtonWidget = new FlatIconButtonWidget(15, hudButtonsHeight, ScreenTexts.EMPTY, 15, hudButtonsHeight, TABLE_TEXTURE, button -> {
                 if(ScreensMixin.this.client != null) ScreensMixin.this.client.setScreen(new UnicodeTableScreen(ScreensMixin.this));
             }, textSupplier -> Text.translatable("symbolchat.unicode_table"));

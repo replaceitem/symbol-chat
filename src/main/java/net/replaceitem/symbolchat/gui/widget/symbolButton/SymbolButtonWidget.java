@@ -70,7 +70,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
                 drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bg);
             }
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-            int textColor = this.isHighlighted() ? SymbolChat.config.getButtonTextHoverColor() : SymbolChat.config.getButtonTextColor();
+            int textColor = this.isHighlighted() ? SymbolChat.reconfig.buttonTextHoverColor.get() : SymbolChat.reconfig.buttonTextColor.get();
             drawSymbol(drawContext, textRenderer, this.getMessage(), textColor);
             this.renderOverlay(drawContext);
         }
@@ -81,7 +81,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     }
 
     protected int getBackgroundColor() {
-        return this.isHighlighted() ? SymbolChat.config.getButtonHoverColor() : SymbolChat.config.getButtonColor();
+        return this.isHighlighted() ? SymbolChat.reconfig.buttonActiveColor.get() : SymbolChat.reconfig.buttonColor.get();
     }
     
     protected boolean shouldRenderBackground() {

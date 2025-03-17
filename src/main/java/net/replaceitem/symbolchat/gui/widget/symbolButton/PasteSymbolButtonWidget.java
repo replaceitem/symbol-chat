@@ -23,14 +23,14 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
         this.symbol = symbol;
         this.context = context;
         this.setTooltip(tooltip);
-        this.setTooltipDelay(SymbolChat.config.getSymbolTooltipMode().getDelay());
+        this.setTooltipDelay(SymbolChat.reconfig.symbolTooltipMode.get().getDelay());
         this.isFavorite = SymbolChat.symbolManager.isFavorite(symbol);
     }
 
     @Override
     protected void renderOverlay(DrawContext drawContext) {
         super.renderOverlay(drawContext);
-        if(isFavorite) this.drawCorners(drawContext, SymbolChat.config.getFavoriteColor());
+        if(isFavorite) this.drawCorners(drawContext, SymbolChat.reconfig.favoriteColor.get());
     }
 
     @Override
@@ -49,8 +49,13 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     protected void onRightClick() {
         if(symbol.codePoints().count() > 1) return; // With current config implementation, favoriting more than once codepoint isn't possible
         boolean currentlyFavorite = SymbolChat.symbolManager.isFavorite(this.symbol);
-        if(currentlyFavorite) SymbolChat.config.removeFavorite(this.getSymbol());
-        else SymbolChat.config.addFavorite(this.getSymbol());
+        String currentFavorites = SymbolChat.reconfig.favoriteSymbols.get();
+
+        if(currentlyFavorite) {
+            SymbolChat.reconfig.favoriteSymbols.set(currentFavorites.replace(this.getSymbol(), ""));
+        } else {
+            SymbolChat.reconfig.favoriteSymbols.set(currentFavorites + getSymbol());
+        }
         this.isFavorite = !currentlyFavorite;
     }
 

@@ -71,12 +71,7 @@ public class UnicodeTableScreen extends Screen {
 
             favoriteSymbolButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> unicodeTable.favoriteSymbols(), true).texture(FAVORITE_TEXTURE, 16, 16).dimension(20, 20).build();
             buttonRow.add(favoriteSymbolButton);
-            if (!SymbolChat.clothConfigEnabled) {
-                favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.symbol_panel.no_clothconfig")));
-                favoriteSymbolButton.active = false;
-            } else {
-                favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.unicode_table.favorite_symbol")));
-            }
+            favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.unicode_table.favorite_symbol")));
         }
 
 

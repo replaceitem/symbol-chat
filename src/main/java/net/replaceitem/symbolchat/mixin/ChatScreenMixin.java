@@ -10,7 +10,7 @@ import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
-import net.replaceitem.symbolchat.config.ConfigProvider;
+import net.replaceitem.symbolchat.config.Reconfig;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
@@ -63,7 +63,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     }
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 0),require = 1)
     private int changeTextBoxX(int original) {
-        ConfigProvider.HudCorner symbolButtonPosition = SymbolChat.config.getSymbolButtonPosition();
+        Reconfig.HudCorner symbolButtonPosition = SymbolChat.reconfig.symbolButtonPosition.get();
         return switch(symbolButtonPosition.getHorizontal()) {
             case LEFT -> original + SymbolButtonWidget.SYMBOL_SIZE + 2;
             case RIGHT -> original;
@@ -99,7 +99,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     @Override
     public boolean disabled() {
         String text = this.chatField.getText();
-        return !SymbolChat.config.getChatSuggestionPattern().matcher(text).matches();
+        return !SymbolChat.reconfig.chatSuggestionPattern.get().matcher(text).matches();
     }
 
     @Override

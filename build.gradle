@@ -7,6 +7,17 @@ plugins {
 repositories {
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases"}
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 loom {
@@ -26,15 +37,11 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     
-    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-    modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-    
     modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
     modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+    
+    modImplementation "maven.modrinth:reconfigure:${project.reconfigure_version}"
+    include "maven.modrinth:reconfigure:${project.reconfigure_version}"
 }
 
 processResources {
@@ -77,10 +84,10 @@ modrinth {
     dependencies = [
             // fabric api needed
             new ModDependency("P7dR8mSH", DependencyType.REQUIRED),
-            // cloth config optional for configuration
-            new ModDependency("9s6osm5g", DependencyType.OPTIONAL),
             // modmenu optional for accessing the configuration
-            new ModDependency("mOgUt4GM", DependencyType.OPTIONAL)
+            new ModDependency("mOgUt4GM", DependencyType.OPTIONAL),
+            // reconfigure bundled
+            new ModDependency("QHmQeeNt", DependencyType.EMBEDDED)
     ]
     changelog = rootProject.file("changelog.md").text
     syncBodyFrom = rootProject.file("README.md").text

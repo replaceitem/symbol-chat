@@ -1,1 +1,2 @@
-* Added config option for changing which corner the symbol button appears in
+* Switched from ClothConfig to my own bundled config library
+* Renamed `custom_symbols` config property to `favorite_symbols`. Existing config files will be converted and no custom symbols should be lost

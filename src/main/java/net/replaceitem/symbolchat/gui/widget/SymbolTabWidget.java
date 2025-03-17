@@ -23,7 +23,6 @@ public class SymbolTabWidget extends NonScrollableContainerWidget implements Pas
     private static final int SEARCH_BAR_HEIGHT = 10;
     public static final Text NO_RESULTS = Text.translatable("symbolchat.symbol_panel.no_search_results");
     public static final Text NO_FAVORITE_SYMBOLS = Text.translatable("symbolchat.symbol_panel.no_favorite_symbols");
-    public static final Text NO_CLOTHCONFIG = Text.translatable("symbolchat.symbol_panel.no_clothconfig");
 
     private final SymbolSelectionPanel symbolSelectionPanel;
 
@@ -78,7 +77,7 @@ public class SymbolTabWidget extends NonScrollableContainerWidget implements Pas
     private Text getEmptyText(boolean noSymbols) {
         if(!noSymbols) return null;
         if(SymbolChat.symbolManager.isOnlyFavorites(tab)) {
-            return SymbolChat.clothConfigEnabled ? NO_FAVORITE_SYMBOLS : NO_CLOTHCONFIG;
+            return NO_FAVORITE_SYMBOLS;
         }
         return NO_RESULTS;
     }

@@ -10,7 +10,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.JsonHelper;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.config.ConfigProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -128,11 +127,14 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
         this.listCache.put(symbolList.getId(), symbolList);
     }
 
-    public void onConfigReload(ConfigProvider config) {
+    public void onCustomSymbolsChanged(String favoriteSymbols) {
         favoritesList.clear();
-        config.getFavoriteSymbols().codePoints().mapToObj(UCharacter::toString).forEach(favoritesList::addSymbol);
+        favoriteSymbols.codePoints().mapToObj(UCharacter::toString).forEach(favoritesList::addSymbol);
+    }
+
+    public void onCustomKaomojisChanged(List<String> customKaomojis) {
         customKaomojisList.clear();
-        config.getCustomKaomojis().forEach(customKaomojisList::addSymbol);
+        customKaomojis.forEach(customKaomojisList::addSymbol);
     }
 
     public boolean isOnlyFavorites(SymbolTab tab) {
