@@ -59,11 +59,16 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
 
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 1),require = 1)
     private int changeTextBoxWidth(int original) {
-        return original + TEXT_BOX_CURSOR_WIDTH + SymbolButtonWidget.SYMBOL_SIZE + 2 + 2;
+        int symbolButtonWidth = switch (SymbolChat.config.symbolButtonPosition.get().getVertical()) {
+            case TOP -> 0;
+            case BOTTOM -> SymbolButtonWidget.SYMBOL_SIZE + 2;
+        };
+        return original + TEXT_BOX_CURSOR_WIDTH + symbolButtonWidth + 2;
     }
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 0),require = 1)
     private int changeTextBoxX(int original) {
         Config.HudCorner symbolButtonPosition = SymbolChat.config.symbolButtonPosition.get();
+        if(symbolButtonPosition.getVertical() == Config.HudVerticalSide.TOP) return original;
         return switch(symbolButtonPosition.getHorizontal()) {
             case LEFT -> original + SymbolButtonWidget.SYMBOL_SIZE + 2;
             case RIGHT -> original;
