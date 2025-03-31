@@ -56,7 +56,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.fill(getX(), buttonWidget.getBottom(), getRight(), getBottom(), SymbolChat.reconfig.buttonColor.get());
+        context.fill(getX(), buttonWidget.getBottom(), getRight(), getBottom(), SymbolChat.config.buttonColor.get());
         super.renderWidget(context, mouseX, mouseY, delta);
     }
 
@@ -79,7 +79,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
         }
 
         private int getBackgroundColor() {
-            return this.isHovered() ? SymbolChat.reconfig.buttonActiveColor.get() : SymbolChat.reconfig.buttonColor.get();
+            return this.isHovered() ? SymbolChat.config.buttonActiveColor.get() : SymbolChat.config.buttonColor.get();
         }
 
         @Override
@@ -107,7 +107,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
         }
         
         private int getBackgroundColor() {
-            return this.isHovered() ? SymbolChat.reconfig.buttonActiveColor.get() : SymbolChat.reconfig.buttonColor.get();
+            return this.isHovered() ? SymbolChat.config.buttonActiveColor.get() : SymbolChat.config.buttonColor.get();
         }
     
         @Override

@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
-public class Reconfig {
-    public final Config config = Config.builder("symbol-chat")
-            .serializer(Serializers.buildJson().preLoad(Reconfig::updateConfig).build())
+public class Config {
+    public final net.replaceitem.reconfigure.api.Config config = net.replaceitem.reconfigure.api.Config.builder("symbol-chat")
+            .serializer(Serializers.buildJson().preLoad(Config::updateConfig).build())
             .build();
     
     public final ConfigTab tab = config.createDefaultTab().build();

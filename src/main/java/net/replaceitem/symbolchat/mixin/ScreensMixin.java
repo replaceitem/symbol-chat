@@ -16,7 +16,7 @@ import net.replaceitem.symbolchat.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
-import net.replaceitem.symbolchat.config.Reconfig;
+import net.replaceitem.symbolchat.config.Config;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
 import net.replaceitem.symbolchat.gui.UnicodeTableScreen;
 import net.replaceitem.symbolchat.gui.widget.DropDownWidget;
@@ -65,8 +65,8 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
 
     @Override
     public void addSymbolChatComponents() {
-        Reconfig.HudSide hudPosition = SymbolChat.reconfig.hudPosition.get();
-        Reconfig.HudCorner symbolButtonPosition = SymbolChat.reconfig.symbolButtonPosition.get();
+        Config.HudSide hudPosition = SymbolChat.config.hudPosition.get();
+        Config.HudCorner symbolButtonPosition = SymbolChat.config.symbolButtonPosition.get();
         
         int padding = 2;
         int hudButtonsHeight = 15;
@@ -79,7 +79,7 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
             case TOP -> padding + (symbolButtonPosition.getHorizontal() == hudPosition ? hudButtonsHeight + padding : 0);
             case BOTTOM -> this.height - padding - SymbolButtonWidget.SYMBOL_SIZE;
         };
-        int panelHeight = SymbolChat.reconfig.symbolPanelHeight.get();
+        int panelHeight = SymbolChat.config.symbolPanelHeight.get();
         int panelWidth = SymbolSelectionPanel.getWidthForTabs(SymbolChat.symbolManager.getTabs().size());
         int panelX = switch (symbolButtonPosition.getHorizontal()) {
             case LEFT -> padding;
@@ -111,7 +111,7 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
         gridWidget.setColumnSpacing(padding);
         GridWidget.Adder adder = gridWidget.createAdder(Integer.MAX_VALUE);
 
-        if(!SymbolChat.reconfig.hideFontButton.get()) {
+        if(!SymbolChat.config.hideFontButton.get()) {
             this.fontSelectionDropDown = new DropDownWidget<>(0, 0, 180, hudButtonsHeight, SymbolChat.fontManager.getFontProcessors(), SymbolChat.selectedFont) {
                 @Override
                 public void onSelection(int index, FontProcessor element) {
@@ -121,15 +121,15 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
             adder.add(fontSelectionDropDown);
         }
 
-        if(!SymbolChat.reconfig.hideSettingsButton.get()) {
+        if(!SymbolChat.config.hideSettingsButton.get()) {
             settingsButtonWidget = new FlatIconButtonWidget(15, hudButtonsHeight, ScreenTexts.EMPTY, 15, hudButtonsHeight, WRENCH_TEXTURE, button -> {
-                MinecraftClient.getInstance().setScreen(SymbolChat.reconfig.config.createScreen(ScreensMixin.this));
+                MinecraftClient.getInstance().setScreen(SymbolChat.config.config.createScreen(ScreensMixin.this));
             }, textSupplier -> Text.translatable("reconfigure.title.symbol-chat"));
             settingsButtonWidget.setTooltip(Tooltip.of(Text.translatable("reconfigure.title.symbol-chat")));
             adder.add(settingsButtonWidget);
         }
 
-        if(!SymbolChat.reconfig.hideTableButton.get()) {
+        if(!SymbolChat.config.hideTableButton.get()) {
             tableButtonWidget = new FlatIconButtonWidget(15, hudButtonsHeight, ScreenTexts.EMPTY, 15, hudButtonsHeight, TABLE_TEXTURE, button -> {
                 if(ScreensMixin.this.client != null) ScreensMixin.this.client.setScreen(new UnicodeTableScreen(ScreensMixin.this));
             }, textSupplier -> Text.translatable("symbolchat.unicode_table"));

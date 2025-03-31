@@ -96,7 +96,7 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
     }
 
     private void drawBackground(DrawContext context) {
-        int color = SymbolChat.reconfig.buttonColor.get();
+        int color = SymbolChat.config.buttonColor.get();
         int alpha = ColorHelper.getAlpha(color);
         // remove alpha of color and apply it as fading to black instead
         color = ColorHelper.mix(color, ColorHelper.getArgb(255, alpha, alpha, alpha));
@@ -294,11 +294,11 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
     public void favoriteSymbols() {
         if(!hasSelection()) return;
         IntStream selectedSymbols = getSelectedSymbols();
-        Stream<String> current = SymbolChat.reconfig.favoriteSymbols.get().codePoints().mapToObj(UCharacter::toString);
+        Stream<String> current = SymbolChat.config.favoriteSymbols.get().codePoints().mapToObj(UCharacter::toString);
         List<String> toToggle = selectedSymbols.mapToObj(UCharacter::toString).toList();
         Set<String> forRemoval = toToggle.stream().filter(value -> SymbolChat.symbolManager.isFavorite(value)).collect(Collectors.toUnmodifiableSet());
         current = Stream.concat(current.filter(k -> !forRemoval.contains(k)), toToggle.stream().filter(value -> !SymbolChat.symbolManager.isFavorite(value)));
-        SymbolChat.reconfig.favoriteSymbols.set(current.collect(Collectors.joining()));
+        SymbolChat.config.favoriteSymbols.set(current.collect(Collectors.joining()));
         refresh();
     }
 
@@ -339,7 +339,7 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
         @Override
         protected int getBackgroundColor() {
             // when not hovered, use halved RGB values
-            return this.isHovered() ? (showBlocks ? blockColor : SymbolChat.reconfig.buttonActiveColor.get()) : ColorHelper.scaleRgb(blockColor, 0.5f);
+            return this.isHovered() ? (showBlocks ? blockColor : SymbolChat.config.buttonActiveColor.get()) : ColorHelper.scaleRgb(blockColor, 0.5f);
         }
 
         @Override

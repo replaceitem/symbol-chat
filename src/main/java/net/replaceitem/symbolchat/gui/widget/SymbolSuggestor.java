@@ -49,7 +49,7 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
 
         
         int fittingSymbols = Math.floorDiv(this.screen.width, SymbolButtonWidget.SYMBOL_SIZE + 1);
-        int shownSymbols = Math.min(fittingSymbols, SymbolChat.reconfig.maxSymbolSuggestions.get());
+        int shownSymbols = Math.min(fittingSymbols, SymbolChat.config.maxSymbolSuggestions.get());
         
         children().clear();
 
@@ -81,7 +81,7 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.fill(this.getX(), this.getY(), this.getRight(), this.getBottom(), SymbolChat.reconfig.hudColor.get());
+        context.fill(this.getX(), this.getY(), this.getRight(), this.getBottom(), SymbolChat.config.hudColor.get());
         super.renderWidget(context, mouseX, mouseY, delta);
     }
 

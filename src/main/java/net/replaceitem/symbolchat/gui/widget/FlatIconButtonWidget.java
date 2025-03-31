@@ -21,7 +21,7 @@ public class FlatIconButtonWidget extends TextIconButtonWidget.IconOnly {
     }
 
     protected int getBackgroundColor() {
-        return this.isHovered() ? SymbolChat.reconfig.buttonActiveColor.get() : SymbolChat.reconfig.buttonColor.get();
+        return this.isHovered() ? SymbolChat.config.buttonActiveColor.get() : SymbolChat.config.buttonColor.get();
     }
 
     public void setOutlined(boolean outlined) {
@@ -51,7 +51,7 @@ public class FlatIconButtonWidget extends TextIconButtonWidget.IconOnly {
         if(outlined) drawOutline(context, 0xFFFFFFFF);
         int textureX = this.getX() + this.getWidth() / 2 - this.textureWidth / 2;
         int textureY = this.getY() + this.getHeight() / 2 - this.textureHeight / 2;
-        int textColor = this.isHovered() ? SymbolChat.reconfig.buttonTextHoverColor.get() : SymbolChat.reconfig.buttonTextColor.get();
+        int textColor = this.isHovered() ? SymbolChat.config.buttonTextHoverColor.get() : SymbolChat.config.buttonTextColor.get();
         if(texture != null) {
             context.drawGuiTexture(RenderLayer::getGuiTextured, this.texture, textureX, textureY, this.textureWidth, this.textureHeight, ColorHelper.withAlpha((int) (this.alpha*255), textColor));
         }

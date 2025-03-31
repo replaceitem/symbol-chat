@@ -32,7 +32,7 @@ public class SymbolSelectionPanel extends NonScrollableContainerWidget {
         super(x, y, 0, height);
         int columns = Math.max(SymbolChat.symbolManager.getTabs().size(), MIN_COLUMNS);
         this.width = getWidthForTabs(SymbolChat.symbolManager.getTabs().size());
-        this.visible = SymbolChat.reconfig.keepPanelOpen.get() && SymbolChat.isPanelOpen;
+        this.visible = SymbolChat.config.keepPanelOpen.get() && SymbolChat.isPanelOpen;
         this.symbolInsertable = symbolInsertable;
         this.tabSelectionWidget = new TabSelectionWidget(this.getX(), this.getY() + 1, width) {
             @Override
@@ -86,7 +86,7 @@ public class SymbolSelectionPanel extends NonScrollableContainerWidget {
     
     public void toggleVisible() {
         this.visible = !this.visible;
-        if(SymbolChat.reconfig.keepPanelOpen.get()) SymbolChat.isPanelOpen = this.visible;
+        if(SymbolChat.config.keepPanelOpen.get()) SymbolChat.isPanelOpen = this.visible;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class SymbolSelectionPanel extends NonScrollableContainerWidget {
         drawContext.getMatrices().push();
         drawContext.getMatrices().translate(0.0, 0.0, 350.0);
         RenderSystem.disableDepthTest();
-        drawContext.fill(this.getX(), this.getY() + SymbolButtonWidget.GRID_SPCAING + 1, this.getX() + width, this.getY() + height, SymbolChat.reconfig.hudColor.get());
+        drawContext.fill(this.getX(), this.getY() + SymbolButtonWidget.GRID_SPCAING + 1, this.getX() + width, this.getY() + height, SymbolChat.config.hudColor.get());
         super.renderWidget(drawContext, mouseX, mouseY, delta);
         drawContext.getMatrices().pop();
     }
