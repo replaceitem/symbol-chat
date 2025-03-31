@@ -42,7 +42,6 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
     @Override
     public void refresh() {
         Vector2i cursorPosition = this.suggestable.getCursorPosition();
-        this.setX(cursorPosition.x);
         this.setY(cursorPosition.y - HEIGHT - 3);
         
         String search = this.suggestable.getSuggestionTerm();
@@ -69,6 +68,11 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
                 });
             }
         }
+        
+        if(!visible && !children().isEmpty()) {
+            this.setX(cursorPosition.x);
+        }
+        
         visible = !children().isEmpty();
     }
     
