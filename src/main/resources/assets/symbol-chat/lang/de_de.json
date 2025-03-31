@@ -58,6 +58,7 @@
   "reconfigure.headline.symbol-chat.general": "Allgemein",
   "reconfigure.headline.symbol-chat.hud_layout": "HUD Layout",
   "reconfigure.headline.symbol-chat.colors": "Farben",
+  "reconfigure.headline.symbol-chat.unicode_table": "Unicode Tabelle",
   "reconfigure.property.symbol-chat.button_active_color": "Aktive Schaltflächenfarbe",
   "reconfigure.property.symbol-chat.button_color": "Schaltflächenfarbe",
   "reconfigure.property.symbol-chat.button_text_color": "Schaltflächentextfarbe",
@@ -91,5 +92,8 @@
   "reconfigure.property.symbol-chat.symbol_tooltip_mode.tooltip": "Aus: Keinen Tooltip anzeigen\nVerzögert: Tooltip nur nach kurzer Hoverdauer anzeigen\nAn: Tooltip sofort anzeigen",
   "reconfigure.property.symbol-chat.symbol_tooltip_mode.enum.off": "Aus",
   "reconfigure.property.symbol-chat.symbol_tooltip_mode.enum.on": "An",
-  "reconfigure.property.symbol-chat.symbol_tooltip_mode.enum.delayed": "Verzögert"
+  "reconfigure.property.symbol-chat.symbol_tooltip_mode.enum.delayed": "Verzögert",
+  "reconfigure.property.symbol-chat.unicode_table_show_blocks": "Unicode-Blöcke anzeigen",
+  "reconfigure.property.symbol-chat.unicode_table_text_shadow": "Textschatten anzeigen",
+  "reconfigure.property.symbol-chat.unicode_table_missing_glyphs": "Fehlende Zeichen verstecken"
 }

@@ -91,11 +91,21 @@ public class UnicodeTableScreen extends Screen {
             adder.add(fontButton);
         }
 
-        CheckboxWidget showBlocksCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.show_blocks"), textRenderer).callback((checkbox, checked) -> unicodeTable.setShowBlocks(checked)).build();
+        CheckboxWidget showBlocksCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.show_blocks"), textRenderer)
+                .checked(SymbolChat.config.unicodeTableShowBlocks.get())
+                .callback((checkbox, checked) -> {
+                    SymbolChat.config.unicodeTableShowBlocks.setIfValid(checked);
+                    unicodeTable.setShowBlocks(checked);
+                }).build();
         unicodeTable.setShowBlocks(showBlocksCheckbox.isChecked());
         adder.add(showBlocksCheckbox);
 
-        CheckboxWidget textShadowCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.text_shadow"), textRenderer).checked(true).callback((checkbox, checked) -> unicodeTable.setRenderTextShadow(checked)).build();
+        CheckboxWidget textShadowCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.text_shadow"), textRenderer)
+                .checked(SymbolChat.config.unicodeTableTextShadow.get())
+                .callback((checkbox, checked) -> {
+                    SymbolChat.config.unicodeTableTextShadow.setIfValid(checked);
+                    unicodeTable.setRenderTextShadow(checked);
+                }).build();
         unicodeTable.setRenderTextShadow(textShadowCheckbox.isChecked());
         adder.add(textShadowCheckbox);
 
@@ -155,7 +165,12 @@ public class UnicodeTableScreen extends Screen {
             pageRow.add(widthSpinner, Positioner::alignRight);
         }
         
-        hideMissingGlyphsCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.hide_missing_glyphs"), textRenderer).callback((checkbox, checked) -> reloadSymbols()).build();
+        hideMissingGlyphsCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.hide_missing_glyphs"), textRenderer)
+                .checked(SymbolChat.config.unicodeTableHideMissingGlyphs.get())
+                .callback((checkbox, checked) -> {
+                    SymbolChat.config.unicodeTableHideMissingGlyphs.setIfValid(checked);
+                    reloadSymbols();
+                }).build();
         adder.add(hideMissingGlyphsCheckbox);
 
         adder.refreshPositions();

@@ -40,6 +40,11 @@ public class Config {
     public final Property<Integer> favoriteColor = tab.createIntegerProperty("favorite_color").defaultValue(0xFFFFFF00).asColorPicker().build();
     public final Property<Integer> buttonTextColor = tab.createIntegerProperty("button_text_color").defaultValue(0xFFA0A0A0).asColorPicker().build();
     public final Property<Integer> buttonTextHoverColor = tab.createIntegerProperty("button_text_hover_color").defaultValue(0xFFFFFFFF).asColorPicker().build();
+
+    private final Void unicodeTableHeadline = tab.createHeadline("unicode_table");
+    public final Property<Boolean> unicodeTableShowBlocks = tab.createBooleanProperty("unicode_table_show_blocks").defaultValue(false).asCheckbox().build();
+    public final Property<Boolean> unicodeTableTextShadow = tab.createBooleanProperty("unicode_table_text_shadow").defaultValue(true).asCheckbox().build();
+    public final Property<Boolean> unicodeTableHideMissingGlyphs = tab.createBooleanProperty("unicode_table_missing_glyphs").defaultValue(false).asCheckbox().build();
     
     @SuppressWarnings("unused")
     public enum SymbolTooltipMode {

@@ -44,7 +44,7 @@
   "symbolchat.unicode_table.favorite_symbol": "Toggle Favorite for selected Symbols",
   "symbolchat.unicode_table.filter": "Filter",
   "symbolchat.unicode_table.font": "Font",
-  "symbolchat.unicode_table.hide_missing_glyphs": "Hide missing glyphs",
+  "symbolchat.unicode_table.hide_missing_glyphs": "Hide Missing Glyphs",
   "symbolchat.unicode_table.jump_to": "Jump to",
   "symbolchat.unicode_table.page": "Page",
   "symbolchat.unicode_table.search": "Search",
@@ -58,6 +58,7 @@
   "reconfigure.headline.symbol-chat.general": "General",
   "reconfigure.headline.symbol-chat.hud_layout": "Hud layout",
   "reconfigure.headline.symbol-chat.colors": "Colors",
+  "reconfigure.headline.symbol-chat.unicode_table": "Unicode Table",
   "reconfigure.property.symbol-chat.button_active_color": "Active button color",
   "reconfigure.property.symbol-chat.button_color": "Button color",
   "reconfigure.property.symbol-chat.button_text_color": "Button text color",
@@ -91,5 +92,8 @@
   "reconfigure.property.symbol-chat.symbol_tooltip_mode.tooltip": "OFF: Do not show a tooltip\nDELAYED: Only show a tooltip after some time hovering\nON: Show a tooltip immediately",
   "reconfigure.property.symbol-chat.symbol_tooltip_mode.enum.off": "Off",
   "reconfigure.property.symbol-chat.symbol_tooltip_mode.enum.on": "On",
-  "reconfigure.property.symbol-chat.symbol_tooltip_mode.enum.delayed": "Delayed"
+  "reconfigure.property.symbol-chat.symbol_tooltip_mode.enum.delayed": "Delayed",
+  "reconfigure.property.symbol-chat.unicode_table_show_blocks": "Show Unicode Blocks",
+  "reconfigure.property.symbol-chat.unicode_table_text_shadow": "Show Text Shadow",
+  "reconfigure.property.symbol-chat.unicode_table_missing_glyphs": "Hide Missing Glyphs"
 }
