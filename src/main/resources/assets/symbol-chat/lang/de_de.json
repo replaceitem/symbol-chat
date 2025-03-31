@@ -75,12 +75,21 @@
   "reconfigure.property.symbol-chat.hide_table_button.tooltip": "Versteckt die Unicodetabellenschaltfläche, mit welcher man alle unicode symbole durchsuchen kann",
   "reconfigure.property.symbol-chat.hud_color": "Hintergrundfarbe",
   "reconfigure.property.symbol-chat.hud_position": "Schaltflächenposition",
+  "reconfigure.property.symbol-chat.hud_position.enum.left": "Links",
+  "reconfigure.property.symbol-chat.hud_position.enum.right": "Rechts",
   "reconfigure.property.symbol-chat.hud_position.tooltip": "Position der Einstellungs- und Schriftartschaltfläche",
   "reconfigure.property.symbol-chat.symbol_button_position": "Symbol Schaltflächenposition",
   "reconfigure.property.symbol-chat.symbol_button_position.tooltip": "Position der Symbolmenü Schaltfläche",
+  "reconfigure.property.symbol-chat.symbol_button_position.enum.top_left": "Oben links",
+  "reconfigure.property.symbol-chat.symbol_button_position.enum.top_right": "Oben rechts",
+  "reconfigure.property.symbol-chat.symbol_button_position.enum.bottom_right": "Unten rechts",
+  "reconfigure.property.symbol-chat.symbol_button_position.enum.bottom_left": "Unten links",
   "reconfigure.property.symbol-chat.keep_panel_open": "Panel offen lassen",
   "reconfigure.property.symbol-chat.max_symbol_suggestions": "Maximale Symbol Vorschläge",
   "reconfigure.property.symbol-chat.symbol_panel_height": "Symbolpanelhöhe",
-  "reconfigure.property.symbol-chat.symbol_tooltip_mode": "Symbol Kurzinfomodus",
-  "reconfigure.property.symbol-chat.symbol_tooltip_mode.tooltip": "OFF: Keine Kurzinfos anzeigen\nDELAYED: Kurzinfo nur nach kurzer Hoverdauer anzeigen\nON: Kurzinfo sofort anzeigen"
+  "reconfigure.property.symbol-chat.symbol_tooltip_mode": "Symbol Tooltip",
+  "reconfigure.property.symbol-chat.symbol_tooltip_mode.tooltip": "Aus: Keinen Tooltip anzeigen\nVerzögert: Tooltip nur nach kurzer Hoverdauer anzeigen\nAn: Tooltip sofort anzeigen",
+  "reconfigure.property.symbol-chat.symbol_tooltip_mode.enum.off": "Aus",
+  "reconfigure.property.symbol-chat.symbol_tooltip_mode.enum.on": "An",
+  "reconfigure.property.symbol-chat.symbol_tooltip_mode.enum.delayed": "Verzögert"
 }
