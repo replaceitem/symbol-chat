@@ -25,6 +25,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -181,6 +182,8 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
         int codepointIndex = getScrolledRows()*columns;
         int widgetIndex = 0;
         IntUnaryOperator widthGetter = ((TextRendererAccess) textRenderer).getCodepointWidthGetter(style);
+        IntPredicate missingGlyphPredicate = ((TextRendererAccess) textRenderer).getMissingGlyphPredicate(style);
+
         while(codepointIndex < codepoints.length && widgetIndex < columns*visibleRows) {
             int value = codepoints[codepointIndex];
             int codePoint = value & 0x00FFFFFF;
@@ -202,7 +205,7 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
 
             int x = widgetIndex % columns * GRID_SPCAING + 1;
             int y = widgetIndex / columns * GRID_SPCAING + 1;
-            TableButton button = new TableButton(getX()+x, getY()+y, this, symbol, tooltip, codepointIndex, blockColor);
+            TableButton button = new TableButton(getX()+x, getY()+y, this, symbol, tooltip, codepointIndex, blockColor, missingGlyphPredicate.test(codePoint));
 
             this.addChildren(button);
             
@@ -327,19 +330,27 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
         private final int index;
         private final boolean marked;
         private final int blockColor;
+        private final boolean missing;
 
-        public TableButton(int x, int y, Context context, String symbol, Tooltip tooltip, int index, int blockColor) {
+        public TableButton(int x, int y, Context context, String symbol, Tooltip tooltip, int index, int blockColor, boolean missing) {
             super(x, y, context, symbol, tooltip);
             this.index = index;
             this.marked = index >= selectionStart && index <= selectionEnd;
             this.blockColor = blockColor;
-            this.setMessage(Text.literal(symbol).setStyle(style));
+            this.missing = missing;
+            this.setMessage(missing ? Text.empty() : Text.literal(symbol).setStyle(style));
         }
 
         @Override
         protected int getBackgroundColor() {
             // when not hovered, use halved RGB values
             return this.isHovered() ? (showBlocks ? blockColor : SymbolChat.config.buttonActiveColor.get()) : ColorHelper.scaleRgb(blockColor, 0.5f);
+        }
+
+        @Override
+        protected void renderOverlay(DrawContext drawContext) {
+            if(this.missing) drawContext.drawHorizontalLine(this.getX()+4, this.getRight()-5, this.getY() + getHeight()/2, 0xFFFF0000);
+            super.renderOverlay(drawContext);
         }
 
         @Override

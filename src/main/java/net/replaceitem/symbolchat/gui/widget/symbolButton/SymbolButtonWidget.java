@@ -66,8 +66,7 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
         if (this.visible && ((DrawContextExtension) drawContext).scissorOverlaps(getNavigationFocus())) {
             RenderSystem.disableDepthTest();
             if(shouldRenderBackground()) {
-                int bg = getBackgroundColor();
-                drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bg);
+                this.renderBackground(drawContext);
             }
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
             int textColor = this.isHighlighted() ? SymbolChat.config.buttonTextHoverColor.get() : SymbolChat.config.buttonTextColor.get();
@@ -76,6 +75,13 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
         }
     }
     
+    
+
+    protected void renderBackground(DrawContext drawContext) {
+            int bg = getBackgroundColor();
+            drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bg);
+    }
+
     protected boolean isHighlighted() {
         return this.isHovered();
     }
