@@ -2,10 +2,7 @@ package net.replaceitem.symbolchat.gui.widget;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Narratable;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -21,19 +18,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DropDownWidget<T> extends NonScrollableContainerWidget implements Drawable, Element, Narratable {
-
+    public static final int DROPDOWN_HEIGHT = 150;
     public final List<DropDownElementWidget> elements;
     private final Button buttonWidget;
     private final ScrollableGridContainer scrollableGridWidget;
     public int selected;
     public boolean expanded;
 
-    public DropDownWidget(int x, int y, int width, int height, List<T> elementList, int defaultSelection) {
+    public DropDownWidget(int x, int y, int width, int height, List<T> elementList, int defaultSelection, boolean upward) {
         super(x, y, width, height);
         this.expanded = false;
         this.elements = new ArrayList<>();
         this.buttonWidget = new Button(x, y, width, height);
-        this.scrollableGridWidget = new ScrollableGridContainer(this.getX() + 1, this.getY() + height + 1, this.width - 2, 150, 1);
+        this.scrollableGridWidget = new ScrollableGridContainer(
+                this.getX() + 1 ,
+                upward ? this.getY() - 1 - DROPDOWN_HEIGHT : this.getBottom() + 1, 
+                this.width - 2, DROPDOWN_HEIGHT, 1
+        );
         this.scrollableGridWidget.setScrollbarStyle(SmoothScrollableContainerWidget.ScrollbarStyle.SLIM);
         this.scrollableGridWidget.setSmoothScrolling(true);
         this.scrollableGridWidget.visible = this.expanded;
@@ -51,13 +52,22 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
     private void toggleVisible() {
         this.expanded = !this.expanded;
         this.scrollableGridWidget.visible = this.expanded;
-        this.height = this.buttonWidget.getHeight() + (expanded ? scrollableGridWidget.getBottom()-buttonWidget.getBottom()+1 : 0);
+    }
+    
+    private ScreenRect getExpandedArea() {
+        return new ScreenRect(scrollableGridWidget.getX()-1, scrollableGridWidget.getY()-1, scrollableGridWidget.getWidth()+2, scrollableGridWidget.getHeight()+2);
     }
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.fill(getX(), buttonWidget.getBottom(), getRight(), getBottom(), SymbolChat.config.buttonColor.get());
+        ScreenRect expandedArea = getExpandedArea();
+        if(expanded) context.fill(expandedArea.getLeft(), expandedArea.getTop(), expandedArea.getRight(), expandedArea.getBottom(), SymbolChat.config.buttonColor.get());
         super.renderWidget(context, mouseX, mouseY, delta);
+    }
+
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        return super.isMouseOver(mouseX, mouseY) || getExpandedArea().contains((int) mouseX, (int) mouseY);
     }
 
     public void changeSelected(int index) {
