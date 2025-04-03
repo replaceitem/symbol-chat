@@ -73,7 +73,7 @@ These are also supported on clients without symbol-chat and can be seen by every
 
 ## Config
 
-Some aspects of this mod are configurable using [Cloth config](https://modrinth.com/mod/cloth-config) (not required).
+Some aspects of this mod are configurable using the builtin configuration menu.
 The configuration screen is accessible through the gear button on the top of the chat screen, as well as the [ModMenu](https://modrinth.com/mod/modmenu) config button.
 
 The config allows you to change the appearance and behavior of the symbol-chat HUD.
