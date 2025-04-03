@@ -26,7 +26,7 @@
   "symbolchat.font.symbol-chat.subscript": "Tiefgestellt",
   "symbolchat.font.symbol-chat.superscript": "Hochgestellt",
   "symbolchat.font.symbol-chat.outlined": "Umrandet",
-  "symbolchat.symbol_panel.no_favorite_symbols": "Keine favorisierten Symbole angegeben. Du kannst Symbole durch Rechtsklick favorisieren oder sie in der ClothConfig Konfiguration hinzufügen, die vom ModMenu Menu erreichbar ist.",
+  "symbolchat.symbol_panel.no_favorite_symbols": "Keine favorisierten Symbole angegeben. Du kannst Symbole durch Rechtsklick favorisieren oder sie in der Konfiguration hinzufügen.",
   "symbolchat.symbol_panel.no_search_results": "Keine Symbole gefunden.",
   "symbolchat.symbol_panel.search": "Suche",
   "symbolchat.symbol_panel.toggle_symbol_panel": "Symbolpanel umschalten",

@@ -26,7 +26,7 @@
   "symbolchat.font.symbol-chat.subscript": "Subscript",
   "symbolchat.font.symbol-chat.superscript": "Superscript",
   "symbolchat.font.symbol-chat.outlined": "Outlined",
-  "symbolchat.symbol_panel.no_favorite_symbols": "No favorite symbols specified. You can favorite symbols by right clicking them or adding them in the ClothConfig configuration accessible from the ModMenu screen.",
+  "symbolchat.symbol_panel.no_favorite_symbols": "No favorite symbols specified. You can favorite symbols by right clicking them or adding them in the configuration.",
   "symbolchat.symbol_panel.no_search_results": "No symbols found.",
   "symbolchat.symbol_panel.search": "Search",
   "symbolchat.symbol_panel.toggle_symbol_panel": "Toggle symbol panel",
