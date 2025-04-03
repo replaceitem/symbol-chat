@@ -65,7 +65,7 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
 
     @Override
     public void addSymbolChatComponents() {
-        Config.HudSide hudPosition = SymbolChat.config.hudPosition.get();
+        Config.HudCorner hudPosition = SymbolChat.config.hudPosition.get();
         Config.HudCorner symbolButtonPosition = SymbolChat.config.symbolButtonPosition.get();
         
         int padding = 2;
@@ -76,7 +76,7 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
             case RIGHT -> this.width - padding - SymbolButtonWidget.SYMBOL_SIZE;
         };
         int symbolButtonY = switch (symbolButtonPosition.getVertical()) {
-            case TOP -> padding + (symbolButtonPosition.getHorizontal() == hudPosition ? hudButtonsHeight + padding : 0);
+            case TOP -> padding + (symbolButtonPosition.getHorizontal() == hudPosition.getHorizontal() ? hudButtonsHeight + padding : 0);
             case BOTTOM -> this.height - padding - SymbolButtonWidget.SYMBOL_SIZE;
         };
         int panelHeight = SymbolChat.config.symbolPanelHeight.get();
@@ -107,12 +107,16 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
         symbolButtonWidget.setOutlined(symbolSelectionPanel.isVisible());
         this.addDrawableChild(symbolButtonWidget);
 
-        GridWidget gridWidget = new GridWidget(0, padding);
+        GridWidget gridWidget = new GridWidget(0, 0);
         gridWidget.setColumnSpacing(padding);
         GridWidget.Adder adder = gridWidget.createAdder(Integer.MAX_VALUE);
 
         if(!SymbolChat.config.hideFontButton.get()) {
-            this.fontSelectionDropDown = new DropDownWidget<>(0, 0, 180, hudButtonsHeight, SymbolChat.fontManager.getFontProcessors(), SymbolChat.selectedFont) {
+            this.fontSelectionDropDown = new DropDownWidget<>(
+                    0, 0, 180, hudButtonsHeight,
+                    SymbolChat.fontManager.getFontProcessors(), SymbolChat.selectedFont, 
+                    SymbolChat.config.hudPosition.get().getVertical() == Config.HudVerticalSide.BOTTOM
+            ) {
                 @Override
                 public void onSelection(int index, FontProcessor element) {
                     SymbolChat.selectedFont = index;
@@ -138,11 +142,16 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
         }
 
         gridWidget.refreshPositions();
-        int hudX = switch(hudPosition) {
+        int hudX = switch(hudPosition.getHorizontal()) {
             case LEFT -> padding;
             case RIGHT -> width - padding - gridWidget.getWidth();
         };
         gridWidget.setX(hudX);
+        int hudY = switch(hudPosition.getVertical()) {
+            case TOP -> padding;
+            case BOTTOM -> height - padding - SymbolButtonWidget.SYMBOL_SIZE - padding - gridWidget.getHeight();
+        };
+        gridWidget.setY(hudY);
         gridWidget.forEachChild(this::addDrawableChild);
 
         this.symbolSuggestor = new SymbolSuggestor(this, this::onSymbolReplaced, (SymbolSuggestable) this);

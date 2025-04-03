@@ -30,7 +30,7 @@ public class Config {
     public final Property<Boolean> hideSettingsButton = tab.createBooleanProperty("hide_settings_button").asCheckbox().tooltip().build();
     public final Property<Boolean> hideTableButton = tab.createBooleanProperty("hide_table_button").asCheckbox().tooltip().build();
     public final Property<Integer> symbolPanelHeight = tab.createIntegerProperty("symbol_panel_height").defaultValue(200).range(100, 500).asSlider().build();
-    public final Property<HudSide> hudPosition = tab.createEnumProperty("hud_position", HudSide.class).defaultValue(HudSide.RIGHT).asCyclingButton().tooltip().build();
+    public final Property<HudCorner> hudPosition = tab.createEnumProperty("hud_position", HudCorner.class).defaultValue(HudCorner.TOP_RIGHT).asCyclingButton().tooltip().build();
     public final Property<HudCorner> symbolButtonPosition = tab.createEnumProperty("symbol_button_position", HudCorner.class).defaultValue(HudCorner.BOTTOM_RIGHT).asCyclingButton().tooltip().build();
 
     private final Void colorsHeadline = tab.createHeadline("colors");
