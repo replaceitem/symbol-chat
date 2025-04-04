@@ -64,7 +64,6 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
     @Override
     public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible && ((DrawContextExtension) drawContext).scissorOverlaps(getNavigationFocus())) {
-            RenderSystem.disableDepthTest();
             if(shouldRenderBackground()) {
                 this.renderBackground(drawContext);
             }

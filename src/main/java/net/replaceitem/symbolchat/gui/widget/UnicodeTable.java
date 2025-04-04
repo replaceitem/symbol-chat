@@ -89,10 +89,8 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
         super.renderWidget(context, mouseX, mouseY, delta);
         
         if(scrollbarHeight != getHeight()) {
-            RenderSystem.enableBlend();
             context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_BACKGROUND_TEXTURE, scrollbarX, getY(), SCROLLBAR_WIDTH, getHeight());
             context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_TEXTURE, scrollbarX, scrollbarY, SCROLLBAR_WIDTH, scrollbarHeight);
-            RenderSystem.disableBlend();
         }
     }
 

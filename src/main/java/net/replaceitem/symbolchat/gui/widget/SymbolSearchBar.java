@@ -17,7 +17,6 @@ public class SymbolSearchBar extends TextFieldWidget {
 
     @Override
     public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        RenderSystem.disableDepthTest();
         if(this.getText().isEmpty()) {
             drawContext.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, HINT_TEXT, this.getX(), this.getY(), 0xa0a0a0a0);
         }
