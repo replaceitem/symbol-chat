@@ -34,7 +34,15 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
                 this.getX() + 1 ,
                 upward ? this.getY() - 1 - DROPDOWN_HEIGHT : this.getBottom() + 1, 
                 this.width - 2, DROPDOWN_HEIGHT, 1
-        );
+        ) {
+            @Override
+            protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+                context.getMatrices().push();
+                context.getMatrices().translate(0,0,1000);
+                super.renderWidget(context, mouseX, mouseY, delta);
+                context.getMatrices().pop();
+            }
+        };
         this.scrollableGridWidget.setScrollbarStyle(SmoothScrollableContainerWidget.ScrollbarStyle.SLIM);
         this.scrollableGridWidget.setSmoothScrolling(true);
         this.scrollableGridWidget.visible = this.expanded;
@@ -61,13 +69,16 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         ScreenRect expandedArea = getExpandedArea();
+        context.getMatrices().push();
+        context.getMatrices().translate(0,0,1000);
         if(expanded) context.fill(expandedArea.getLeft(), expandedArea.getTop(), expandedArea.getRight(), expandedArea.getBottom(), SymbolChat.config.buttonColor.get());
+        context.getMatrices().pop();
         super.renderWidget(context, mouseX, mouseY, delta);
     }
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return super.isMouseOver(mouseX, mouseY) || getExpandedArea().contains((int) mouseX, (int) mouseY);
+        return super.isMouseOver(mouseX, mouseY) || (expanded && getExpandedArea().contains((int) mouseX, (int) mouseY));
     }
 
     public void changeSelected(int index) {

@@ -2,6 +2,7 @@ package net.replaceitem.symbolchat.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.gui.screen.ChatInputSuggestor;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -13,6 +14,7 @@ import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.config.Config;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.lwjgl.glfw.GLFW;
+import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+@Debug(export = true)
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
     @Shadow protected TextFieldWidget chatField;
@@ -33,14 +36,16 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     private void onInit(CallbackInfo ci) {
         ((ScreenAccess) this).addSymbolChatComponents();
     }
-    
+
     @Inject(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;mouseClicked(DDI)Z"), cancellable = true)
     private void callSuperMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        // Directly call super.mouseClicked instead of chatField.mouseClicked first.
-        // Since chatField is also in this.children(), this means that clicking the chat box will actually change focus like any other element.
-        if(super.mouseClicked(mouseX, mouseY, button)) cir.setReturnValue(true);
-        else this.setFocused(chatField);
-        
+        cir.setReturnValue(false);
+    }
+    
+    @WrapOperation(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ChatInputSuggestor;mouseClicked(DDI)Z"))
+    private boolean clickScreenAfterInput(ChatInputSuggestor instance, double mouseX, double mouseY, int button, Operation<Boolean> original) {
+        boolean result = original.call(instance, mouseX, mouseY, button);
+        return result || super.mouseClicked(mouseX, mouseY, button);
     }
     
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
