@@ -67,7 +67,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return super.isMouseOver(mouseX, mouseY) || getExpandedArea().contains((int) mouseX, (int) mouseY);
+        return super.isMouseOver(mouseX, mouseY) || (expanded && getExpandedArea().contains((int) mouseX, (int) mouseY));
     }
 
     public void changeSelected(int index) {
