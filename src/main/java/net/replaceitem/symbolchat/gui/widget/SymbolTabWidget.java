@@ -96,8 +96,6 @@ public class SymbolTabWidget extends NonScrollableContainerWidget implements Pas
         if(emptyText != null) {
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
             List<OrderedText> orderedTexts = textRenderer.wrapLines(emptyText, width - 4);
-            drawContext.getMatrices().push();
-            drawContext.getMatrices().translate(0, 0, 200);
             int centerX = this.getX() + this.getWidth() / 2;
             int startY = this.getY() + (this.getHeight() / 2) - (orderedTexts.size() * textRenderer.fontHeight / 2);
             for (int i = 0; i < orderedTexts.size(); i++) {
@@ -105,7 +103,6 @@ public class SymbolTabWidget extends NonScrollableContainerWidget implements Pas
                 int dy = startY + (i * textRenderer.fontHeight);
                 drawContext.drawText(textRenderer, orderedText, centerX - textRenderer.getWidth(orderedText) / 2, dy, 0x66FFFFFF, false);
             }
-            drawContext.getMatrices().pop();
         }
     }
 }

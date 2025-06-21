@@ -1,6 +1,5 @@
 package net.replaceitem.symbolchat.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
@@ -91,10 +90,7 @@ public class SymbolSelectionPanel extends NonScrollableContainerWidget {
 
     @Override
     public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        drawContext.getMatrices().push();
-        drawContext.getMatrices().translate(0.0, 0.0, 350.0);
         drawContext.fill(this.getX(), this.getY() + SymbolButtonWidget.GRID_SPCAING + 1, this.getX() + width, this.getY() + height, SymbolChat.config.hudColor.get());
         super.renderWidget(drawContext, mouseX, mouseY, delta);
-        drawContext.getMatrices().pop();
     }
 }

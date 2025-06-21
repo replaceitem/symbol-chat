@@ -1,9 +1,12 @@
 package net.replaceitem.symbolchat.mixin;
 
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.ScreenPos;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
 import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
@@ -14,7 +17,6 @@ import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.resource.FontProcessor;
-import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -68,6 +70,16 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
         }
         return true;
     }
+
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(Lnet/minecraft/client/gui/DrawContext;IIF)V"))
+    private boolean doNotRenderSuperBefore(Screen instance, DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+        return false;
+    }
+
+    @Inject(method = "render", at = @At("TAIL"))
+    private void renderSuperAfter(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+        super.render(context, mouseX, mouseY, deltaTicks);
+    }
     
     
     @Inject(method = "keyPressed", at = @At("RETURN"))
@@ -81,11 +93,11 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
     }
 
     @Override
-    public Vector2i getCursorPosition() {
+    public ScreenPos getCursorPosition() {
         Vector3f textScale = this.getTextScale();
         String string = this.getText();
         int cursor = this.getSelectionManager().getSelectionStart();
-        if (string == null || cursor < 0 || client == null) return new Vector2i(0,0);
+        if (string == null || cursor < 0 || client == null) return new ScreenPos(0,0);
         int halfY = 4 * this.blockEntity.getTextLineHeight() / 2;
         int y = this.currentRow * this.blockEntity.getTextLineHeight() - halfY;
         int cx = this.client.textRenderer.getWidth(string.substring(0, Math.min(cursor, string.length())));
@@ -93,7 +105,7 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
         x += this.width/2; // see translateForRender()
         y += 90;
         if(((Object) this) instanceof HangingSignEditScreen) y += 35;
-        return new Vector2i((int) (x * textScale.x), (int) (y * textScale.y));
+        return new ScreenPos((int) (x * textScale.x), (int) (y * textScale.y));
     }
 
     @Override

@@ -57,6 +57,7 @@ public class NonScrollableContainerWidget extends ContainerWidget {
 
     @Override
     public void setX(int x) {
+        if(x == this.getX()) return;
         for (ClickableWidget child : children) {
             child.setX(child.getX() - this.getX() + x);
         }
@@ -65,6 +66,7 @@ public class NonScrollableContainerWidget extends ContainerWidget {
 
     @Override
     public void setY(int y) {
+        if(y == this.getY()) return;
         for (ClickableWidget child : children) {
             child.setY(child.getY() - this.getY() + y);
         }

@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.10-SNAPSHOT'
+    id 'fabric-loom' version "${loom_version}"
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
 }
@@ -49,7 +49,7 @@ processResources {
     inputs.property "reconfigure_version", project.reconfigure_version
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version, "reconfigure_version": project.reconfigure_version
+        expand "version": inputs.properties.version, "reconfigure_version": inputs.properties.reconfigure_version
     }
 }
 
@@ -67,7 +67,7 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
+        rename { "${it}_${inputs.properties.archivesBaseName}"}
     }
 }
 

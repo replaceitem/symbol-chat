@@ -2,13 +2,12 @@ package net.replaceitem.symbolchat.gui.widget;
 
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.lang.UProperty;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -89,8 +88,8 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
         super.renderWidget(context, mouseX, mouseY, delta);
         
         if(scrollbarHeight != getHeight()) {
-            context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_BACKGROUND_TEXTURE, scrollbarX, getY(), SCROLLBAR_WIDTH, getHeight());
-            context.drawGuiTexture(RenderLayer::getGuiTextured, SCROLLER_TEXTURE, scrollbarX, scrollbarY, SCROLLBAR_WIDTH, scrollbarHeight);
+            context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, SCROLLER_BACKGROUND_TEXTURE, scrollbarX, getY(), SCROLLBAR_WIDTH, getHeight());
+            context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, SCROLLER_TEXTURE, scrollbarX, scrollbarY, SCROLLBAR_WIDTH, scrollbarHeight);
         }
     }
 

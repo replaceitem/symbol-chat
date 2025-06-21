@@ -65,6 +65,9 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
 
     @Override
     public void addSymbolChatComponents() {
+        this.symbolSuggestor = new SymbolSuggestor(this, this::onSymbolReplaced, (SymbolSuggestable) this);
+        this.addDrawableChild(symbolSuggestor);
+
         Config.HudCorner hudPosition = SymbolChat.config.hudPosition.get();
         Config.HudCorner symbolButtonPosition = SymbolChat.config.symbolButtonPosition.get();
         
@@ -153,9 +156,6 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
         };
         gridWidget.setY(hudY);
         gridWidget.forEachChild(this::addDrawableChild);
-
-        this.symbolSuggestor = new SymbolSuggestor(this, this::onSymbolReplaced, (SymbolSuggestable) this);
-        this.addDrawableChild(symbolSuggestor);
     }
 
     @Override

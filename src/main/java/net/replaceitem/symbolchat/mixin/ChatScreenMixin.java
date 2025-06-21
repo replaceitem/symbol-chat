@@ -12,6 +12,7 @@ import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.config.Config;
+import net.replaceitem.symbolchat.SymbolEditableWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Debug;
@@ -35,6 +36,8 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     @Inject(method = "init", at = @At(value = "RETURN"))
     private void onInit(CallbackInfo ci) {
         ((ScreenAccess) this).addSymbolChatComponents();
+        ((SymbolEditableWidget) this.chatField).setFontProcessorSupplier(() -> ((ScreenAccess) this).getFontProcessor());
+        ((SymbolEditableWidget) this.chatField).setRefreshSuggestions(() -> ((ScreenAccess) this).refreshSuggestions());
     }
 
     @Inject(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;mouseClicked(DDI)Z"), cancellable = true)
@@ -91,11 +94,6 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     @Inject(method = "mouseScrolled", at = @At(value = "HEAD"), cancellable = true)
     public void onMouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount, CallbackInfoReturnable<Boolean> cir) {
         if(super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)) cir.setReturnValue(true);
-    }
-    
-    @Inject(method = "onChatFieldUpdate", at = @At("HEAD"))
-    private void onOnChatFieldUpdate(String chatText, CallbackInfo ci) {
-        ((ScreenAccess) this).refreshSuggestions();
     }
     
     @Override

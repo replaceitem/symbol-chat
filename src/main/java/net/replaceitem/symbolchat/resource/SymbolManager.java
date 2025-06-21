@@ -74,7 +74,7 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
     }
 
     public Stream<String> streamAllSymbols() {
-        return allSymbols.stream();
+        return allSymbols.stream().filter(s -> s.codePoints().count() <= 1);
     }
 
     @NotNull

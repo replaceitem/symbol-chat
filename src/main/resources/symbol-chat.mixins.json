@@ -5,19 +5,21 @@
     "compatibilityLevel": "JAVA_21",
     "client": [
         "AbstractSignEditScreenMixin",
-        "AnonymousChatTextFieldWidgetMixin",
         "AnvilScreenMixin",
         "BookEditScreenMixin",
         "ChatScreenMixin",
         "DrawContextMixin",
-        "ScissorStackMixin",
-        "PageContentAccessor",
-        "ScreensMixin",
-        "TextFieldWidgetAccessor",
-        "TextRendererMixin",
+        "EditBoxAccessor",
+        "EditBoxWidgetAccessor",
+        "EditBoxWidgetMixin",
         "FontManagerAccessor",
         "MinecraftClientAccessor",
-        "ScrollableWidgetAccessor"
+        "ScissorStackMixin",
+        "ScreensMixin",
+        "ScrollableWidgetAccessor",
+        "TextFieldWidgetAccessor",
+        "TextFieldWidgetMixin",
+        "TextRendererMixin"
     ],
     "injectors": {
         "defaultRequire": 1

@@ -2,6 +2,7 @@ package net.replaceitem.symbolchat.gui.widget;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Narratable;
+import net.minecraft.client.gui.ScreenPos;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.util.math.MathHelper;
@@ -12,10 +13,11 @@ import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
-import org.joml.Vector2i;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class SymbolSuggestor extends NonScrollableContainerWidget implements PasteSymbolButtonWidget.Context {
@@ -23,6 +25,9 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
     private final Screen screen;
     private final SymbolInsertable symbolInsertable;
     private final SymbolSuggestable suggestable;
+
+    @Nullable
+    private String previousSearchTerm = null;
     
     public static final int HEIGHT = SymbolButtonWidget.SYMBOL_SIZE + 2;
 
@@ -41,8 +46,8 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
 
     @Override
     public void refresh() {
-        Vector2i cursorPosition = this.suggestable.getCursorPosition();
-        this.setY(cursorPosition.y - HEIGHT - 3);
+        ScreenPos cursorPosition = this.suggestable.getCursorPosition();
+        this.setY(cursorPosition.y() - HEIGHT - 3);
         
         String search = this.suggestable.getSuggestionTerm();
 
@@ -50,27 +55,30 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
         int fittingSymbols = Math.floorDiv(this.screen.width, SymbolButtonWidget.SYMBOL_SIZE + 1);
         int shownSymbols = Math.min(fittingSymbols, SymbolChat.config.maxSymbolSuggestions.get());
         
-        children().clear();
+        if (!Objects.equals(previousSearchTerm, search)) {
+            previousSearchTerm = search;
+            children().clear();
 
-        if (search != null) {
-            Stream<String> searchStream = search.isBlank() ?
-                    SymbolChat.symbolManager.getFavoriteSymbols() :
-                    SearchUtil.performSearch(SymbolChat.symbolManager.streamAllSymbols(), search);
-            List<String> symbols = searchStream.limit(shownSymbols).toList();
-            this.width = 1 + SymbolButtonWidget.GRID_SPCAING * symbols.size();
-            this.setX(MathHelper.clamp(this.getX(), 0, this.screen.width - this.width));
-            for (int i = 0; i < symbols.size(); i++) {
-                children().add(new PasteSymbolButtonWidget(this.getX() + 1 + i * (SymbolButtonWidget.GRID_SPCAING), this.getY()+1, this, symbols.get(i)) {
-                    @Override
-                    protected boolean isHighlighted() {
-                        return this.isSelected();
-                    }
-                });
+            if(search != null) {
+                Stream<String> searchStream = search.isBlank() ?
+                        SymbolChat.symbolManager.getFavoriteSymbols() :
+                        SearchUtil.performSearch(SymbolChat.symbolManager.streamAllSymbols(), search);
+                List<String> symbols = searchStream.limit(shownSymbols).toList();
+                this.width = 1 + SymbolButtonWidget.GRID_SPCAING * symbols.size();
+                this.setX(MathHelper.clamp(this.getX(), 0, this.screen.width - this.width));
+                for (int i = 0; i < symbols.size(); i++) {
+                    children().add(new PasteSymbolButtonWidget(this.getX() + 1 + i * (SymbolButtonWidget.GRID_SPCAING), this.getY() + 1, this, symbols.get(i)) {
+                        @Override
+                        protected boolean isHighlighted() {
+                            return this.isSelected();
+                        }
+                    });
+                }
             }
         }
         
         if(!visible && !children().isEmpty()) {
-            this.setX(cursorPosition.x);
+            this.setX(cursorPosition.x());
         }
         
         visible = !children().isEmpty();
@@ -129,7 +137,7 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
         
         return false;
     }
-    
+
     private void hide() {
         this.setFocused(null);
         this.visible = false;

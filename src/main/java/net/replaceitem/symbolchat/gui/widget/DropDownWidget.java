@@ -37,10 +37,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
         ) {
             @Override
             protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-                context.getMatrices().push();
-                context.getMatrices().translate(0,0,1000);
                 super.renderWidget(context, mouseX, mouseY, delta);
-                context.getMatrices().pop();
             }
         };
         this.scrollableGridWidget.setScrollbarStyle(SmoothScrollableContainerWidget.ScrollbarStyle.SLIM);
@@ -69,10 +66,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         ScreenRect expandedArea = getExpandedArea();
-        context.getMatrices().push();
-        context.getMatrices().translate(0,0,1000);
         if(expanded) context.fill(expandedArea.getLeft(), expandedArea.getTop(), expandedArea.getRight(), expandedArea.getBottom(), SymbolChat.config.buttonColor.get());
-        context.getMatrices().pop();
         super.renderWidget(context, mouseX, mouseY, delta);
     }
 
