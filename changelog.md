@@ -1,1 +1,1 @@
-* Updated bundled reconfigure version, fixing a crash with fabric loader version below 0.16.12
+* Updated to Minecraft 1.21.6
