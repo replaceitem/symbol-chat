@@ -1,10 +1,10 @@
-package net.replaceitem.symbolchat.mixin;
+package net.replaceitem.symbolchat.mixin.widget;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.replaceitem.symbolchat.SymbolEditableWidget;
+import net.replaceitem.symbolchat.extensions.SymbolEditableWidget;
 import net.replaceitem.symbolchat.resource.FontProcessor;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;

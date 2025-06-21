@@ -11,7 +11,7 @@ import net.minecraft.resource.ResourceFinder;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
-import net.replaceitem.symbolchat.ScreenAccess;
+import net.replaceitem.symbolchat.extensions.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
 import org.jetbrains.annotations.NotNull;
 

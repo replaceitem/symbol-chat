@@ -1,4 +1,4 @@
-package net.replaceitem.symbolchat.mixin;
+package net.replaceitem.symbolchat.mixin.widget;
 
 import net.minecraft.client.gui.EditBox;
 import net.minecraft.client.gui.widget.EditBoxWidget;

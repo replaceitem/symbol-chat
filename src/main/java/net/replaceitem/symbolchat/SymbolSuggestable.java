@@ -7,7 +7,7 @@ import net.minecraft.client.input.CursorMovement;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.mixin.EditBoxAccessor;
-import net.replaceitem.symbolchat.mixin.TextFieldWidgetAccessor;
+import net.replaceitem.symbolchat.mixin.widget.TextFieldWidgetAccessor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.regex.MatchResult;

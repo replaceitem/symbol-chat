@@ -1,4 +1,4 @@
-package net.replaceitem.symbolchat.mixin;
+package net.replaceitem.symbolchat.mixin.screen;
 
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
 import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.text.Text;
-import net.replaceitem.symbolchat.ScreenAccess;
+import net.replaceitem.symbolchat.extensions.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;

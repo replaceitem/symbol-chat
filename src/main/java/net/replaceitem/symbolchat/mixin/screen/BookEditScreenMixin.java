@@ -1,4 +1,4 @@
-package net.replaceitem.symbolchat.mixin;
+package net.replaceitem.symbolchat.mixin.screen;
 
 import net.minecraft.client.gui.EditBox;
 import net.minecraft.client.gui.ScreenPos;
@@ -7,9 +7,10 @@ import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.gui.widget.EditBoxWidget;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.*;
-import net.replaceitem.symbolchat.EditBoxWidgetExtension;
-import net.replaceitem.symbolchat.ScreenAccess;
-import net.replaceitem.symbolchat.SymbolEditableWidget;
+import net.replaceitem.symbolchat.extensions.EditBoxWidgetExtension;
+import net.replaceitem.symbolchat.extensions.ScreenAccess;
+import net.replaceitem.symbolchat.extensions.SymbolEditableWidget;
+import net.replaceitem.symbolchat.mixin.widget.EditBoxWidgetAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

@@ -11,7 +11,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-import net.replaceitem.symbolchat.DrawContextExtension;
+import net.replaceitem.symbolchat.extensions.DrawContextExtension;
 import net.replaceitem.symbolchat.SymbolChat;
 import org.lwjgl.glfw.GLFW;
 

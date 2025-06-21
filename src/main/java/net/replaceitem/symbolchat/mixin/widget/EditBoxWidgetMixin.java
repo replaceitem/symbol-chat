@@ -1,4 +1,4 @@
-package net.replaceitem.symbolchat.mixin;
+package net.replaceitem.symbolchat.mixin.widget;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -9,8 +9,8 @@ import net.minecraft.client.gui.widget.EditBoxWidget;
 import net.minecraft.client.gui.widget.ScrollableTextFieldWidget;
 import net.minecraft.client.input.CursorMovement;
 import net.minecraft.text.Text;
-import net.replaceitem.symbolchat.EditBoxWidgetExtension;
-import net.replaceitem.symbolchat.SymbolEditableWidget;
+import net.replaceitem.symbolchat.extensions.EditBoxWidgetExtension;
+import net.replaceitem.symbolchat.extensions.SymbolEditableWidget;
 import net.replaceitem.symbolchat.resource.FontProcessor;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;

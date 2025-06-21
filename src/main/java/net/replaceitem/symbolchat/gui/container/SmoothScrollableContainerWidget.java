@@ -6,7 +6,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ContainerWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.util.math.MathHelper;
-import net.replaceitem.symbolchat.mixin.ScrollableWidgetAccessor;
+import net.replaceitem.symbolchat.mixin.widget.ScrollableWidgetAccessor;
 
 public abstract class SmoothScrollableContainerWidget extends ContainerWidget {
     public static final int SLIM_SCROLLBAR_WIDTH = 2;

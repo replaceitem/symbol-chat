@@ -16,7 +16,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.TextRendererAccess;
+import net.replaceitem.symbolchat.extensions.TextRendererAccess;
 import net.replaceitem.symbolchat.Util;
 import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;

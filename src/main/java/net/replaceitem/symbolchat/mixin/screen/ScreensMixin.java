@@ -1,4 +1,4 @@
-package net.replaceitem.symbolchat.mixin;
+package net.replaceitem.symbolchat.mixin.screen;
 
 
 import net.minecraft.client.MinecraftClient;
@@ -12,7 +12,7 @@ import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.replaceitem.symbolchat.ScreenAccess;
+import net.replaceitem.symbolchat.extensions.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;

@@ -9,7 +9,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.TextRendererAccess;
+import net.replaceitem.symbolchat.extensions.TextRendererAccess;
 import net.replaceitem.symbolchat.UnicodeSearch;
 import net.replaceitem.symbolchat.gui.widget.IntSpinnerWidget;
 import net.replaceitem.symbolchat.gui.widget.UnicodeTable;

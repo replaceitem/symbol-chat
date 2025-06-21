@@ -1,4 +1,4 @@
-package net.replaceitem.symbolchat;
+package net.replaceitem.symbolchat.extensions;
 
 import net.replaceitem.symbolchat.resource.FontProcessor;
 import org.jetbrains.annotations.Nullable;
