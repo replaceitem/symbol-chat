@@ -32,9 +32,7 @@ public class ScrollableGridContainer extends ScrollableLayoutContainer<GridWidge
     @Override
     protected void renderContents(DrawContext context, int mouseX, int mouseY, float delta) {
         for (ClickableWidget child : children) {
-            if(((DrawContextExtension) context).scissorOverlaps(child.getNavigationFocus())) {
-                child.render(context, mouseX, mouseY, delta);
-            }
+            child.render(context, mouseX, mouseY, delta);
         }
     }
 

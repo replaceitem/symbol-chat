@@ -8,6 +8,4 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface ScrollableWidgetAccessor {
     @Accessor
     boolean isScrollbarDragged();
-    @Accessor
-    void setScrollbarDragged(boolean scrollbarDragged);
 }
