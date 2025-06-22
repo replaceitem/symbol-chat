@@ -11,7 +11,6 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-import net.replaceitem.symbolchat.extensions.DrawContextExtension;
 import net.replaceitem.symbolchat.SymbolChat;
 import org.lwjgl.glfw.GLFW;
 
@@ -62,15 +61,13 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
 
     @Override
     public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        if (this.visible && ((DrawContextExtension) drawContext).scissorOverlaps(getNavigationFocus())) {
-            if(shouldRenderBackground()) {
-                this.renderBackground(drawContext);
-            }
-            TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-            int textColor = this.isHighlighted() ? SymbolChat.config.buttonTextHoverColor.get() : SymbolChat.config.buttonTextColor.get();
-            drawSymbol(drawContext, textRenderer, this.getMessage(), textColor);
-            this.renderOverlay(drawContext);
+        if(shouldRenderBackground()) {
+            this.renderBackground(drawContext);
         }
+        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+        int textColor = this.isHighlighted() ? SymbolChat.config.buttonTextHoverColor.get() : SymbolChat.config.buttonTextColor.get();
+        drawSymbol(drawContext, textRenderer, this.getMessage(), textColor);
+        this.renderOverlay(drawContext);
     }
     
     

@@ -6,7 +6,6 @@ import net.minecraft.client.gui.Narratable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.GridWidget;
-import net.replaceitem.symbolchat.extensions.DrawContextExtension;
 
 import java.util.ArrayList;
 import java.util.List;
