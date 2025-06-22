@@ -1,1 +1,1 @@
-* Updated to Minecraft 1.21.6
+* Fixed crash in 1.3.3 ([#71](https://github.com/replaceitem/symbol-chat/issues/71))
