@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 @Mixin(EditBoxWidget.class)
@@ -34,13 +35,21 @@ public abstract class EditBoxWidgetMixin extends ScrollableTextFieldWidget imple
     @Shadow @Final private EditBox editBox;
     @Shadow @Final private TextRenderer textRenderer;
 
+    @Shadow public abstract String getText();
+
     @Unique @Nullable private Supplier<FontProcessor> fontProcessorSupplier;
+    @Unique @Nullable private BiFunction<String, @Nullable String, Boolean> convertFontsPredicate;
     @Unique @Nullable private Runnable refreshSuggestions;
 
     @Unique
     @Override
     public void setFontProcessorSupplier(@Nullable Supplier<FontProcessor> fontProcessorSupplier) {
         this.fontProcessorSupplier = fontProcessorSupplier;
+    }
+
+    @Override
+    public void setConvertFontsPredicate(@Nullable BiFunction<String, @Nullable String, Boolean> convertFontsPredicate) {
+        this.convertFontsPredicate = convertFontsPredicate;
     }
 
     @Unique
@@ -75,7 +84,8 @@ public abstract class EditBoxWidgetMixin extends ScrollableTextFieldWidget imple
 
     @WrapOperation(method = "charTyped", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/EditBox;replaceSelection(Ljava/lang/String;)V"))
     private void wrapReplaceSelection(EditBox instance, String string, Operation<Void> original) {
-        FontProcessor fontProcessor = fontProcessorSupplier == null ? null : fontProcessorSupplier.get();
+        boolean convertFont = convertFontsPredicate == null || convertFontsPredicate.apply(this.getText(), string);
+        FontProcessor fontProcessor = !convertFont || fontProcessorSupplier == null ? null : fontProcessorSupplier.get();
         if(fontProcessor != null) {
             string = fontProcessor.convertString(string);
         }

@@ -65,6 +65,8 @@
   "reconfigure.property.symbol-chat.button_text_hover_color": "Button text hover color",
   "reconfigure.property.symbol-chat.chat_suggestion_regex": "Chat Suggestion Regex",
   "reconfigure.property.symbol-chat.chat_suggestion_regex.tooltip": "This regex must be matched for symbols to be suggested in chat",
+  "reconfigure.property.symbol-chat.font_conversion_regex": "Font Conversion Regex",
+  "reconfigure.property.symbol-chat.font_conversion_regex.tooltip": "This regex must be matched for your typed characters to be converted by the currently selected font",
   "reconfigure.property.symbol-chat.custom_kaomojis": "Custom kaomojis",
   "reconfigure.property.symbol-chat.favorite_symbols": "Favorite symbols",
   "reconfigure.property.symbol-chat.favorite_symbols.tooltip": "You can paste custom symbols here, which will appear in the favorites symbols tab",

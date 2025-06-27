@@ -24,6 +24,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+import java.util.Objects;
+
 @Debug(export = true)
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
@@ -36,8 +38,14 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     @Inject(method = "init", at = @At(value = "RETURN"))
     private void onInit(CallbackInfo ci) {
         ((ScreenAccess) this).addSymbolChatComponents();
-        ((SymbolEditableWidget) this.chatField).setFontProcessorSupplier(() -> ((ScreenAccess) this).getFontProcessor());
         ((SymbolEditableWidget) this.chatField).setRefreshSuggestions(() -> ((ScreenAccess) this).refreshSuggestions());
+        ((SymbolEditableWidget) this.chatField).setFontProcessorSupplier(() -> ((ScreenAccess) this).getFontProcessor());
+
+        ((SymbolEditableWidget) this.chatField).setConvertFontsPredicate((text, insert) -> {
+            // Never convert slashes at the start for commands
+            if(text.isEmpty() && Objects.equals(insert, "/")) return false;
+            return SymbolChat.config.fontConversionPattern.get().matcher(text).matches();
+        });
     }
 
     @Inject(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;mouseClicked(DDI)Z"), cancellable = true)

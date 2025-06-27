@@ -23,7 +23,7 @@ public class Config {
     public final Property<Integer> maxSymbolSuggestions = tab.createIntegerProperty("max_symbol_suggestions").defaultValue(5).range(0, 50).asSlider().build();
     public final Property<SymbolTooltipMode> symbolTooltipMode = tab.createEnumProperty("symbol_tooltip_mode", SymbolTooltipMode.class).defaultValue(SymbolTooltipMode.DELAYED).asCyclingButton().tooltip().build();
     public final Property<String> chatSuggestionRegex = tab.createStringProperty("chat_suggestion_regex").defaultValue("^(/(msg|tell|w|say|me|teammsg|tm) |[^/]).*").asTextField().tooltip().build();
-    public final Bindable<Pattern> chatSuggestionPattern = chatSuggestionRegex.map(Pattern::compile);
+    public final Property<String> fontConversionRegex = tab.createStringProperty("font_conversion_regex").defaultValue("^[^/].*").asTextField().tooltip().build();
 
     private final Void hudLayoutHeadline = tab.createHeadline("hud_layout");
     public final Property<Boolean> hideFontButton = tab.createBooleanProperty("hide_font_button").asCheckbox().build();
@@ -45,7 +45,11 @@ public class Config {
     public final Property<Boolean> unicodeTableShowBlocks = tab.createBooleanProperty("unicode_table_show_blocks").defaultValue(false).asCheckbox().build();
     public final Property<Boolean> unicodeTableTextShadow = tab.createBooleanProperty("unicode_table_text_shadow").defaultValue(true).asCheckbox().build();
     public final Property<Boolean> unicodeTableHideMissingGlyphs = tab.createBooleanProperty("unicode_table_missing_glyphs").defaultValue(false).asCheckbox().build();
-    
+
+
+    public final Bindable<Pattern> chatSuggestionPattern = chatSuggestionRegex.map(Pattern::compile);
+    public final Bindable<Pattern> fontConversionPattern = fontConversionRegex.map(Pattern::compile);
+
     @SuppressWarnings("unused")
     public enum SymbolTooltipMode {
         OFF(Duration.ofSeconds(Integer.MAX_VALUE)),

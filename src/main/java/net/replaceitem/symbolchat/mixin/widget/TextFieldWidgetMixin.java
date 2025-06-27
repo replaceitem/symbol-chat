@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 @Mixin(TextFieldWidget.class)
@@ -21,19 +22,26 @@ public class TextFieldWidgetMixin implements SymbolEditableWidget {
 
     @Shadow private int selectionStart;
     @Shadow private int selectionEnd;
+    @Shadow private String text;
     @Unique @Nullable private Supplier<FontProcessor> fontProcessorSupplier;
+    @Unique @Nullable private BiFunction<String, @Nullable String, Boolean> convertFontsPredicate;
     @Unique @Nullable private Runnable refreshSuggestions;
 
     @Inject(method = "write", at = @At(value = "HEAD"))
     private void beforeWrite(String text, CallbackInfo ci, @Local(argsOnly = true) LocalRef<String> textRef) {
-        FontProcessor fontProcessor = fontProcessorSupplier == null ? null : fontProcessorSupplier.get();
-        if(fontProcessor != null) {
-            textRef.set(fontProcessor.convertString(text));
+        if (convertFontsPredicate == null || convertFontsPredicate.apply(this.text, text)) {
+            FontProcessor fontProcessor = fontProcessorSupplier == null ? null : fontProcessorSupplier.get();
+            if (fontProcessor != null) {
+                textRef.set(fontProcessor.convertString(text));
+            }
         }
     }
 
     @ModifyArg(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;setSelectionStart(I)V"))
     private int modifySelectionStart(int cursor) {
+        if(convertFontsPredicate != null && !convertFontsPredicate.apply(this.text, null)) {
+            return cursor;
+        }
         FontProcessor fontProcessor = fontProcessorSupplier == null ? null : fontProcessorSupplier.get();
         if (fontProcessor != null && fontProcessor.isReverseDirection()) {
             return Math.min(this.selectionStart, this.selectionEnd);
@@ -52,6 +60,11 @@ public class TextFieldWidgetMixin implements SymbolEditableWidget {
     @Override
     public void setFontProcessorSupplier(@Nullable Supplier<FontProcessor> fontProcessorSupplier) {
         this.fontProcessorSupplier = fontProcessorSupplier;
+    }
+
+    @Override
+    public void setConvertFontsPredicate(@Nullable BiFunction<String, @Nullable String, Boolean> convertFontsPredicate) {
+        this.convertFontsPredicate = convertFontsPredicate;
     }
 
     @Override
