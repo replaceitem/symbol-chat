@@ -13,7 +13,6 @@ public class SymbolChat implements ClientModInitializer {
     public static Logger LOGGER;
     public static final String NAMESPACE = "symbol-chat";
     
-    public static int selectedFont = 0;
     public static boolean isPanelOpen = false;
     public static int selectedTab = 0;
     
@@ -28,7 +27,7 @@ public class SymbolChat implements ClientModInitializer {
         LOGGER = LogManager.getLogger(NAMESPACE);
         symbolManager = new SymbolManager();
         fontManager = new FontManager();
-        config.config.load();
+        config.load();
         config.favoriteSymbols.observe(favoriteSymbols -> symbolManager.onCustomSymbolsChanged(favoriteSymbols));
         config.customKaomojis.observe(customKaomojis -> symbolManager.onCustomKaomojisChanged(customKaomojis));
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(symbolManager);

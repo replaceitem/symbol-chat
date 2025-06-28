@@ -18,6 +18,7 @@ public class Config {
     
     private final Void general = tab.createHeadline("general");
     public final Property<Boolean> keepPanelOpen = tab.createBooleanProperty("keep_panel_open").asCheckbox().build();
+    public final Property<Boolean> keepFontSelected = tab.createBooleanProperty("keep_font_selected").defaultValue(true).asCheckbox().build();
     public final Property<String> favoriteSymbols = tab.createStringProperty("favorite_symbols").asTextField().tooltip().build();
     public final Property<List<String>> customKaomojis = tab.createListProperty("custom_kaomojis").asChipList().build();
     public final Property<Integer> maxSymbolSuggestions = tab.createIntegerProperty("max_symbol_suggestions").defaultValue(5).range(0, 50).asSlider().build();
@@ -46,9 +47,18 @@ public class Config {
     public final Property<Boolean> unicodeTableTextShadow = tab.createBooleanProperty("unicode_table_text_shadow").defaultValue(true).asCheckbox().build();
     public final Property<Boolean> unicodeTableHideMissingGlyphs = tab.createBooleanProperty("unicode_table_missing_glyphs").defaultValue(false).asCheckbox().build();
 
+    public final Property<String> selectedFont = tab.createStringProperty("selected_font").defaultValue("").buildWithoutWidget();
 
     public final Bindable<Pattern> chatSuggestionPattern = chatSuggestionRegex.map(Pattern::compile);
     public final Bindable<Pattern> fontConversionPattern = fontConversionRegex.map(Pattern::compile);
+
+    public void save() {
+        this.config.save();
+    }
+
+    public void load() {
+        this.config.load();
+    }
 
     @SuppressWarnings("unused")
     public enum SymbolTooltipMode {

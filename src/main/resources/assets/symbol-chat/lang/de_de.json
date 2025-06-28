@@ -92,6 +92,7 @@
   "reconfigure.property.symbol-chat.symbol_button_position.enum.bottom_right": "Unten rechts",
   "reconfigure.property.symbol-chat.symbol_button_position.enum.bottom_left": "Unten links",
   "reconfigure.property.symbol-chat.keep_panel_open": "Panel offen lassen",
+    "reconfigure.property.symbol-chat.keep_font_selected": "Schriftart ausgewählt lassen",
   "reconfigure.property.symbol-chat.max_symbol_suggestions": "Maximale Symbol Vorschläge",
   "reconfigure.property.symbol-chat.symbol_panel_height": "Symbolpanelhöhe",
   "reconfigure.property.symbol-chat.symbol_tooltip_mode": "Symbol Tooltip",

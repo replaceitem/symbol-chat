@@ -29,6 +29,9 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
+import java.util.List;
+import java.util.Optional;
+
 @Mixin({ChatScreen.class, BookEditScreen.class, AnvilScreen.class, AbstractSignEditScreen.class})
 public abstract class ScreensMixin extends Screen implements ScreenAccess, SymbolInsertable {
 
@@ -115,14 +118,26 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
         GridWidget.Adder adder = gridWidget.createAdder(Integer.MAX_VALUE);
 
         if(!SymbolChat.config.hideFontButton.get()) {
+            List<FontProcessor> fonts = SymbolChat.fontManager.getFontProcessors();
+            FontProcessor selectedFont = null;
+            if(SymbolChat.config.keepFontSelected.get()) {
+                String fontString = SymbolChat.config.selectedFont.get();
+                Identifier selectedFontId = fontString.isBlank() ? null : Identifier.tryParse(fontString);
+                selectedFont = fonts.stream().filter(
+                        fontProcessor -> fontProcessor.getId().equals(selectedFontId)
+                ).findFirst().orElse(null);
+            }
             this.fontSelectionDropDown = new DropDownWidget<>(
                     0, 0, 180, hudButtonsHeight,
-                    SymbolChat.fontManager.getFontProcessors(), SymbolChat.selectedFont, 
+                    fonts, selectedFont,
                     SymbolChat.config.hudPosition.get().getVertical() == Config.HudVerticalSide.BOTTOM
             ) {
                 @Override
                 public void onSelection(int index, FontProcessor element) {
-                    SymbolChat.selectedFont = index;
+                    if(SymbolChat.config.keepFontSelected.get()) {
+                        SymbolChat.config.selectedFont.set(element.getId().toString());
+                        SymbolChat.config.save();
+                    }
                 }
             };
             adder.add(fontSelectionDropDown);

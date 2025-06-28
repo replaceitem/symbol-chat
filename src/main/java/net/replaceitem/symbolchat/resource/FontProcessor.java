@@ -30,6 +30,10 @@ public class FontProcessor {
         }
     }
 
+    public Identifier getId() {
+        return id;
+    }
+
     public String convertString(String string) {
         return string.codePoints().mapToObj(Util::stringFromCodePoint).map(codePointConverter).collect(Collectors.joining());
     }

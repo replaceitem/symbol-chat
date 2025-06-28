@@ -13,6 +13,7 @@ import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.container.ScrollableGridContainer;
 import net.replaceitem.symbolchat.gui.container.SmoothScrollableContainerWidget;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
     public int selected;
     public boolean expanded;
 
-    public DropDownWidget(int x, int y, int width, int height, List<T> elementList, int defaultSelection, boolean upward) {
+    public DropDownWidget(int x, int y, int width, int height, List<T> elementList, @Nullable T defaultSelection, boolean upward) {
         super(x, y, width, height);
         this.expanded = false;
         this.elements = new ArrayList<>();
@@ -51,7 +52,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
         this.scrollableGridWidget.refreshPositions();
         this.addChildren(buttonWidget);
         this.addChildren(scrollableGridWidget);
-        this.selected = defaultSelection >= elementList.size() ? 0 : defaultSelection;
+        this.selected = defaultSelection == null ? 0 : Math.max(elementList.indexOf(defaultSelection), 0);
     }
 
     private void toggleVisible() {
