@@ -50,6 +50,13 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     }
 
     @Override
+    public void focusTextbox() {
+        if(client != null) this.client.send(() -> {
+            if(client.currentScreen == this) this.setFocused(this.nameField);
+        });
+    }
+
+    @Override
     public TextFieldWidget getTextField() {
         return this.nameField;
     }

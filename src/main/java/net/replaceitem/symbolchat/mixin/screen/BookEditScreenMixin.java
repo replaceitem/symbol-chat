@@ -49,6 +49,13 @@ public abstract class BookEditScreenMixin extends Screen implements SymbolInsert
     }
 
     @Override
+    public void focusTextbox() {
+        if(client != null) this.client.send(() -> {
+            if(client.currentScreen == this) this.setFocused(this.editBox);
+        });
+    }
+
+    @Override
     public ScreenPos getCursorPosition() {
         return ((EditBoxWidgetExtension) this.editBox).getCursorPosition();
     }

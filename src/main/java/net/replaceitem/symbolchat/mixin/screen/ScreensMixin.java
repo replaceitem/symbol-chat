@@ -138,6 +138,8 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
                         SymbolChat.config.selectedFont.set(element.getId().toString());
                         SymbolChat.config.save();
                     }
+
+                    focusTextbox();
                 }
             };
             adder.add(fontSelectionDropDown);

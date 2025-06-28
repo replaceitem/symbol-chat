@@ -111,7 +111,14 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
             if(client.currentScreen == this) this.setFocused(this.chatField);
         });
     }
-    
+
+    @Override
+    public void focusTextbox() {
+        if(client != null) this.client.send(() -> {
+            if(client.currentScreen == this) this.setFocused(this.chatField);
+        });
+    }
+
     @Override
     public boolean disabled() {
         String text = this.chatField.getText();
