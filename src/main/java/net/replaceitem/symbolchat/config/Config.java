@@ -1,6 +1,7 @@
 package net.replaceitem.symbolchat.config;
 
 import com.google.gson.JsonObject;
+import net.minecraft.client.gui.screen.Screen;
 import net.replaceitem.reconfigure.api.*;
 import net.replaceitem.reconfigure.api.serializer.Serializers;
 
@@ -10,7 +11,7 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class Config {
-    public final net.replaceitem.reconfigure.api.Config config = net.replaceitem.reconfigure.api.Config.builder("symbol-chat")
+    private final net.replaceitem.reconfigure.api.Config config = net.replaceitem.reconfigure.api.Config.builder("symbol-chat")
             .serializer(Serializers.buildJson().preLoad(Config::updateConfig).build())
             .build();
     
@@ -56,8 +57,16 @@ public class Config {
         this.config.save();
     }
 
+    public void scheduleSave() {
+        this.config.scheduleSave(Duration.ofSeconds(5));
+    }
+
     public void load() {
         this.config.load();
+    }
+
+    public Screen createScreen(Screen screen) {
+        return this.config.createScreen(screen);
     }
 
     @SuppressWarnings("unused")

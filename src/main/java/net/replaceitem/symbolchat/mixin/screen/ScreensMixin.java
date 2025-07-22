@@ -147,7 +147,7 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
 
         if(!SymbolChat.config.hideSettingsButton.get()) {
             settingsButtonWidget = new FlatIconButtonWidget(15, hudButtonsHeight, ScreenTexts.EMPTY, 15, hudButtonsHeight, WRENCH_TEXTURE, button -> {
-                MinecraftClient.getInstance().setScreen(SymbolChat.config.config.createScreen(ScreensMixin.this));
+                MinecraftClient.getInstance().setScreen(SymbolChat.config.createScreen(ScreensMixin.this));
             }, textSupplier -> Text.translatable("reconfigure.title.symbol-chat"));
             settingsButtonWidget.setTooltip(Tooltip.of(Text.translatable("reconfigure.title.symbol-chat")));
             adder.add(settingsButtonWidget);

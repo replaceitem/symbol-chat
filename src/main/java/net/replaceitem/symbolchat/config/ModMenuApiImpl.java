@@ -7,6 +7,6 @@ import net.replaceitem.symbolchat.SymbolChat;
 public class ModMenuApiImpl implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> SymbolChat.config.config.createScreen(parent);
+        return parent -> SymbolChat.config.createScreen(parent);
     }
 }
