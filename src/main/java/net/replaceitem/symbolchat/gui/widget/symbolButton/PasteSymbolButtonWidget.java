@@ -56,6 +56,7 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
         } else {
             SymbolChat.config.favoriteSymbols.set(currentFavorites + getSymbol());
         }
+        SymbolChat.config.scheduleSave();
         this.isFavorite = !currentlyFavorite;
     }
 
