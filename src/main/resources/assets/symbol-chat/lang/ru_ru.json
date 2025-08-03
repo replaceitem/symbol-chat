@@ -74,7 +74,7 @@
   "reconfigure.property.symbol-chat.hide_font_button": "Скрыть кнопку шрифта",
   "reconfigure.property.symbol-chat.hide_settings_button": "Скрыть кнопку настроек",
   "reconfigure.property.symbol-chat.hide_settings_button.tooltip": "После скрытия кнопки настроек вернуться сюда получится только при помощи ModMenu.",
-  "reconfigure.property.symbol-chat.hide_table_button": "Скрыть кнопку таблицы юникода",
+  "reconfigure.property.symbol-chat.hide_table_button": "Скрыть кнопку таблицы Юникода",
   "reconfigure.property.symbol-chat.hide_table_button.tooltip": "Скрывает кнопку просмотра полной таблицы символов Юникода.",
   "reconfigure.property.symbol-chat.hud_color": "Цвет фона",
   "reconfigure.property.symbol-chat.hud_position": "Расположение кнопок",
