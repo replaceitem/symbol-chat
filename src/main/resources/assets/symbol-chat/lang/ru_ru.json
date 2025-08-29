@@ -1,11 +1,11 @@
 {
   "modmenu.descriptionTranslation.symbol-chat": "Клиентский мод, добавляющий меню с интересными символами и смайлами, а также написание разными шрифтами Unicode.",
   "modmenu.summaryTranslation.symbol-chat": "Шрифты Unicode и меню со списком символов и смайлов.",
-  "symbolchat.font.symbol-chat.big_scribble": "Восточная писᏏменность",
+  "symbolchat.font.symbol-chat.big_scribble": "Восточная письменность",
   "symbolchat.font.symbol-chat.brackets": "В СКОБКАХ",
   "symbolchat.font.symbol-chat.capitalized": "Заглавные",
   "symbolchat.font.symbol-chat.circled": "Circled",
-  "symbolchat.font.symbol-chat.fullwidth": "Full width",
+  "symbolchat.font.symbol-chat.fullwidth": "Полноширинные",
   "symbolchat.font.symbol-chat.inverse": "Перевернутые",
   "symbolchat.font.symbol-chat.mathematical": "Тонкие",
   "symbolchat.font.symbol-chat.mathematical_bold": "Mathematical bold",
