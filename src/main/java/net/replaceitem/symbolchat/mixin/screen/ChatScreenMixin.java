@@ -46,9 +46,10 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
         });
     }
 
-    @Inject(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;mouseClicked(DDI)Z"), cancellable = true)
-    private void callSuperMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(false);
+    // Skip directly calling the text field click, will be called with ParentElement.mouseClicked
+    @WrapOperation(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;mouseClicked(DDI)Z"))
+    private boolean callSuperMouseClicked(TextFieldWidget instance, double mouseX, double mouseY, int button, Operation<Boolean> original) {
+        return false;
     }
     
     @WrapOperation(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ChatInputSuggestor;mouseClicked(DDI)Z"))
