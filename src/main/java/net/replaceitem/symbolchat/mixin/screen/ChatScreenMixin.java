@@ -15,7 +15,6 @@ import net.replaceitem.symbolchat.config.Config;
 import net.replaceitem.symbolchat.extensions.SymbolEditableWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.lwjgl.glfw.GLFW;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -26,7 +25,6 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.Objects;
 
-@Debug(export = true)
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
     @Shadow protected TextFieldWidget chatField;
