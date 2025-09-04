@@ -15,7 +15,6 @@ import net.replaceitem.symbolchat.config.Config;
 import net.replaceitem.symbolchat.extensions.SymbolEditableWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.lwjgl.glfw.GLFW;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -26,7 +25,6 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.Objects;
 
-@Debug(export = true)
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
     @Shadow protected TextFieldWidget chatField;
@@ -48,9 +46,10 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
         });
     }
 
-    @Inject(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;mouseClicked(DDI)Z"), cancellable = true)
-    private void callSuperMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(false);
+    // Skip directly calling the text field click, will be called with ParentElement.mouseClicked
+    @WrapOperation(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;mouseClicked(DDI)Z"))
+    private boolean callSuperMouseClicked(TextFieldWidget instance, double mouseX, double mouseY, int button, Operation<Boolean> original) {
+        return false;
     }
     
     @WrapOperation(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ChatInputSuggestor;mouseClicked(DDI)Z"))
