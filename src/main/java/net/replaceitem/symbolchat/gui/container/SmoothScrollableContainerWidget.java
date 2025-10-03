@@ -1,8 +1,8 @@
 package net.replaceitem.symbolchat.gui.container;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.ScreenRect;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ContainerWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.util.math.MathHelper;
@@ -13,7 +13,7 @@ public abstract class SmoothScrollableContainerWidget extends ContainerWidget {
     
     private boolean smoothScrolling;
     private double scrollTarget;
-    private double scrollSpeed = 20;
+    private static final double scrollSpeed = 20;
     private ScrollbarStyle scrollbarStyle = ScrollbarStyle.VANILLA;
     private boolean scrollbarHovered;
 
@@ -27,13 +27,10 @@ public abstract class SmoothScrollableContainerWidget extends ContainerWidget {
     public void setScrollbarStyle(ScrollbarStyle scrollbarStyle) {
         this.scrollbarStyle = scrollbarStyle;
     }
-    public void setScrollSpeed(double scrollSpeed) {
-        this.scrollSpeed = scrollSpeed;
-    }
 
     @Override
     protected double getDeltaYPerScroll() {
-        return Screen.hasControlDown() ? scrollSpeed * 3 : scrollSpeed;
+        return MinecraftClient.getInstance().isCtrlPressed() ? scrollSpeed * 3 : scrollSpeed;
     }
 
     @Override
@@ -63,7 +60,7 @@ public abstract class SmoothScrollableContainerWidget extends ContainerWidget {
             context.enableScissor(this.getX(), this.getY(), this.getRight(), this.getBottom());
             this.renderContents(context, mouseX, mouseY, delta);
             context.disableScissor();
-            this.drawScrollbar(context);
+            this.drawScrollbar(context, mouseX, mouseY);
         }
     }
     
@@ -82,9 +79,9 @@ public abstract class SmoothScrollableContainerWidget extends ContainerWidget {
     }
 
     @Override
-    protected void drawScrollbar(DrawContext context) {
+    protected void drawScrollbar(DrawContext context, int mouseX, int mouseY) {
         if(scrollbarStyle == ScrollbarStyle.VANILLA) {
-            super.drawScrollbar(context);
+            super.drawScrollbar(context, mouseX, mouseY);
         } else {
             if(!overflows()) return;
             ScreenRect rect = getScrollbarThumbRect();

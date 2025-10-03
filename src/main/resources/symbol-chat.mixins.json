@@ -7,6 +7,7 @@
         "EditBoxAccessor",
         "FontManagerAccessor",
         "MinecraftClientAccessor",
+        "TextHandlerAccessor",
         "TextRendererMixin",
         "screen.AbstractSignEditScreenMixin",
         "screen.AnvilScreenMixin",

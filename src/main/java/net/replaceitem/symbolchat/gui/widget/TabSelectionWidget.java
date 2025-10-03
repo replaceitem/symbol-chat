@@ -1,6 +1,7 @@
 package net.replaceitem.symbolchat.gui.widget;
 
 import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.tooltip.*;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.text.*;
@@ -34,11 +35,11 @@ public class TabSelectionWidget extends NonScrollableContainerWidget {
                 SymbolButtonWidget.SYMBOL_SIZE, SymbolButtonWidget.SYMBOL_SIZE,
                 hasLiteralIcon ? Text.literal(textIcon) : null,
                 SymbolButtonWidget.SYMBOL_SIZE, SymbolButtonWidget.SYMBOL_SIZE,
-                hasLiteralIcon ? null : icon,
+                hasLiteralIcon ? null : new ButtonTextures(icon),
                 button -> setTab(index),
+                tab.getTooltipText(),
                 textSupplier -> narration
         );
-        switchTabWidget.setTooltip(Tooltip.of(tab.getTooltipText()));
         this.children().add(switchTabWidget);
     }
 

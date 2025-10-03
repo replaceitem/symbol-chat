@@ -5,6 +5,7 @@ import net.minecraft.client.gui.Narratable;
 import net.minecraft.client.gui.ScreenPos;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.util.math.MathHelper;
 import net.replaceitem.symbolchat.SearchUtil;
 import net.replaceitem.symbolchat.SymbolChat;
@@ -14,7 +15,6 @@ import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.Objects;
@@ -98,43 +98,43 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyInput input) {
         if(!visible) return false;
-        if(keyCode == GLFW.GLFW_KEY_TAB) {
+        if(input.isTab()) {
             PasteSymbolButtonWidget focused;
             if(this.getFocused() instanceof PasteSymbolButtonWidget pasteSymbolButtonWidget) {
                 focused = pasteSymbolButtonWidget;
             } else if(!this.children().isEmpty() && this.children().getFirst() instanceof PasteSymbolButtonWidget symbolButtonWidget) {
                 focused = symbolButtonWidget;
             } else return false;
-            focused.onClick(0);
+            focused.onSymbolClicked();
             this.hide();
             return true;
         }
-        if(keyCode == GLFW.GLFW_KEY_UP) {
+        if(input.isUp()) {
             if(this.getFocused() == null && !this.children().isEmpty()) this.setFocused(this.children().getFirst());
             return true;
         }
-        
-        if(keyCode == GLFW.GLFW_KEY_RIGHT && this.getFocused() instanceof PasteSymbolButtonWidget pasteSymbolButtonWidget) {
+
+        if(input.isRight() && this.getFocused() instanceof PasteSymbolButtonWidget pasteSymbolButtonWidget) {
             this.setFocused(children().get(Math.min(children().indexOf(pasteSymbolButtonWidget) + 1, children().size()-1)));
             return true;
         }
-        if(keyCode == GLFW.GLFW_KEY_LEFT && this.getFocused() instanceof PasteSymbolButtonWidget pasteSymbolButtonWidget) {
+        if(input.isLeft() && this.getFocused() instanceof PasteSymbolButtonWidget pasteSymbolButtonWidget) {
             this.setFocused(children().get(Math.max(children().indexOf(pasteSymbolButtonWidget) - 1, 0)));
             return true;
         }
-        if((keyCode == GLFW.GLFW_KEY_DOWN || keyCode == GLFW.GLFW_KEY_ESCAPE) && this.getFocused() != null) {
+        if((input.isDown() || input.isEscape()) && this.getFocused() != null) {
             this.setFocused(null);
             return true;
         }
-        
-        if(keyCode == GLFW.GLFW_KEY_ENTER && this.getFocused() != null) {
-            if(getFocused() instanceof SymbolButtonWidget symbolButtonWidget) symbolButtonWidget.onClick(0);
+
+        if(input.isEnter() && this.getFocused() != null) {
+            if(getFocused() instanceof PasteSymbolButtonWidget symbolButtonWidget) symbolButtonWidget.onSymbolClicked();
             this.hide();
             return true;
         }
-        
+
         return false;
     }
 

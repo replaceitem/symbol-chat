@@ -5,6 +5,7 @@ import net.minecraft.client.gui.ScreenPos;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.gui.widget.EditBoxWidget;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.*;
 import net.replaceitem.symbolchat.extensions.EditBoxWidgetExtension;
@@ -39,8 +40,8 @@ public abstract class BookEditScreenMixin extends Screen implements SymbolInsert
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(((ScreenAccess) this).handleKeyPressed(keyCode, scanCode, modifiers)) cir.setReturnValue(true);
+    public void keyPressed(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
+        if(((ScreenAccess) this).handleKeyPressed(input)) cir.setReturnValue(true);
     }
 
     @Override

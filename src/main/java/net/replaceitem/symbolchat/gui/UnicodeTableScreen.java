@@ -1,11 +1,12 @@
 package net.replaceitem.symbolchat.gui;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.*;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.replaceitem.symbolchat.SymbolChat;
@@ -15,10 +16,10 @@ import net.replaceitem.symbolchat.gui.widget.IntSpinnerWidget;
 import net.replaceitem.symbolchat.gui.widget.UnicodeTable;
 import net.replaceitem.symbolchat.mixin.FontManagerAccessor;
 import net.replaceitem.symbolchat.mixin.MinecraftClientAccessor;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.function.IntUnaryOperator;
 
 public class UnicodeTableScreen extends Screen {
     public UnicodeTableScreen(Screen parent) {
@@ -87,7 +88,7 @@ public class UnicodeTableScreen extends Screen {
                 unicodeTable.setFont(value);
                 reloadSymbols();
             });
-            fontButton.setValue(Style.DEFAULT_FONT_ID);
+            fontButton.setValue(MinecraftClient.DEFAULT_FONT_ID);
             adder.add(fontButton);
         }
 
@@ -113,8 +114,8 @@ public class UnicodeTableScreen extends Screen {
             TextWidget jumpToLabel = new TextWidget(Text.translatable("symbolchat.unicode_table.jump_to"), this.textRenderer);
             TextFieldWidget jumpToTextField = new TextFieldWidget(this.textRenderer, widgetWidth - jumpToLabel.getWidth(), 12, Text.empty()) {
                 @Override
-                public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-                    if(keyCode == GLFW.GLFW_KEY_ENTER) {
+                public boolean keyPressed(KeyInput input) {
+                    if(input.isEnter()) {
                         int codepoint;
                         try {
                             codepoint = Integer.parseInt(this.getText(), 16);
@@ -128,7 +129,7 @@ public class UnicodeTableScreen extends Screen {
                         unicodeTable.jumpTo(codepoint);
                         return true;
                     }
-                    return super.keyPressed(keyCode, scanCode, modifiers);
+                    return super.keyPressed(input);
                 }
             };
             jumpToTextField.setChangedListener(s -> this.reloadSymbols());
@@ -186,9 +187,13 @@ public class UnicodeTableScreen extends Screen {
         search = search.search(searchTextField.getText());
 
         OptionalInt width = widthSpinner.getValue();
-        if(width.isPresent()) search = search.filterWidth(width.getAsInt(), ((TextRendererAccess) textRenderer).getCodepointWidthGetter(unicodeTable.getStyle()));
-        
-        if(hideMissingGlyphsCheckbox.isChecked()) search = search.filter(((TextRendererAccess) textRenderer).getMissingGlyphPredicate(unicodeTable.getStyle()).negate());
+        if(width.isPresent()) {
+            IntUnaryOperator codepointWidthGetter = ((TextRendererAccess) textRenderer).getCodepointWidthGetter(unicodeTable.getStyle());
+            search = search.filterWidth(width.getAsInt(), codepointWidthGetter);
+        }
+        if(hideMissingGlyphsCheckbox.isChecked()) {
+            search = search.filter(((TextRendererAccess) textRenderer).getMissingGlyphPredicate(unicodeTable.getStyle()).negate());
+        }
         
         unicodeTable.setCodepoints(search.collect());
     }

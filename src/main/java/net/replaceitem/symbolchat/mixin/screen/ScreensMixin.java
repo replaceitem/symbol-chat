@@ -2,13 +2,15 @@ package net.replaceitem.symbolchat.mixin.screen;
 
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.BookEditScreen;
-import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.GridWidget;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -30,7 +32,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
-import java.util.Optional;
 
 @Mixin({ChatScreen.class, BookEditScreen.class, AnvilScreen.class, AbstractSignEditScreen.class})
 public abstract class ScreensMixin extends Screen implements ScreenAccess, SymbolInsertable {
@@ -102,11 +103,12 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
                 SymbolButtonWidget.SYMBOL_SIZE, SymbolButtonWidget.SYMBOL_SIZE,
                 ScreenTexts.EMPTY,
                 SymbolButtonWidget.SYMBOL_SIZE, SymbolButtonWidget.SYMBOL_SIZE,
-                SMILEY_TEXTURE,
+                new ButtonTextures(SMILEY_TEXTURE),
                 button -> {
                     symbolSelectionPanel.toggleVisible();
                     button.setOutlined(!button.isOutlined());
                 },
+                null,
                 textSupplier -> Text.translatable("symbolchat.symbol_panel.toggle_symbol_panel")
         );
         symbolButtonWidget.setPosition(symbolButtonX, symbolButtonY);
@@ -146,18 +148,31 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
         }
 
         if(!SymbolChat.config.hideSettingsButton.get()) {
-            settingsButtonWidget = new FlatIconButtonWidget(15, hudButtonsHeight, ScreenTexts.EMPTY, 15, hudButtonsHeight, WRENCH_TEXTURE, button -> {
-                MinecraftClient.getInstance().setScreen(SymbolChat.config.createScreen(ScreensMixin.this));
-            }, textSupplier -> Text.translatable("reconfigure.title.symbol-chat"));
-            settingsButtonWidget.setTooltip(Tooltip.of(Text.translatable("reconfigure.title.symbol-chat")));
+            settingsButtonWidget = new FlatIconButtonWidget(15,
+                    hudButtonsHeight,
+                    ScreenTexts.EMPTY,
+                    15,
+                    hudButtonsHeight,
+                    new ButtonTextures(WRENCH_TEXTURE),
+                    button -> MinecraftClient.getInstance().setScreen(SymbolChat.config.createScreen(ScreensMixin.this)),
+                    Text.translatable("reconfigure.title.symbol-chat"),
+                    textSupplier -> Text.translatable("reconfigure.title.symbol-chat"));
             adder.add(settingsButtonWidget);
         }
 
         if(!SymbolChat.config.hideTableButton.get()) {
-            tableButtonWidget = new FlatIconButtonWidget(15, hudButtonsHeight, ScreenTexts.EMPTY, 15, hudButtonsHeight, TABLE_TEXTURE, button -> {
-                if(ScreensMixin.this.client != null) ScreensMixin.this.client.setScreen(new UnicodeTableScreen(ScreensMixin.this));
-            }, textSupplier -> Text.translatable("symbolchat.unicode_table"));
-            tableButtonWidget.setTooltip(Tooltip.of(Text.translatable("symbolchat.unicode_table")));
+            tableButtonWidget = new FlatIconButtonWidget(15,
+                    hudButtonsHeight,
+                    ScreenTexts.EMPTY,
+                    15,
+                    hudButtonsHeight,
+                    new ButtonTextures(TABLE_TEXTURE),
+                    button -> {
+                        if(ScreensMixin.this.client != null) ScreensMixin.this.client.setScreen(new UnicodeTableScreen(ScreensMixin.this));
+                    },
+                    Text.translatable("symbolchat.unicode_table"),
+                    textSupplier -> Text.translatable("symbolchat.unicode_table")
+            );
             adder.add(tableButtonWidget);
         }
 
@@ -192,20 +207,20 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
     
     @Override
     @Unique
-    public boolean handleSuggestorKeyPressed(int keyCode, int scanCode, int modifiers) {
-        return this.symbolSuggestor != null && this.symbolSuggestor.keyPressed(keyCode, scanCode, modifiers);
+    public boolean handleSuggestorKeyPressed(KeyInput input) {
+        return this.symbolSuggestor != null && this.symbolSuggestor.keyPressed(input);
     }
 
     @Override
     @Unique
-    public boolean handlePanelKeyPressed(int keyCode, int scanCode, int modifiers) {
-        return this.symbolSelectionPanel != null && this.symbolSelectionPanel.isFocused() && this.symbolSelectionPanel.keyPressed(keyCode, scanCode, modifiers);
+    public boolean handlePanelKeyPressed(KeyInput input) {
+        return this.symbolSelectionPanel != null && this.symbolSelectionPanel.isFocused() && this.symbolSelectionPanel.keyPressed(input);
     }
 
     @Override
     @Unique
-    public boolean handlePanelCharTyped(char chr, int modifiers) {
-        return this.symbolSelectionPanel != null && this.symbolSelectionPanel.charTyped(chr, modifiers);
+    public boolean handlePanelCharTyped(CharInput input) {
+        return this.symbolSelectionPanel != null && this.symbolSelectionPanel.charTyped(input);
     }
 
     @Unique

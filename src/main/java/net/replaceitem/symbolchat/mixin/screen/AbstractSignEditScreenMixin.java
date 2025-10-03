@@ -10,6 +10,8 @@ import net.minecraft.client.gui.ScreenPos;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
 import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.extensions.ScreenAccess;
@@ -45,24 +47,24 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(((ScreenAccess) this).handleKeyPressed(keyCode, scanCode, modifiers)) cir.setReturnValue(true);
+    public void keyPressed(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
+        if(((ScreenAccess) this).handleKeyPressed(input)) cir.setReturnValue(true);
     }
     
     @Inject(method = "charTyped", at = @At("HEAD"), cancellable = true)
-    public void charTyped(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(((ScreenAccess) this).handlePanelCharTyped(chr, modifiers)) cir.setReturnValue(true);
+    public void charTyped(CharInput input, CallbackInfoReturnable<Boolean> cir) {
+        if(((ScreenAccess) this).handlePanelCharTyped(input)) cir.setReturnValue(true);
     }
     
     @Inject(method = "charTyped", at = @At("RETURN"))
-    private void updateSuggestions(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+    private void updateSuggestions(CharInput input, CallbackInfoReturnable<Boolean> cir) {
         ((ScreenAccess) this).refreshSuggestions();
     }
     
-    @WrapOperation(method = "charTyped", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/SelectionManager;insert(C)Z"))
-    private boolean processFont(SelectionManager instance, char c, Operation<Boolean> original) {
+    @WrapOperation(method = "charTyped", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/SelectionManager;insert(Lnet/minecraft/client/input/CharInput;)Z"))
+    private boolean processFont(SelectionManager instance, CharInput input, Operation<Boolean> original) {
         FontProcessor fontProcessor = SymbolChat.fontManager.getCurrentScreenFontProcessor();
-        String string = fontProcessor.convertString(Character.toString(c));
+        String string = fontProcessor.convertString(Character.toString(input.codepoint()));
         instance.insert(string);
         if(fontProcessor.isReverseDirection()) {
             int pos = instance.getSelectionStart()-string.length();
@@ -83,7 +85,7 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
     
     
     @Inject(method = "keyPressed", at = @At("RETURN"))
-    private void updateSuggestions(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+    private void updateSuggestions(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
         ((ScreenAccess) this).refreshSuggestions();
     }
     

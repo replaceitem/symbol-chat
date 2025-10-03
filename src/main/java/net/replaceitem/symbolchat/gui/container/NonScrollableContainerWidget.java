@@ -28,9 +28,9 @@ public class NonScrollableContainerWidget extends ContainerWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(this.isMouseOver(mouseX, mouseY)) {
-            return super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(Click click, boolean doubled) {
+        if(this.isMouseOver(click.x(), click.y())) {
+            return super.mouseClicked(click, doubled);
         }
         return false;
     }

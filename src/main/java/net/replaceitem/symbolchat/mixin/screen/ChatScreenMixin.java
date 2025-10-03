@@ -2,10 +2,10 @@ package net.replaceitem.symbolchat.mixin.screen;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.gui.screen.ChatInputSuggestor;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.extensions.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
@@ -14,7 +14,6 @@ import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.config.Config;
 import net.replaceitem.symbolchat.extensions.SymbolEditableWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -45,28 +44,16 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
             return SymbolChat.config.fontConversionPattern.get().matcher(text).matches();
         });
     }
-
-    // Skip directly calling the text field click, will be called with ParentElement.mouseClicked
-    @WrapOperation(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;mouseClicked(DDI)Z"))
-    private boolean callSuperMouseClicked(TextFieldWidget instance, double mouseX, double mouseY, int button, Operation<Boolean> original) {
-        return false;
-    }
-    
-    @WrapOperation(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ChatInputSuggestor;mouseClicked(DDI)Z"))
-    private boolean clickScreenAfterInput(ChatInputSuggestor instance, double mouseX, double mouseY, int button, Operation<Boolean> original) {
-        boolean result = original.call(instance, mouseX, mouseY, button);
-        return result || super.mouseClicked(mouseX, mouseY, button);
-    }
     
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if(((ScreenAccess) this).handleSuggestorKeyPressed(keyCode, scanCode, modifiers)) cir.setReturnValue(true);
+    public void keyPressed(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
+        if(((ScreenAccess) this).handleSuggestorKeyPressed(input)) cir.setReturnValue(true);
     }
     
-    @WrapOperation(method = "keyPressed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;keyPressed(III)Z"))
-    public boolean skipArrowKeys(ChatScreen instance, int keyCode, int scanCode, int modifiers, Operation<Boolean> original) {
+    @WrapOperation(method = "keyPressed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;keyPressed(Lnet/minecraft/client/input/KeyInput;)Z"))
+    public boolean skipArrowKeys(ChatScreen instance, KeyInput input, Operation<Boolean> original) {
         // Prevent arrow keys changing focus when they should move through chat history 
-        return ((keyCode != GLFW.GLFW_KEY_UP && keyCode != GLFW.GLFW_KEY_DOWN) || !this.chatField.isFocused()) && original.call(this, keyCode, scanCode, modifiers);
+        return ((!input.isUp() && !input.isDown()) || !this.chatField.isFocused()) && original.call(instance, input);
     }
     
     @Unique

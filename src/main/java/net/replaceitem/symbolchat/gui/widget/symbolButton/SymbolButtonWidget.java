@@ -2,12 +2,10 @@ package net.replaceitem.symbolchat.gui.widget.symbolButton;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Narratable;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.input.MouseInput;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -26,32 +24,14 @@ public abstract class SymbolButtonWidget extends ClickableWidget implements Draw
         super(x, y, w, h, Text.literal(symbol));
     }
 
-    public abstract boolean onClick(int button);
-
-    // final, so the above is used instead
     @Override
-    public final void onClick(double mouseX, double mouseY) {
-        super.onClick(mouseX, mouseY);
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!this.active || !this.visible) return false;
-        if (this.isValidClickButton(button) && this.isMouseOver(mouseX, mouseY)) {
-            this.playDownSound(MinecraftClient.getInstance().getSoundManager());
-            return this.onClick(button);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(Click click) {
         return false; // default behaviour consumes any release event which is problematic when trying to un-set ScrollableWidget.scrollbarDragged
     }
 
     @Override
-    protected boolean isValidClickButton(int button) {
-        return super.isValidClickButton(button) || button == GLFW.GLFW_MOUSE_BUTTON_2;
+    protected boolean isValidClickButton(MouseInput input) {
+        return super.isValidClickButton(input) || input.button() == GLFW.GLFW_MOUSE_BUTTON_2;
     }
 
     @Override

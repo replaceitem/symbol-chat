@@ -5,11 +5,13 @@ import com.ibm.icu.lang.UProperty;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
+import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -149,7 +151,7 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
     }
 
     public void setFont(Identifier value) {
-        this.style = Style.EMPTY.withFont(value);
+        this.style = Style.EMPTY.withFont(new StyleSpriteSource.Font(value));
     }
 
     public Style getStyle() {
@@ -225,25 +227,25 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        setScroll(scroll - (verticalAmount * (Screen.hasControlDown() ? visibleRows : 1)));
+        setScroll(scroll - (verticalAmount * (MinecraftClient.getInstance().isCtrlPressed() ? visibleRows : 1)));
         this.refresh();
         return true;
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(super.mouseClicked(mouseX, mouseY, button)) return true;
-        if(mouseX >= scrollbarX && mouseX < scrollbarX+SCROLLBAR_WIDTH && mouseY >= scrollbarY && mouseY < scrollbarY+scrollbarHeight) {
-            scrolling = button == 0;
+    public boolean mouseClicked(Click click, boolean doubled) {
+        if(super.mouseClicked(click, doubled)) return true;
+        if(click.x() >= scrollbarX && click.x() < scrollbarX+SCROLLBAR_WIDTH && click.y() >= scrollbarY && click.y() < scrollbarY+scrollbarHeight) {
+            scrolling = click.button() == 0;
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if(super.mouseReleased(mouseX, mouseY, button)) return true;
-        if(button == 0) {
+    public boolean mouseReleased(Click click) {
+        if(super.mouseReleased(click)) return true;
+        if(click.button() == 0) {
             scrolling = false;
             return true;
         }
@@ -251,20 +253,20 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)) {
+    public boolean mouseDragged(Click click, double offsetX, double offsetY) {
+        if (super.mouseDragged(click, offsetX, offsetY)) {
             return true;
         }
-        if (button == 0 && this.scrolling) {
-            if (mouseY < (double)this.getY()) {
+        if (click.button() == 0 && this.scrolling) {
+            if (click.y() < (double)this.getY()) {
                 scroll = 0;
-            } else if (mouseY > (double)this.getBottom()) {
+            } else if (click.y() > (double)this.getBottom()) {
                 scroll = maxScroll;
             } else {
-                double scrolledRows = (int) MathHelper.map(deltaY, 0, height-scrollbarHeight, 0, maxScroll);
+                double scrolledRows = (int) MathHelper.map(offsetY, 0, height-scrollbarHeight, 0, maxScroll);
                 setScroll(scroll + scrolledRows);
             }
-            
+
             refresh();
             return true;
         }
@@ -272,18 +274,18 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if(Screen.isCopy(keyCode) && selectionStart != -1) {
+    public boolean keyPressed(KeyInput input) {
+        if(input.isCopy() && selectionStart != -1) {
             copySelected();
             return true;
         }
-        if(keyCode == GLFW.GLFW_KEY_ESCAPE && selectionStart != -1) {
+        if(input.isEscape() && selectionStart != -1) {
             selectionStart = -1;
             selectionEnd = -1;
             refresh();
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(input);
     }
 
     public void copySelected() {
@@ -366,9 +368,9 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
         }
 
         @Override
-        public boolean onClick(int button) {
-            if(button == GLFW.GLFW_MOUSE_BUTTON_1) {
-                if (Screen.hasShiftDown() && selectionStart != -1) {
+        public void onClick(Click click, boolean doubled) {
+            if(click.button() == GLFW.GLFW_MOUSE_BUTTON_1) {
+                if (click.hasShift() && selectionStart != -1) {
                     if (selectionStart > index) {
                         selectionEnd = selectionStart;
                         selectionStart = index;
@@ -380,8 +382,7 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
                     selectionEnd = index;
                 }
             }
-            super.onClick(button);
-            return true;
+            super.onClick(click, doubled);
         }
     }
 

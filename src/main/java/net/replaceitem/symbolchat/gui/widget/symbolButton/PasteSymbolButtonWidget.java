@@ -1,5 +1,6 @@
 package net.replaceitem.symbolchat.gui.widget.symbolButton;
 
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.text.Text;
@@ -34,18 +35,23 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     }
 
     @Override
-    public boolean onClick(int button) {
-        if(button == GLFW.GLFW_MOUSE_BUTTON_1 && this.context != null) {
-            this.context.onSymbolClicked(this.getSymbol());
-            return true;
+    public void onClick(Click click, boolean doubled) {
+        if(click.button() == GLFW.GLFW_MOUSE_BUTTON_1) {
+            this.onSymbolClicked();
+            return;
         }
-        if(button == GLFW.GLFW_MOUSE_BUTTON_2) {
+        if(click.button() == GLFW.GLFW_MOUSE_BUTTON_2) {
             onRightClick();
             if(this.context != null) this.context.refresh();
         }
-        return true;
     }
-    
+
+    public void onSymbolClicked() {
+        if(this.context != null) {
+            this.context.onSymbolClicked(this.getSymbol());
+        }
+    }
+
     protected void onRightClick() {
         if(symbol.codePoints().count() > 1) return; // With current config implementation, favoriting more than once codepoint isn't possible
         boolean currentlyFavorite = SymbolChat.symbolManager.isFavorite(this.symbol);

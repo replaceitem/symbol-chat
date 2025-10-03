@@ -2,5 +2,4 @@ accessWidener   v2      named
 accessible class net/minecraft/client/gui/DrawContext$ScissorStack
 accessible method net/minecraft/client/gui/widget/ScrollableWidget getScrollbarThumbHeight ()I
 accessible class net/minecraft/client/gui/EditBox$Substring
-extendable method net/minecraft/client/gui/widget/ScrollableWidget drawScrollbar (Lnet/minecraft/client/gui/DrawContext;)V
 extendable method net/minecraft/client/util/SelectionManager insert (Ljava/lang/String;Ljava/lang/String;)V

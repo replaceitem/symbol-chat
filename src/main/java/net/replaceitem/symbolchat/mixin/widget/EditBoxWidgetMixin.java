@@ -8,6 +8,7 @@ import net.minecraft.client.gui.ScreenPos;
 import net.minecraft.client.gui.widget.EditBoxWidget;
 import net.minecraft.client.gui.widget.ScrollableTextFieldWidget;
 import net.minecraft.client.input.CursorMovement;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.extensions.EditBoxWidgetExtension;
 import net.replaceitem.symbolchat.extensions.SymbolEditableWidget;
@@ -104,7 +105,7 @@ public abstract class EditBoxWidgetMixin extends ScrollableTextFieldWidget imple
     }
 
     @Inject(method = "keyPressed", at = @At("RETURN"))
-    private void afterKeyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+    private void afterKeyPressed(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
         if (refreshSuggestions != null) {
             refreshSuggestions.run();
         }
