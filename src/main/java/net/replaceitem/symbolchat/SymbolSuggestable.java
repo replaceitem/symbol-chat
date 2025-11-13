@@ -20,7 +20,7 @@ public interface SymbolSuggestable {
     String getSuggestionTerm();
     void replaceSuggestion(String symbol);
     
-    default boolean disabled() {
+    default boolean suggestionsDisabled() {
         return false;
     }
     
@@ -33,7 +33,7 @@ public interface SymbolSuggestable {
         }
 
         default String getSuggestionTerm() {
-            if(disabled()) return null;
+            if(suggestionsDisabled()) return null;
             TextFieldWidget chatField = getTextField();
             if(((TextFieldWidgetAccessor) chatField).getSelectionStart() != ((TextFieldWidgetAccessor) chatField).getSelectionEnd()) return null;
             MatchResult suggestionArea = getSuggestionArea(chatField);
@@ -61,7 +61,7 @@ public interface SymbolSuggestable {
 
     interface SelectionManagerSymbolSuggestable extends SymbolSuggestable {
         default String getSuggestionTerm() {
-            if(disabled()) return null;
+            if(suggestionsDisabled()) return null;
             if(this.getSelectionManager().isSelecting()) return null;
             int cursor = this.getSelectionManager().getSelectionStart();
             String string = this.getText();
@@ -87,7 +87,7 @@ public interface SymbolSuggestable {
 
     interface EditBoxSymbolSuggestable extends SymbolSuggestable {
         default String getSuggestionTerm() {
-            if(disabled()) return null;
+            if(suggestionsDisabled()) return null;
             if(this.getEditBox().hasSelection()) return null;
             int cursor = this.getEditBox().getCursor();
             String string = this.getEditBox().getText();

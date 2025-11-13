@@ -56,8 +56,6 @@
   "reconfigure.property.symbol-chat.button_color": "按鈕顏色",
   "reconfigure.property.symbol-chat.button_text_color": "按鈕文字顏色",
   "reconfigure.property.symbol-chat.button_text_hover_color": "按鈕文字懸停顏色",
-  "reconfigure.property.symbol-chat.chat_suggestion_regex": "聊天建議正規表示式",
-  "reconfigure.property.symbol-chat.chat_suggestion_regex.tooltip": "必須匹配此正規表示式才能在聊天中建議符號",
   "reconfigure.property.symbol-chat.custom_kaomojis": "自訂顏文字",
   "reconfigure.property.symbol-chat.favorite_symbols": "收藏符號",
   "reconfigure.property.symbol-chat.favorite_symbols.tooltip": "您可以在這裡貼上自訂符號，這些符號將會出現在收藏符號標籤頁中",

@@ -27,27 +27,27 @@ public class TextFieldWidgetMixin implements SymbolEditableWidget {
     @Unique @Nullable private BiFunction<String, @Nullable String, Boolean> convertFontsPredicate;
     @Unique @Nullable private Runnable refreshSuggestions;
 
+    // acting as a local variable between the two injection points beforeWrite and modifySelectionStart
+    @Unique private boolean lastReverseDirection;
+
     @Inject(method = "write", at = @At(value = "HEAD"))
     private void beforeWrite(String text, CallbackInfo ci, @Local(argsOnly = true) LocalRef<String> textRef) {
+        this.lastReverseDirection = false;
         if (convertFontsPredicate == null || convertFontsPredicate.apply(this.text, text)) {
             FontProcessor fontProcessor = fontProcessorSupplier == null ? null : fontProcessorSupplier.get();
             if (fontProcessor != null) {
                 textRef.set(fontProcessor.convertString(text));
+                this.lastReverseDirection = fontProcessor.isReverseDirection();
             }
         }
     }
 
     @ModifyArg(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;setSelectionStart(I)V"))
     private int modifySelectionStart(int cursor) {
-        if(convertFontsPredicate != null && !convertFontsPredicate.apply(this.text, null)) {
-            return cursor;
-        }
-        FontProcessor fontProcessor = fontProcessorSupplier == null ? null : fontProcessorSupplier.get();
-        if (fontProcessor != null && fontProcessor.isReverseDirection()) {
+        if (this.lastReverseDirection) {
             return Math.min(this.selectionStart, this.selectionEnd);
         }
         return cursor;
-
     }
 
     @Inject(method = "setSelectionEnd", at = @At("RETURN"))

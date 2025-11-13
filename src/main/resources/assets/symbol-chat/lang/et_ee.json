@@ -41,8 +41,6 @@
   "symbolchat.unicode_table.show_blocks": "Näita blokke",
   "reconfigure.property.symbol-chat.button_active_color": "Aktiivne nupu värv",
   "reconfigure.property.symbol-chat.button_color": "Nupu värv",
-  "reconfigure.property.symbol-chat.chat_suggestion_regex": "Chati soovituse Regex",
-  "reconfigure.property.symbol-chat.chat_suggestion_regex.tooltip": "See regex peab sobima, et chatis sümboleid soovitada.",
   "reconfigure.property.symbol-chat.custom_kaomojis": "Kohandatud kaomojis",
   "reconfigure.property.symbol-chat.favorite_symbols": "Lemmik sümbolid",
   "reconfigure.property.symbol-chat.favorite_symbols.tooltip": "Kopeeri siia sümboleid, et neid näha lemmikute sümbolite seas",

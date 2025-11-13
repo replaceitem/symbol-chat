@@ -63,8 +63,6 @@
   "reconfigure.property.symbol-chat.button_color": "Color del botón",
   "reconfigure.property.symbol-chat.button_text_color": "Color del texto del botón",
   "reconfigure.property.symbol-chat.button_text_hover_color": "Color del texto del botón al pasar el ratón",
-  "reconfigure.property.symbol-chat.chat_suggestion_regex": "Regex de sugerencias de chat",
-  "reconfigure.property.symbol-chat.chat_suggestion_regex.tooltip": "Esta regex debe coincidir para que se sugieran símbolos en el chat",
   "reconfigure.property.symbol-chat.custom_kaomojis": "Kaomojis personalizados",
   "reconfigure.property.symbol-chat.favorite_symbols": "Símbolos favoritos",
   "reconfigure.property.symbol-chat.favorite_symbols.tooltip": "Puedes pegar símbolos personalizados aquí, que aparecerán en la pestaña de símbolos favoritos",

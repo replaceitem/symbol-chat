@@ -2,10 +2,19 @@ package net.replaceitem.symbolchat.mixin.screen;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.ParseResults;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.tree.ArgumentCommandNode;
+import com.mojang.brigadier.tree.CommandNode;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.input.KeyInput;
+import net.minecraft.client.network.ClientCommandSource;
+import net.minecraft.command.argument.MessageArgumentType;
 import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.extensions.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
@@ -14,6 +23,7 @@ import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.config.Config;
 import net.replaceitem.symbolchat.extensions.SymbolEditableWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -38,11 +48,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
         ((SymbolEditableWidget) this.chatField).setRefreshSuggestions(() -> ((ScreenAccess) this).refreshSuggestions());
         ((SymbolEditableWidget) this.chatField).setFontProcessorSupplier(() -> ((ScreenAccess) this).getFontProcessor());
 
-        ((SymbolEditableWidget) this.chatField).setConvertFontsPredicate((text, insert) -> {
-            // Never convert slashes at the start for commands
-            if(text.isEmpty() && Objects.equals(insert, "/")) return false;
-            return SymbolChat.config.fontConversionPattern.get().matcher(text).matches();
-        });
+        ((SymbolEditableWidget) this.chatField).setConvertFontsPredicate(this::isInMessage);
     }
     
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
@@ -106,13 +112,41 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     }
 
     @Override
-    public boolean disabled() {
+    public boolean suggestionsDisabled() {
         String text = this.chatField.getText();
-        return !SymbolChat.config.chatSuggestionPattern.get().matcher(text).matches();
+        return !isInMessage(text, null);
     }
 
     @Override
     public TextFieldWidget getTextField() {
         return chatField;
+    }
+
+    private boolean isInMessage(String text, @Nullable String insert) {
+        // Never convert slashes at the start for commands
+        if(text.isEmpty() && Objects.equals(insert, "/")) return false;
+
+        StringReader stringReader = new StringReader(this.chatField.getText());
+        boolean startsWithSlash = stringReader.canRead() && stringReader.peek() == '/';
+        if (startsWithSlash) {
+            stringReader.skip();
+        }
+
+        if (startsWithSlash && this.chatField.getCursor() > 0 && this.client != null && this.client.player != null) {
+            try {
+                CommandDispatcher<ClientCommandSource> commandDispatcher = this.client.player.networkHandler.getCommandDispatcher();
+                ParseResults<ClientCommandSource> parse = commandDispatcher.parse(stringReader, this.client.player.networkHandler.getCommandSource());
+                CommandNode<ClientCommandSource> parent = parse.getContext().findSuggestionContext(this.chatField.getCursor()).parent;
+                return parent.getChildren().stream().anyMatch(node -> {
+                    if (!(node instanceof ArgumentCommandNode<?, ?> argumentCommandNode)) return false;
+                    ArgumentType<?> type = argumentCommandNode.getType();
+                    if(type instanceof StringArgumentType stringArgument && stringArgument.getType() == StringArgumentType.StringType.GREEDY_PHRASE) return true;
+                    return type instanceof MessageArgumentType;
+                });
+            } catch (Exception e) {
+                SymbolChat.LOGGER.error(e);
+            }
+        }
+        return true;
     }
 }
