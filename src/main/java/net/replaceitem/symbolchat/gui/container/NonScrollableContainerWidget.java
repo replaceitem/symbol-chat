@@ -1,34 +1,37 @@
 package net.replaceitem.symbolchat.gui.container;
 
 import net.minecraft.client.gui.*;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.ContainerWidget;
-import net.minecraft.text.Text;
-
+import net.minecraft.client.gui.components.AbstractContainerWidget;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.narration.NarrationSupplier;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NonScrollableContainerWidget extends ContainerWidget {
-    private final List<ClickableWidget> children = new ArrayList<>();
+public class NonScrollableContainerWidget extends AbstractContainerWidget {
+    private final List<AbstractWidget> children = new ArrayList<>();
     
     public NonScrollableContainerWidget(int x, int y, int width, int height) {
-        super(x, y, width, height, Text.empty());
+        super(x, y, width, height, Component.empty());
     }
     
-    public void addChildren(ClickableWidget element) {
+    public void addChildren(AbstractWidget element) {
         this.children.add(element);
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        for (Element child : this.children) {
-            if(child instanceof Drawable drawable) drawable.render(context, mouseX, mouseY, delta);
+    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        for (GuiEventListener child : this.children) {
+            if(child instanceof Renderable drawable) drawable.render(context, mouseX, mouseY, delta);
         }
     }
 
     @Override
-    public boolean mouseClicked(Click click, boolean doubled) {
+    public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
         if(this.isMouseOver(click.x(), click.y())) {
             return super.mouseClicked(click, doubled);
         }
@@ -36,13 +39,13 @@ public class NonScrollableContainerWidget extends ContainerWidget {
     }
 
     @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
-        Element focused = getFocused();
-        if(focused instanceof Narratable narratable) narratable.appendNarrations(builder);
+    protected void updateWidgetNarration(NarrationElementOutput builder) {
+        GuiEventListener focused = getFocused();
+        if(focused instanceof NarrationSupplier narratable) narratable.updateNarration(builder);
     }
 
     @Override
-    public List<ClickableWidget> children() {
+    public List<AbstractWidget> children() {
         return this.children;
     }
     
@@ -52,13 +55,13 @@ public class NonScrollableContainerWidget extends ContainerWidget {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        return this.hoveredElement(mouseX, mouseY).filter(element -> element.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)).isPresent();
+        return this.getChildAt(mouseX, mouseY).filter(element -> element.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)).isPresent();
     }
 
     @Override
     public void setX(int x) {
         if(x == this.getX()) return;
-        for (ClickableWidget child : children) {
+        for (AbstractWidget child : children) {
             child.setX(child.getX() - this.getX() + x);
         }
         super.setX(x);
@@ -67,24 +70,24 @@ public class NonScrollableContainerWidget extends ContainerWidget {
     @Override
     public void setY(int y) {
         if(y == this.getY()) return;
-        for (ClickableWidget child : children) {
+        for (AbstractWidget child : children) {
             child.setY(child.getY() - this.getY() + y);
         }
         super.setY(y);
     }
 
     @Override
-    protected int getContentsHeightWithPadding() {
+    protected int contentHeight() {
         return height;
     }
 
     @Override
-    protected double getDeltaYPerScroll() {
+    protected double scrollRate() {
         return 0;
     }
 
     @Override
-    protected boolean overflows() {
+    protected boolean scrollbarVisible() {
         return false;
     }
 }

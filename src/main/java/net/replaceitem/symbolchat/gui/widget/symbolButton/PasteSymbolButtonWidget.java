@@ -1,9 +1,9 @@
 package net.replaceitem.symbolchat.gui.widget.symbolButton;
 
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.Util;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +16,7 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     private boolean isFavorite;
 
     public PasteSymbolButtonWidget(int x, int y, @Nullable Context context, String symbol) {
-        this(x, y, context, symbol, Tooltip.of(Text.of(Util.getCapitalizedSymbolName(symbol))));
+        this(x, y, context, symbol, Tooltip.create(Component.nullToEmpty(Util.getCapitalizedSymbolName(symbol))));
     }
 
     public PasteSymbolButtonWidget(int x, int y, @Nullable Context context, String symbol, Tooltip tooltip) {
@@ -29,13 +29,13 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     }
 
     @Override
-    protected void renderOverlay(DrawContext drawContext) {
+    protected void renderOverlay(GuiGraphics drawContext) {
         super.renderOverlay(drawContext);
         if(isFavorite) this.drawCorners(drawContext, SymbolChat.config.favoriteColor.get());
     }
 
     @Override
-    public void onClick(Click click, boolean doubled) {
+    public void onClick(MouseButtonEvent click, boolean doubled) {
         if(click.button() == GLFW.GLFW_MOUSE_BUTTON_1) {
             this.onSymbolClicked();
             return;

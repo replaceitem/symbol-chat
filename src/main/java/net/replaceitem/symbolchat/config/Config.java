@@ -1,7 +1,7 @@
 package net.replaceitem.symbolchat.config;
 
 import com.google.gson.JsonObject;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screens.Screen;
 import net.replaceitem.reconfigure.api.*;
 import net.replaceitem.reconfigure.api.serializer.Serializers;
 

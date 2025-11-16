@@ -3,12 +3,12 @@ package net.replaceitem.symbolchat.resource;
 import com.google.gson.*;
 import com.ibm.icu.lang.UCharacter;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourceFinder;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.InvalidIdentifierException;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.ResourceLocationException;
+import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.GsonHelper;
 import net.replaceitem.symbolchat.SymbolChat;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,34 +21,34 @@ import static net.replaceitem.symbolchat.SymbolChat.NAMESPACE;
 
 public class SymbolManager implements SimpleSynchronousResourceReloadListener {
     
-    public static final Identifier IDENTIFIER = Identifier.of(NAMESPACE,"symbols");
-    public static final ResourceFinder SYMBOLS_FINDER = new ResourceFinder("symbols", ".txt");
-    public static final ResourceFinder SYMBOL_TABS_FINDER = ResourceFinder.json("symbol_tabs");
+    public static final ResourceLocation IDENTIFIER = ResourceLocation.fromNamespaceAndPath(NAMESPACE,"symbols");
+    public static final FileToIdConverter SYMBOLS_FINDER = new FileToIdConverter("symbols", ".txt");
+    public static final FileToIdConverter SYMBOL_TABS_FINDER = FileToIdConverter.json("symbol_tabs");
 
     private List<SymbolTab> tabs = List.of();
     private List<String> allSymbols = List.of();
-    private final HashMap<Identifier, SymbolList> listCache = new HashMap<>();
-    private final SymbolList.Mutable favoritesList = new SymbolList.Mutable(Identifier.of(NAMESPACE, "favorites"));
-    private final SymbolList.Mutable customKaomojisList = new SymbolList.Mutable(Identifier.of(NAMESPACE, "custom_kaomojis"));
+    private final HashMap<ResourceLocation, SymbolList> listCache = new HashMap<>();
+    private final SymbolList.Mutable favoritesList = new SymbolList.Mutable(ResourceLocation.fromNamespaceAndPath(NAMESPACE, "favorites"));
+    private final SymbolList.Mutable customKaomojisList = new SymbolList.Mutable(ResourceLocation.fromNamespaceAndPath(NAMESPACE, "custom_kaomojis"));
     
     @Override
-    public Identifier getFabricId() {
+    public ResourceLocation getFabricId() {
         return IDENTIFIER;
     }
 
     @Override
-    public void reload(ResourceManager manager) {
+    public void onResourceManagerReload(ResourceManager manager) {
         this.listCache.clear();
         this.addCachedList(favoritesList);
         this.addCachedList(customKaomojisList);
         tabs = new ArrayList<>();
-        for (Map.Entry<Identifier, Resource> identifierListEntry : SYMBOL_TABS_FINDER.findResources(manager).entrySet()) {
-            Identifier identifier = SYMBOL_TABS_FINDER.toResourceId(identifierListEntry.getKey());
+        for (Map.Entry<ResourceLocation, Resource> identifierListEntry : SYMBOL_TABS_FINDER.listMatchingResources(manager).entrySet()) {
+            ResourceLocation identifier = SYMBOL_TABS_FINDER.fileToId(identifierListEntry.getKey());
             Resource tabResource = identifierListEntry.getValue();
-            try(BufferedReader symbolTabReader = tabResource.getReader()) {
+            try(BufferedReader symbolTabReader = tabResource.openAsReader()) {
                 SymbolTab symbolTab = readTab(manager, symbolTabReader, identifier);
                 tabs.add(symbolTab);
-            } catch (IOException | JsonParseException | InvalidIdentifierException e) {
+            } catch (IOException | JsonParseException | ResourceLocationException e) {
                 SymbolChat.LOGGER.error("Could not load symbol tab {}", identifier, e);
             }
         }
@@ -65,7 +65,7 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
         return tabs;
     }
     
-    public Optional<SymbolTab> getTab(Identifier identifier) {
+    public Optional<SymbolTab> getTab(ResourceLocation identifier) {
         return tabs.stream().filter(tab -> tab.getId().equals(identifier)).findFirst();
     }
     
@@ -78,13 +78,13 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
     }
 
     @NotNull
-    private SymbolTab readTab(ResourceManager manager, BufferedReader symbolTabReader, Identifier identifier) {
-        JsonObject object = JsonHelper.deserialize(symbolTabReader);
-        String icon = JsonHelper.getString(object, "icon");
-        int order = JsonHelper.getInt(object, "order");
-        SymbolTab.Type type = SymbolTab.Type.getOrDefault(JsonHelper.getString(object, "type", null), SymbolTab.Type.SYMBOLS);
-        boolean searchBar = JsonHelper.getBoolean(object, "search_bar", false);
-        JsonArray symbolFiles = JsonHelper.getArray(object, "symbols", new JsonArray(0));
+    private SymbolTab readTab(ResourceManager manager, BufferedReader symbolTabReader, ResourceLocation identifier) {
+        JsonObject object = GsonHelper.parse(symbolTabReader);
+        String icon = GsonHelper.getAsString(object, "icon");
+        int order = GsonHelper.getAsInt(object, "order");
+        SymbolTab.Type type = SymbolTab.Type.getOrDefault(GsonHelper.getAsString(object, "type", null), SymbolTab.Type.SYMBOLS);
+        boolean searchBar = GsonHelper.getAsBoolean(object, "search_bar", false);
+        JsonArray symbolFiles = GsonHelper.getAsJsonArray(object, "symbols", new JsonArray(0));
         List<SymbolList> symbols = readSymbolLists(manager, symbolFiles);
         return new SymbolTab(identifier, icon, order, type, searchBar, symbols);
     }
@@ -93,14 +93,14 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
     private List<SymbolList> readSymbolLists(ResourceManager manager, JsonArray symbolFiles) {
         List<SymbolList> symbols = new ArrayList<>();
         for (JsonElement symbolFile : symbolFiles) {
-            Identifier identifier;
+            ResourceLocation identifier;
             SymbolList.SplitType type;
             if(symbolFile instanceof JsonPrimitive primitive) {
-                identifier = Identifier.of(primitive.getAsString());
+                identifier = ResourceLocation.parse(primitive.getAsString());
                 type = SymbolList.SplitType.CODEPOINT;
             } else if(symbolFile instanceof JsonObject object) {
-                identifier = Identifier.of(JsonHelper.getString(object, "id"));
-                type = SymbolList.SplitType.getOrDefault(JsonHelper.getString(object, "split", null), SymbolList.SplitType.CODEPOINT);
+                identifier = ResourceLocation.parse(GsonHelper.getAsString(object, "id"));
+                type = SymbolList.SplitType.getOrDefault(GsonHelper.getAsString(object, "split", null), SymbolList.SplitType.CODEPOINT);
             } else {
                 continue;
             }
@@ -114,9 +114,9 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
     }
     
     @NotNull
-    private SymbolList readSymbolList(ResourceManager manager, Identifier identifier, SymbolList.SplitType type) throws IOException, JsonParseException {
+    private SymbolList readSymbolList(ResourceManager manager, ResourceLocation identifier, SymbolList.SplitType type) throws IOException, JsonParseException {
         if(listCache.containsKey(identifier)) return listCache.get(identifier);
-        try(BufferedReader symbolsReader = manager.openAsReader(SYMBOLS_FINDER.toResourcePath(identifier))) {
+        try(BufferedReader symbolsReader = manager.openAsReader(SYMBOLS_FINDER.idToFile(identifier))) {
             SymbolList symbolList = new SymbolList(identifier, type.split(symbolsReader));
             this.addCachedList(symbolList);
             return symbolList;

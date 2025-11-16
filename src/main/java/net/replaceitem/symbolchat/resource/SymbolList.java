@@ -1,7 +1,6 @@
 package net.replaceitem.symbolchat.resource;
 
 import com.ibm.icu.lang.UCharacter;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,17 +8,18 @@ import java.io.BufferedReader;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import net.minecraft.resources.ResourceLocation;
 
 public class SymbolList {
-    private final Identifier id;
+    private final ResourceLocation id;
     protected final List<String> symbols;
 
-    public SymbolList(Identifier id, List<String> symbols) {
+    public SymbolList(ResourceLocation id, List<String> symbols) {
         this.id = id;
         this.symbols = symbols;
     }
 
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return id;
     }
 
@@ -31,12 +31,12 @@ public class SymbolList {
 
         private final HashSet<String> set = new HashSet<>();
         
-        public Mutable(Identifier id, List<String> symbols) {
+        public Mutable(ResourceLocation id, List<String> symbols) {
             super(id, new ArrayList<>(symbols));
             set.addAll(symbols);
         }
         
-        public Mutable(Identifier id) {
+        public Mutable(ResourceLocation id) {
             super(id, new ArrayList<>());
         }
 

@@ -1,8 +1,6 @@
 package net.replaceitem.symbolchat.resource;
 
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,34 +8,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 public class SymbolTab implements Comparable<SymbolTab> {
-    private final Identifier id;
-    private final Identifier icon;
+    private final ResourceLocation id;
+    private final ResourceLocation icon;
     private final String textIcon;
-    private final Text tooltipText;
+    private final Component tooltipText;
     private List<SymbolList> symbols;
     private final int order;
     private final Type type;
     private final boolean searchBar;
 
-    public SymbolTab(Identifier id, String icon, int order, Type type, boolean searchBar, List<SymbolList> symbols) {
+    public SymbolTab(ResourceLocation id, String icon, int order, Type type, boolean searchBar, List<SymbolList> symbols) {
         this.id = id;
         if(icon.codePoints().count() == 1) {
             this.icon = null;
             this.textIcon = icon;
         } else {
-            this.icon = Identifier.of(icon);
+            this.icon = ResourceLocation.parse(icon);
             this.textIcon = null;
         }
         this.order = order;
         this.type = type;
-        this.tooltipText = Text.translatable(id.toTranslationKey("symbolchat.tab"));
+        this.tooltipText = Component.translatable(id.toLanguageKey("symbolchat.tab"));
         this.searchBar = searchBar;
         this.symbols = symbols;
     }
 
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return id;
     }
     
@@ -57,7 +57,7 @@ public class SymbolTab implements Comparable<SymbolTab> {
         return this.symbols.stream().flatMap(SymbolList::stream);
     }
 
-    public Text getTooltipText() {
+    public Component getTooltipText() {
         return tooltipText;
     }
 
@@ -70,7 +70,7 @@ public class SymbolTab implements Comparable<SymbolTab> {
         return type;
     }
 
-    public Identifier getIcon() {
+    public ResourceLocation getIcon() {
         return icon;
     }
 

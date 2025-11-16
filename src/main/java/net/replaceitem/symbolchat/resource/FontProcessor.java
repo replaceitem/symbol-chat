@@ -1,28 +1,28 @@
 package net.replaceitem.symbolchat.resource;
 
 
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
 import net.replaceitem.symbolchat.Util;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class FontProcessor {
-    protected final Identifier id;
+    protected final ResourceLocation id;
     protected final Function<String, String> codePointConverter;
     protected final String convertedName;
     protected final int order;
     protected final boolean reverseDirection;
 
-    public FontProcessor(Identifier id, Function<String, String> codePointConverter, int order, boolean reverseDirection) {
+    public FontProcessor(ResourceLocation id, Function<String, String> codePointConverter, int order, boolean reverseDirection) {
         this.id = id;
         this.order = order;
         this.codePointConverter = codePointConverter;
         this.reverseDirection = reverseDirection;
-        String translationKey = id.toTranslationKey("symbolchat.font");
-        if(I18n.hasTranslation(translationKey)) {
-            String name = I18n.translate(translationKey);
+        String translationKey = id.toLanguageKey("symbolchat.font");
+        if(I18n.exists(translationKey)) {
+            String name = I18n.get(translationKey);
             if(reverseDirection) name = new StringBuilder(name).reverse().toString();
             this.convertedName = convertString(name);
         } else {
@@ -30,7 +30,7 @@ public class FontProcessor {
         }
     }
 
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return id;
     }
 

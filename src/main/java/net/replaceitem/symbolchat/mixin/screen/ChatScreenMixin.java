@@ -9,14 +9,14 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
-import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.client.network.ClientCommandSource;
-import net.minecraft.command.argument.MessageArgumentType;
-import net.minecraft.text.Text;
 import net.replaceitem.symbolchat.extensions.ScreenAccess;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.multiplayer.ClientSuggestionProvider;
+import net.minecraft.commands.arguments.MessageArgument;
+import net.minecraft.network.chat.Component;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
@@ -36,30 +36,30 @@ import java.util.Objects;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.TextFieldWidgetSymbolSuggestable {
-    @Shadow protected TextFieldWidget chatField;
+    @Shadow protected EditBox input;
 
-    protected ChatScreenMixin(Text title) {
+    protected ChatScreenMixin(Component title) {
         super(title);
     }
 
     @Inject(method = "init", at = @At(value = "RETURN"))
     private void onInit(CallbackInfo ci) {
         ((ScreenAccess) this).addSymbolChatComponents();
-        ((SymbolEditableWidget) this.chatField).setRefreshSuggestions(() -> ((ScreenAccess) this).refreshSuggestions());
-        ((SymbolEditableWidget) this.chatField).setFontProcessorSupplier(() -> ((ScreenAccess) this).getFontProcessor());
+        ((SymbolEditableWidget) this.input).setRefreshSuggestions(() -> ((ScreenAccess) this).refreshSuggestions());
+        ((SymbolEditableWidget) this.input).setFontProcessorSupplier(() -> ((ScreenAccess) this).getFontProcessor());
 
-        ((SymbolEditableWidget) this.chatField).setConvertFontsPredicate(this::isInMessage);
+        ((SymbolEditableWidget) this.input).setConvertFontsPredicate(this::isInMessage);
     }
     
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    public void keyPressed(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
+    public void keyPressed(KeyEvent input, CallbackInfoReturnable<Boolean> cir) {
         if(((ScreenAccess) this).handleSuggestorKeyPressed(input)) cir.setReturnValue(true);
     }
     
-    @WrapOperation(method = "keyPressed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;keyPressed(Lnet/minecraft/client/input/KeyInput;)Z"))
-    public boolean skipArrowKeys(ChatScreen instance, KeyInput input, Operation<Boolean> original) {
+    @WrapOperation(method = "keyPressed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;keyPressed(Lnet/minecraft/client/input/KeyEvent;)Z"))
+    public boolean skipArrowKeys(ChatScreen instance, KeyEvent input, Operation<Boolean> original) {
         // Prevent arrow keys changing focus when they should move through chat history 
-        return ((!input.isUp() && !input.isDown()) || !this.chatField.isFocused()) && original.call(instance, input);
+        return ((!input.isUp() && !input.isDown()) || !this.input.isFocused()) && original.call(instance, input);
     }
     
     @Unique
@@ -83,12 +83,12 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
         };
     }
     
-    @ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(IIIII)V"))
+    @ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
     private void fillBackgroundAtTextBox(Args args) {
-        args.set(0, this.chatField.getX() - 2);
-        args.set(1, this.chatField.getY() - 2);
-        args.set(2, this.chatField.getRight() + TEXT_BOX_CURSOR_WIDTH);
-        args.set(3, this.chatField.getBottom() - 2);
+        args.set(0, this.input.getX() - 2);
+        args.set(1, this.input.getY() - 2);
+        args.set(2, this.input.getRight() + TEXT_BOX_CURSOR_WIDTH);
+        args.set(3, this.input.getBottom() - 2);
     }
 
     @Inject(method = "mouseScrolled", at = @At(value = "HEAD"), cancellable = true)
@@ -98,50 +98,50 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     
     @Override
     public void insertSymbol(String symbol) {
-        this.chatField.write(symbol);
-        if(client != null) this.client.send(() -> {
-            if(client.currentScreen == this) this.setFocused(this.chatField);
+        this.input.insertText(symbol);
+        if(minecraft != null) this.minecraft.schedule(() -> {
+            if(minecraft.screen == this) this.setFocused(this.input);
         });
     }
 
     @Override
     public void focusTextbox() {
-        if(client != null) this.client.send(() -> {
-            if(client.currentScreen == this) this.setFocused(this.chatField);
+        if(minecraft != null) this.minecraft.schedule(() -> {
+            if(minecraft.screen == this) this.setFocused(this.input);
         });
     }
 
     @Override
     public boolean suggestionsDisabled() {
-        String text = this.chatField.getText();
+        String text = this.input.getValue();
         return !isInMessage(text, null);
     }
 
     @Override
-    public TextFieldWidget getTextField() {
-        return chatField;
+    public EditBox getTextField() {
+        return input;
     }
 
     private boolean isInMessage(String text, @Nullable String insert) {
         // Never convert slashes at the start for commands
         if(text.isEmpty() && Objects.equals(insert, "/")) return false;
 
-        StringReader stringReader = new StringReader(this.chatField.getText());
+        StringReader stringReader = new StringReader(this.input.getValue());
         boolean startsWithSlash = stringReader.canRead() && stringReader.peek() == '/';
         if (startsWithSlash) {
             stringReader.skip();
         }
 
-        if (startsWithSlash && this.chatField.getCursor() > 0 && this.client != null && this.client.player != null) {
+        if (startsWithSlash && this.input.getCursorPosition() > 0 && this.minecraft != null && this.minecraft.player != null) {
             try {
-                CommandDispatcher<ClientCommandSource> commandDispatcher = this.client.player.networkHandler.getCommandDispatcher();
-                ParseResults<ClientCommandSource> parse = commandDispatcher.parse(stringReader, this.client.player.networkHandler.getCommandSource());
-                CommandNode<ClientCommandSource> parent = parse.getContext().findSuggestionContext(this.chatField.getCursor()).parent;
+                CommandDispatcher<ClientSuggestionProvider> commandDispatcher = this.minecraft.player.connection.getCommands();
+                ParseResults<ClientSuggestionProvider> parse = commandDispatcher.parse(stringReader, this.minecraft.player.connection.getSuggestionsProvider());
+                CommandNode<ClientSuggestionProvider> parent = parse.getContext().findSuggestionContext(this.input.getCursorPosition()).parent;
                 return parent.getChildren().stream().anyMatch(node -> {
                     if (!(node instanceof ArgumentCommandNode<?, ?> argumentCommandNode)) return false;
                     ArgumentType<?> type = argumentCommandNode.getType();
                     if(type instanceof StringArgumentType stringArgument && stringArgument.getType() == StringArgumentType.StringType.GREEDY_PHRASE) return true;
-                    return type instanceof MessageArgumentType;
+                    return type instanceof MessageArgument;
                 });
             } catch (Exception e) {
                 SymbolChat.LOGGER.error(e);

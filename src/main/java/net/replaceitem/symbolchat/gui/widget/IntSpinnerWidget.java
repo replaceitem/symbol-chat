@@ -1,35 +1,37 @@
 package net.replaceitem.symbolchat.gui.widget;
 
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.*;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.OptionalInt;
 import java.util.function.Consumer;
 
-public class IntSpinnerWidget extends GridWidget {
+public class IntSpinnerWidget extends GridLayout {
     private final int min, max;
-    private final TextFieldWidget textField;
-    private final ButtonWidget decreaseButton;
-    private final ButtonWidget increaseButton;
+    private final EditBox textField;
+    private final Button decreaseButton;
+    private final Button increaseButton;
     @Nullable
     private Consumer<OptionalInt> changedListener;
 
-    private IntSpinnerWidget(TextRenderer textRenderer, int value, int min, int max) {
+    private IntSpinnerWidget(Font textRenderer, int value, int min, int max) {
         this.min = min;
         this.max = max;
         
-        GridWidget.Adder adder = this.createAdder(Integer.MAX_VALUE);
+        GridLayout.RowHelper adder = this.createRowHelper(Integer.MAX_VALUE);
 
-        decreaseButton = ButtonWidget.builder(Text.of("<"), createEvent(-1)).size(12, 12).build();
-        increaseButton = ButtonWidget.builder(Text.of(">"), createEvent(1)).size(12, 12).build();
+        decreaseButton = Button.builder(Component.nullToEmpty("<"), createEvent(-1)).size(12, 12).build();
+        increaseButton = Button.builder(Component.nullToEmpty(">"), createEvent(1)).size(12, 12).build();
 
-        textField = new TextFieldWidget(textRenderer, 0, 0, 20, 12, Text.empty());
+        textField = new EditBox(textRenderer, 0, 0, 20, 12, Component.empty());
         textField.setMaxLength(Math.max(String.valueOf(min).length(), String.valueOf(max).length()));
-        textField.setChangedListener(string -> {
+        textField.setResponder(string -> {
             OptionalInt val = getValue();
             decreaseButton.active = val.isEmpty() || val.getAsInt() != min;
             increaseButton.active = val.isEmpty() || val.getAsInt() != max;
@@ -37,9 +39,9 @@ public class IntSpinnerWidget extends GridWidget {
         });
         this.setValue(value);
         
-        adder.add(decreaseButton);
-        adder.add(textField);
-        adder.add(increaseButton);
+        adder.addChild(decreaseButton);
+        adder.addChild(textField);
+        adder.addChild(increaseButton);
     }
     
     public void setChangeListener(@Nullable Consumer<OptionalInt> changedListener) {
@@ -47,33 +49,33 @@ public class IntSpinnerWidget extends GridWidget {
     }
     
     public void setValue(int value) {
-        textField.setText(String.valueOf(MathHelper.clamp(value, min, max)));
+        textField.setValue(String.valueOf(Mth.clamp(value, min, max)));
     }
     
     public void setValue(@NotNull String value) {
-        textField.setText(value);
+        textField.setValue(value);
     }
     
     public OptionalInt getValue() {
         try {
-            return OptionalInt.of(Integer.parseInt(textField.getText()));
+            return OptionalInt.of(Integer.parseInt(textField.getValue()));
         } catch (NumberFormatException e) {
             return OptionalInt.empty();
         }
     }
     
     
-    private ButtonWidget.PressAction createEvent(int delta) {
+    private Button.OnPress createEvent(int delta) {
         return button -> setValue(getValue().orElse(0) + delta);
     }
     
-    public static Builder builder(@NotNull TextRenderer textRenderer) {
+    public static Builder builder(@NotNull Font textRenderer) {
         return new Builder(textRenderer);
     }
 
     public static class Builder {
         @NotNull
-        private final TextRenderer textRenderer;
+        private final Font textRenderer;
         @Nullable
         private Consumer<OptionalInt> changedListener;
         private Integer value = 0;
@@ -82,7 +84,7 @@ public class IntSpinnerWidget extends GridWidget {
         private int min = Integer.MIN_VALUE;
         private int max = Integer.MAX_VALUE;
 
-        public Builder(@NotNull TextRenderer textRenderer) {
+        public Builder(@NotNull Font textRenderer) {
             this.textRenderer = textRenderer;
         }
         

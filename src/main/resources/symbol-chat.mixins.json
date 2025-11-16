@@ -4,21 +4,21 @@
     "package": "net.replaceitem.symbolchat.mixin",
     "compatibilityLevel": "JAVA_21",
     "client": [
-        "EditBoxAccessor",
+        "MultilineTextFieldAccessor",
         "FontManagerAccessor",
-        "MinecraftClientAccessor",
-        "TextHandlerAccessor",
-        "TextRendererMixin",
+        "MinecraftAccessor",
+        "StringSplitterAccessor",
+        "FontMixin",
         "screen.AbstractSignEditScreenMixin",
         "screen.AnvilScreenMixin",
         "screen.BookEditScreenMixin",
         "screen.ChatScreenMixin",
         "screen.ScreensMixin",
-        "widget.EditBoxWidgetAccessor",
-        "widget.EditBoxWidgetMixin",
-        "widget.ScrollableWidgetAccessor",
-        "widget.TextFieldWidgetAccessor",
-        "widget.TextFieldWidgetMixin"
+        "widget.MultiLinedEditBoxAccessor",
+        "widget.MultiLineEditBoxMixin",
+        "widget.AbstractScrollAreaAccessor",
+        "widget.EditBoxAccessor",
+        "widget.EditBoxMixin"
     ],
     "injectors": {
         "defaultRequire": 1

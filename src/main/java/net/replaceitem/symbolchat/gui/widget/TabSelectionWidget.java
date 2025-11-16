@@ -1,12 +1,13 @@
 package net.replaceitem.symbolchat.gui.widget;
 
 import net.minecraft.client.gui.*;
-import net.minecraft.client.gui.screen.ButtonTextures;
-import net.minecraft.client.gui.tooltip.*;
-import net.minecraft.client.gui.widget.*;
-import net.minecraft.text.*;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
+import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.layouts.LayoutElement;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.replaceitem.symbolchat.*;
 import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.*;
@@ -27,15 +28,15 @@ public class TabSelectionWidget extends NonScrollableContainerWidget {
 
     public void addTab(SymbolTab tab) {
         int index = this.children().size();
-        MutableText narration = tab.getTooltipText().copy();
-        Identifier icon = tab.getIcon();
+        MutableComponent narration = tab.getTooltipText().copy();
+        ResourceLocation icon = tab.getIcon();
         String textIcon = tab.getTextIcon();
         boolean hasLiteralIcon = textIcon != null;
         FlatIconButtonWidget switchTabWidget = new FlatIconButtonWidget(
                 SymbolButtonWidget.SYMBOL_SIZE, SymbolButtonWidget.SYMBOL_SIZE,
-                hasLiteralIcon ? Text.literal(textIcon) : null,
+                hasLiteralIcon ? Component.literal(textIcon) : null,
                 SymbolButtonWidget.SYMBOL_SIZE, SymbolButtonWidget.SYMBOL_SIZE,
-                hasLiteralIcon ? null : new ButtonTextures(icon),
+                hasLiteralIcon ? null : new WidgetSprites(icon),
                 button -> setTab(index),
                 tab.getTooltipText(),
                 textSupplier -> narration
@@ -44,20 +45,20 @@ public class TabSelectionWidget extends NonScrollableContainerWidget {
     }
 
     public void refreshPositions() {
-        GridWidget gridWidget = new GridWidget(this.getX()+1, this.getY());
-        gridWidget.setColumnSpacing(1);
-        GridWidget.Adder adder = gridWidget.createAdder(Integer.MAX_VALUE);
-        this.children().forEach(adder::add);
-        gridWidget.refreshPositions();
+        GridLayout gridWidget = new GridLayout(this.getX()+1, this.getY());
+        gridWidget.columnSpacing(1);
+        GridLayout.RowHelper adder = gridWidget.createRowHelper(Integer.MAX_VALUE);
+        this.children().forEach(adder::addChild);
+        gridWidget.arrangeElements();
         this.setTab(this.selectedTab);
     }
 
     public void setTab(int tab) {
-        for (Widget child : this.children()) {
+        for (LayoutElement child : this.children()) {
             child.setY(getY());
         }
         int previousTab = this.getSelectedTab();
-        this.selectedTab = MathHelper.clamp(tab, 0, this.children().size()-1);
+        this.selectedTab = Mth.clamp(tab, 0, this.children().size()-1);
         if(selectedTab != -1) {
             SymbolChat.selectedTab = this.selectedTab;
             children().get(selectedTab).setY(getY()+1);
@@ -68,16 +69,16 @@ public class TabSelectionWidget extends NonScrollableContainerWidget {
     protected void onTabSwitched(int previousIndex, int newIndex) {}
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
         int dx = this.getX() + selectedTab * SymbolButtonWidget.GRID_SPCAING;
         int color = 0xFFFFFFFF;
-        if(dx > getX()) context.drawHorizontalLine(getX(), dx-1, getY() + SymbolButtonWidget.SYMBOL_SIZE, color);
-        if(getRight() > dx + SymbolButtonWidget.GRID_SPCAING) context.drawHorizontalLine(dx + SymbolButtonWidget.GRID_SPCAING, getRight() - 1, getY() + SymbolButtonWidget.SYMBOL_SIZE, color);
+        if(dx > getX()) context.hLine(getX(), dx-1, getY() + SymbolButtonWidget.SYMBOL_SIZE, color);
+        if(getRight() > dx + SymbolButtonWidget.GRID_SPCAING) context.hLine(dx + SymbolButtonWidget.GRID_SPCAING, getRight() - 1, getY() + SymbolButtonWidget.SYMBOL_SIZE, color);
         if(selectedTab != -1) {
-            context.drawVerticalLine(dx, getY(), getBottom(), color);
-            context.drawHorizontalLine(dx, dx + SymbolButtonWidget.GRID_SPCAING, getY(), color);
-            context.drawVerticalLine(dx + SymbolButtonWidget.GRID_SPCAING, getY(), getY() + SymbolButtonWidget.SYMBOL_SIZE, color);
+            context.vLine(dx, getY(), getBottom(), color);
+            context.hLine(dx, dx + SymbolButtonWidget.GRID_SPCAING, getY(), color);
+            context.vLine(dx + SymbolButtonWidget.GRID_SPCAING, getY(), getY() + SymbolButtonWidget.SYMBOL_SIZE, color);
         }
     }
 //

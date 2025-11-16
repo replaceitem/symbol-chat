@@ -1,13 +1,13 @@
 package net.replaceitem.symbolchat;
 
-import net.minecraft.client.gui.EditBox;
-import net.minecraft.client.gui.ScreenPos;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.input.CursorMovement;
-import net.minecraft.client.util.SelectionManager;
-import net.minecraft.util.math.MathHelper;
-import net.replaceitem.symbolchat.mixin.EditBoxAccessor;
-import net.replaceitem.symbolchat.mixin.widget.TextFieldWidgetAccessor;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.MultilineTextField;
+import net.minecraft.client.gui.components.Whence;
+import net.minecraft.client.gui.font.TextFieldHelper;
+import net.minecraft.client.gui.navigation.ScreenPosition;
+import net.minecraft.util.Mth;
+import net.replaceitem.symbolchat.mixin.MultilineTextFieldAccessor;
+import net.replaceitem.symbolchat.mixin.widget.EditBoxAccessor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.regex.MatchResult;
@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public interface SymbolSuggestable {
-    ScreenPos getCursorPosition();
+    ScreenPosition getCursorPosition();
     @Nullable
     String getSuggestionTerm();
     void replaceSuggestion(String symbol);
@@ -25,45 +25,45 @@ public interface SymbolSuggestable {
     }
     
     interface TextFieldWidgetSymbolSuggestable extends SymbolSuggestable {
-        default ScreenPos getCursorPosition() {
-            TextFieldWidget chatField = getTextField();
-            int x = chatField.getX() + chatField.getCharacterX(chatField.getCursor())-chatField.getCharacterX(((TextFieldWidgetAccessor) chatField).getFirstCharacterIndex());
-            x = MathHelper.clamp(x, 0, chatField.getCharacterX(0) + chatField.getInnerWidth());
-            return new ScreenPos(x, chatField.getY());
+        default ScreenPosition getCursorPosition() {
+            EditBox chatField = getTextField();
+            int x = chatField.getX() + chatField.getScreenX(chatField.getCursorPosition())-chatField.getScreenX(((EditBoxAccessor) chatField).getDisplayPos());
+            x = Mth.clamp(x, 0, chatField.getScreenX(0) + chatField.getInnerWidth());
+            return new ScreenPosition(x, chatField.getY());
         }
 
         default String getSuggestionTerm() {
             if(suggestionsDisabled()) return null;
-            TextFieldWidget chatField = getTextField();
-            if(((TextFieldWidgetAccessor) chatField).getSelectionStart() != ((TextFieldWidgetAccessor) chatField).getSelectionEnd()) return null;
+            EditBox chatField = getTextField();
+            if(((EditBoxAccessor) chatField).getCursorPos() != ((EditBoxAccessor) chatField).getHighlightPos()) return null;
             MatchResult suggestionArea = getSuggestionArea(chatField);
             if(suggestionArea == null) return null;
             return getSuggestionSearch(suggestionArea);
         }
         
         default void replaceSuggestion(String symbol) {
-            TextFieldWidget textFieldWidget = this.getTextField();
+            EditBox textFieldWidget = this.getTextField();
             MatchResult suggestionArea = getSuggestionArea(textFieldWidget);
             if(suggestionArea == null) return;
-            textFieldWidget.setSelectionStart(suggestionArea.start());
-            textFieldWidget.setSelectionEnd(suggestionArea.end());
+            textFieldWidget.setCursorPosition(suggestionArea.start());
+            textFieldWidget.setHighlightPos(suggestionArea.end());
 
-            textFieldWidget.write(symbol);
+            textFieldWidget.insertText(symbol);
         }
 
         @Nullable
-        static MatchResult getSuggestionArea(TextFieldWidget textFieldWidget) {
-            return SymbolSuggestable.getSuggestionArea(textFieldWidget.getText(), textFieldWidget.getCursor());
+        static MatchResult getSuggestionArea(EditBox textFieldWidget) {
+            return SymbolSuggestable.getSuggestionArea(textFieldWidget.getValue(), textFieldWidget.getCursorPosition());
         }
 
-        TextFieldWidget getTextField();
+        EditBox getTextField();
     }
 
     interface SelectionManagerSymbolSuggestable extends SymbolSuggestable {
         default String getSuggestionTerm() {
             if(suggestionsDisabled()) return null;
-            if(this.getSelectionManager().isSelecting()) return null;
-            int cursor = this.getSelectionManager().getSelectionStart();
+            if(this.getTextFieldHelper().isSelecting()) return null;
+            int cursor = this.getTextFieldHelper().getCursorPos();
             String string = this.getText();
             MatchResult suggestionArea = SymbolSuggestable.getSuggestionArea(string, cursor);
             if(suggestionArea == null) return null;
@@ -71,44 +71,44 @@ public interface SymbolSuggestable {
         }
 
         default void replaceSuggestion(String symbol) {
-            if(this.getSelectionManager().isSelecting()) return;
-            int cursor = this.getSelectionManager().getSelectionStart();
+            if(this.getTextFieldHelper().isSelecting()) return;
+            int cursor = this.getTextFieldHelper().getCursorPos();
             String string = this.getText();
             MatchResult suggestionArea = SymbolSuggestable.getSuggestionArea(string, cursor);
             if(suggestionArea == null) return;
             
-            this.getSelectionManager().setSelection(suggestionArea.start(), suggestionArea.end());
-            this.getSelectionManager().insert(symbol);
+            this.getTextFieldHelper().setSelectionRange(suggestionArea.start(), suggestionArea.end());
+            this.getTextFieldHelper().insertText(symbol);
         }
 
         String getText();
-        SelectionManager getSelectionManager();
+        TextFieldHelper getTextFieldHelper();
     }
 
     interface EditBoxSymbolSuggestable extends SymbolSuggestable {
         default String getSuggestionTerm() {
             if(suggestionsDisabled()) return null;
-            if(this.getEditBox().hasSelection()) return null;
-            int cursor = this.getEditBox().getCursor();
-            String string = this.getEditBox().getText();
+            if(this.getMultilineTextField().hasSelection()) return null;
+            int cursor = this.getMultilineTextField().cursor();
+            String string = this.getMultilineTextField().value();
             MatchResult suggestionArea = SymbolSuggestable.getSuggestionArea(string, cursor);
             if(suggestionArea == null) return null;
             return getSuggestionSearch(suggestionArea);
         }
 
         default void replaceSuggestion(String symbol) {
-            if(this.getEditBox().hasSelection()) return;
-            int cursor = this.getEditBox().getCursor();
-            String string = this.getEditBox().getText();
+            if(this.getMultilineTextField().hasSelection()) return;
+            int cursor = this.getMultilineTextField().cursor();
+            String string = this.getMultilineTextField().value();
             MatchResult suggestionArea = SymbolSuggestable.getSuggestionArea(string, cursor);
             if(suggestionArea == null) return;
 
-            this.getEditBox().moveCursor(CursorMovement.ABSOLUTE, suggestionArea.start());
-            ((EditBoxAccessor) this.getEditBox()).setSelectionEnd(suggestionArea.end());
-            this.getEditBox().replaceSelection(symbol);
+            this.getMultilineTextField().seekCursor(Whence.ABSOLUTE, suggestionArea.start());
+            ((MultilineTextFieldAccessor) this.getMultilineTextField()).setSelectCursor(suggestionArea.end());
+            this.getMultilineTextField().insertText(symbol);
         }
 
-        EditBox getEditBox();
+        MultilineTextField getMultilineTextField();
     }
 
     Pattern SUGGESTION_PATTERN = Pattern.compile("(?<=\\s|^):(\\S+)$", Pattern.MULTILINE);

@@ -1,14 +1,14 @@
 package net.replaceitem.symbolchat.gui.container;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.ScreenRect;
-import net.minecraft.client.gui.widget.ContainerWidget;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.util.math.MathHelper;
-import net.replaceitem.symbolchat.mixin.widget.ScrollableWidgetAccessor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractContainerWidget;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.util.Mth;
+import net.replaceitem.symbolchat.mixin.widget.AbstractScrollAreaAccessor;
 
-public abstract class SmoothScrollableContainerWidget extends ContainerWidget {
+public abstract class SmoothScrollableContainerWidget extends AbstractContainerWidget {
     public static final int SLIM_SCROLLBAR_WIDTH = 2;
     
     private boolean smoothScrolling;
@@ -18,7 +18,7 @@ public abstract class SmoothScrollableContainerWidget extends ContainerWidget {
     private boolean scrollbarHovered;
 
     public SmoothScrollableContainerWidget(int x, int y, int width, int height) {
-        super(x, y, width, height, ScreenTexts.EMPTY);
+        super(x, y, width, height, CommonComponents.EMPTY);
     }
 
     public void setSmoothScrolling(boolean smoothScrolling) {
@@ -29,49 +29,49 @@ public abstract class SmoothScrollableContainerWidget extends ContainerWidget {
     }
 
     @Override
-    protected double getDeltaYPerScroll() {
-        return MinecraftClient.getInstance().isCtrlPressed() ? scrollSpeed * 3 : scrollSpeed;
+    protected double scrollRate() {
+        return Minecraft.getInstance().hasControlDown() ? scrollSpeed * 3 : scrollSpeed;
     }
 
     @Override
-    public void setScrollY(double scrollY) {
-        super.setScrollY(scrollY);
-        if(((ScrollableWidgetAccessor) this).isScrollbarDragged()) this.scrollTarget = getScrollY();
+    public void setScrollAmount(double scrollY) {
+        super.setScrollAmount(scrollY);
+        if(((AbstractScrollAreaAccessor) this).isScrolling()) this.scrollTarget = scrollAmount();
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         if (!this.visible) return false;
-        double deltaY = verticalAmount * this.getDeltaYPerScroll();
+        double deltaY = verticalAmount * this.scrollRate();
         if(smoothScrolling) {
-            this.scrollTarget = MathHelper.clamp(this.scrollTarget - deltaY, 0, getMaxScrollY());
+            this.scrollTarget = Mth.clamp(this.scrollTarget - deltaY, 0, maxScrollAmount());
         } else {
-            this.setScrollY(this.scrollTarget - deltaY);
-            this.scrollTarget = getScrollY();
+            this.setScrollAmount(this.scrollTarget - deltaY);
+            this.scrollTarget = scrollAmount();
         }
         return true;
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
         if(smoothScrolling) scrollSmooth(delta);
-        this.scrollbarHovered = getScrollbarThumbRect().contains(mouseX, mouseY);
+        this.scrollbarHovered = getScrollbarThumbRect().containsPoint(mouseX, mouseY);
         if (this.visible) {
             context.enableScissor(this.getX(), this.getY(), this.getRight(), this.getBottom());
             this.renderContents(context, mouseX, mouseY, delta);
             context.disableScissor();
-            this.drawScrollbar(context, mouseX, mouseY);
+            this.renderScrollbar(context, mouseX, mouseY);
         }
     }
     
-    protected abstract void renderContents(DrawContext context, int mouseX, int mouseY, float delta);
+    protected abstract void renderContents(GuiGraphics context, int mouseX, int mouseY, float delta);
     
     private void scrollSmooth(float delta) {
-        double scrollY = getScrollY();
+        double scrollY = scrollAmount();
         if(scrollTarget == scrollY) return;
-        scrollY = MathHelper.lerp(((ScrollableWidgetAccessor) this).isScrollbarDragged() ? 1 : 1-Math.pow(2, -delta/0.4), scrollY, this.scrollTarget);
+        scrollY = Mth.lerp(((AbstractScrollAreaAccessor) this).isScrolling() ? 1 : 1-Math.pow(2, -delta/0.4), scrollY, this.scrollTarget);
         if(Math.abs(scrollTarget - scrollY) < 0.5) scrollY = scrollTarget;
-        this.setScrollY(scrollY);
+        this.setScrollAmount(scrollY);
     }
     
     public int getScrollbarThumbWidth() {
@@ -79,27 +79,27 @@ public abstract class SmoothScrollableContainerWidget extends ContainerWidget {
     }
 
     @Override
-    protected void drawScrollbar(DrawContext context, int mouseX, int mouseY) {
+    protected void renderScrollbar(GuiGraphics context, int mouseX, int mouseY) {
         if(scrollbarStyle == ScrollbarStyle.VANILLA) {
-            super.drawScrollbar(context, mouseX, mouseY);
+            super.renderScrollbar(context, mouseX, mouseY);
         } else {
-            if(!overflows()) return;
-            ScreenRect rect = getScrollbarThumbRect();
-            context.fill(rect.getLeft(), rect.getTop(), rect.getRight(), rect.getBottom(), scrollbarHovered || ((ScrollableWidgetAccessor) this).isScrollbarDragged() ? 0xFFFFFFFF : 0xFFA0A0A0);
+            if(!scrollbarVisible()) return;
+            ScreenRectangle rect = getScrollbarThumbRect();
+            context.fill(rect.left(), rect.top(), rect.right(), rect.bottom(), scrollbarHovered || ((AbstractScrollAreaAccessor) this).isScrolling() ? 0xFFFFFFFF : 0xFFA0A0A0);
         }
     }
 
     @Override
-    protected int getScrollbarX() {
+    protected int scrollBarX() {
         return this.getRight() - this.getScrollbarThumbWidth();
     }
 
-    public ScreenRect getScrollbarThumbRect() {
-        return new ScreenRect(
-                this.getScrollbarX(),
-                overflows() ? this.getScrollbarThumbY() : getY(),
+    public ScreenRectangle getScrollbarThumbRect() {
+        return new ScreenRectangle(
+                this.scrollBarX(),
+                scrollbarVisible() ? this.scrollBarY() : getY(),
                 this.getScrollbarThumbWidth(),
-                this.getScrollbarThumbHeight()
+                this.scrollerHeight()
         );
     }
     

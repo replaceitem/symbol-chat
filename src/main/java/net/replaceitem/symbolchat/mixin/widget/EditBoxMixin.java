@@ -2,7 +2,7 @@ package net.replaceitem.symbolchat.mixin.widget;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.components.EditBox;
 import net.replaceitem.symbolchat.extensions.SymbolEditableWidget;
 import net.replaceitem.symbolchat.resource.FontProcessor;
 import org.jetbrains.annotations.Nullable;
@@ -17,12 +17,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-@Mixin(TextFieldWidget.class)
-public class TextFieldWidgetMixin implements SymbolEditableWidget {
+@Mixin(EditBox.class)
+public class EditBoxMixin implements SymbolEditableWidget {
 
-    @Shadow private int selectionStart;
-    @Shadow private int selectionEnd;
-    @Shadow private String text;
+    @Shadow private int cursorPos;
+    @Shadow private int highlightPos;
+    @Shadow private String value;
     @Unique @Nullable private Supplier<FontProcessor> fontProcessorSupplier;
     @Unique @Nullable private BiFunction<String, @Nullable String, Boolean> convertFontsPredicate;
     @Unique @Nullable private Runnable refreshSuggestions;
@@ -30,10 +30,10 @@ public class TextFieldWidgetMixin implements SymbolEditableWidget {
     // acting as a local variable between the two injection points beforeWrite and modifySelectionStart
     @Unique private boolean lastReverseDirection;
 
-    @Inject(method = "write", at = @At(value = "HEAD"))
-    private void beforeWrite(String text, CallbackInfo ci, @Local(argsOnly = true) LocalRef<String> textRef) {
+    @Inject(method = "insertText", at = @At(value = "HEAD"))
+    private void beforeInsertText(String text, CallbackInfo ci, @Local(argsOnly = true) LocalRef<String> textRef) {
         this.lastReverseDirection = false;
-        if (convertFontsPredicate == null || convertFontsPredicate.apply(this.text, text)) {
+        if (convertFontsPredicate == null || convertFontsPredicate.apply(this.value, text)) {
             FontProcessor fontProcessor = fontProcessorSupplier == null ? null : fontProcessorSupplier.get();
             if (fontProcessor != null) {
                 textRef.set(fontProcessor.convertString(text));
@@ -42,16 +42,16 @@ public class TextFieldWidgetMixin implements SymbolEditableWidget {
         }
     }
 
-    @ModifyArg(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;setSelectionStart(I)V"))
-    private int modifySelectionStart(int cursor) {
+    @ModifyArg(method = "insertText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/EditBox;setCursorPosition(I)V"))
+    private int modifyCursorPosition(int cursor) {
         if (this.lastReverseDirection) {
-            return Math.min(this.selectionStart, this.selectionEnd);
+            return Math.min(this.cursorPos, this.highlightPos);
         }
         return cursor;
     }
 
-    @Inject(method = "setSelectionEnd", at = @At("RETURN"))
-    private void afterSetSelectionEnd(int cursor, CallbackInfo ci) {
+    @Inject(method = "setHighlightPos", at = @At("RETURN"))
+    private void afterSetHighlightPos(int cursor, CallbackInfo ci) {
         if (this.refreshSuggestions != null) {
             this.refreshSuggestions.run();
         }

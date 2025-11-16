@@ -1,7 +1,7 @@
 package net.replaceitem.symbolchat.extensions;
 
-import net.minecraft.client.input.CharInput;
-import net.minecraft.client.input.KeyInput;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
 import net.replaceitem.symbolchat.resource.FontProcessor;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,11 +9,11 @@ public interface ScreenAccess {
     void addSymbolChatComponents();
     @NotNull FontProcessor getFontProcessor();
     void refreshSuggestions();
-    boolean handleSuggestorKeyPressed(KeyInput input);
-    boolean handlePanelKeyPressed(KeyInput input);
-    boolean handlePanelCharTyped(CharInput input);
+    boolean handleSuggestorKeyPressed(KeyEvent input);
+    boolean handlePanelKeyPressed(KeyEvent input);
+    boolean handlePanelCharTyped(CharacterEvent input);
     
-    default boolean handleKeyPressed(KeyInput input) {
+    default boolean handleKeyPressed(KeyEvent input) {
         if(handleSuggestorKeyPressed(input)) return true;
         return handlePanelKeyPressed(input);
     }

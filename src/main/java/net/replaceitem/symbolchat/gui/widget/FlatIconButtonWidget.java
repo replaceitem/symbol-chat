@@ -1,22 +1,22 @@
 package net.replaceitem.symbolchat.gui.widget;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ButtonTextures;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextIconButtonWidget;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.ColorHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.SpriteIconButton;
+import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
 import net.replaceitem.symbolchat.SymbolChat;
 import org.jetbrains.annotations.Nullable;
 
-public class FlatIconButtonWidget extends TextIconButtonWidget.IconOnly {
+public class FlatIconButtonWidget extends SpriteIconButton.CenteredIcon {
     private boolean outlined = false;
 
-    public FlatIconButtonWidget(int width, int height, Text message, int textureWidth, int textureHeight, ButtonTextures buttonTextures, PressAction pressAction, @Nullable Text tooltipText, @Nullable ButtonWidget.NarrationSupplier narrationSupplier) {
+    public FlatIconButtonWidget(int width, int height, Component message, int textureWidth, int textureHeight, WidgetSprites buttonTextures, PressAction pressAction, @Nullable Component tooltipText, @Nullable Button.CreateNarration narrationSupplier) {
         super(width, height, message, textureWidth, textureHeight, buttonTextures, pressAction, tooltipText, narrationSupplier);
     }
 
@@ -33,36 +33,36 @@ public class FlatIconButtonWidget extends TextIconButtonWidget.IconOnly {
     }
 
     @Override
-    public void drawMessage(DrawContext context, TextRenderer textRenderer, int color) {
-        if(getMessage() != null && getMessage() != ScreenTexts.EMPTY) this.drawScrollableText(context, textRenderer, 0, color);
+    public void renderString(GuiGraphics context, Font textRenderer, int color) {
+        if(getMessage() != null && getMessage() != CommonComponents.EMPTY) this.renderScrollingString(context, textRenderer, 0, color);
     }
 
-    public void drawOutline(DrawContext drawContext, int color) {
-        int alphaColor = ColorHelper.withAlpha((int) (this.alpha*255), color);
-        drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()-1, alphaColor);
-        drawContext.drawVerticalLine(this.getX()-1, this.getY()-1, this.getY()+height, alphaColor);
-        drawContext.drawHorizontalLine(this.getX()-1, this.getX()+width, this.getY()+height, alphaColor);
-        drawContext.drawVerticalLine(this.getX()+width, this.getY()-1, this.getY()+height, alphaColor);
+    public void drawOutline(GuiGraphics drawContext, int color) {
+        int alphaColor = ARGB.color((int) (this.alpha*255), color);
+        drawContext.hLine(this.getX()-1, this.getX()+width, this.getY()-1, alphaColor);
+        drawContext.vLine(this.getX()-1, this.getY()-1, this.getY()+height, alphaColor);
+        drawContext.hLine(this.getX()-1, this.getX()+width, this.getY()+height, alphaColor);
+        drawContext.vLine(this.getX()+width, this.getY()-1, this.getY()+height, alphaColor);
     }
 
     @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), ColorHelper.mix(getBackgroundColor(), ColorHelper.getWhite(alpha)));
+    public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        context.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), ARGB.multiply(getBackgroundColor(), ARGB.white(alpha)));
         if(outlined) drawOutline(context, 0xFFFFFFFF);
-        int textureX = this.getX() + this.getWidth() / 2 - this.textureWidth / 2;
-        int textureY = this.getY() + this.getHeight() / 2 - this.textureHeight / 2;
+        int textureX = this.getX() + this.getWidth() / 2 - this.spriteWidth / 2;
+        int textureY = this.getY() + this.getHeight() / 2 - this.spriteHeight / 2;
         int textColor = this.isHovered() ? SymbolChat.config.buttonTextHoverColor.get() : SymbolChat.config.buttonTextColor.get();
-        if(texture != null) {
-            context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, this.texture.enabled(), textureX, textureY, this.textureWidth, this.textureHeight, ColorHelper.withAlpha((int) (this.alpha*255), textColor));
+        if(sprite != null) {
+            context.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite.enabled(), textureX, textureY, this.spriteWidth, this.spriteHeight, ARGB.color((int) (this.alpha*255), textColor));
         }
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        this.drawMessage(context, minecraftClient.textRenderer, textColor);
+        Minecraft minecraftClient = Minecraft.getInstance();
+        this.renderString(context, minecraftClient.font, textColor);
     }
 
-    public interface PressAction extends ButtonWidget.PressAction {
+    public interface PressAction extends Button.OnPress {
         void onPress(FlatIconButtonWidget button);
         @Override
-        default void onPress(ButtonWidget button) {
+        default void onPress(Button button) {
             if(button instanceof FlatIconButtonWidget flatIconButtonWidget) this.onPress(flatIconButtonWidget);
         }
     }

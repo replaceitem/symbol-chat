@@ -1,6 +1,6 @@
 package net.replaceitem.symbolchat.gui;
 
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.GuiGraphics;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
@@ -89,7 +89,7 @@ public class SymbolSelectionPanel extends NonScrollableContainerWidget {
     }
 
     @Override
-    public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void renderWidget(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
         drawContext.fill(this.getX(), this.getY() + SymbolButtonWidget.GRID_SPCAING + 1, this.getX() + width, this.getY() + height, SymbolChat.config.hudColor.get());
         super.renderWidget(drawContext, mouseX, mouseY, delta);
     }

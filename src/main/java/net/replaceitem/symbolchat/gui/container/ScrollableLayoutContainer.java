@@ -1,8 +1,8 @@
 package net.replaceitem.symbolchat.gui.container;
 
-import net.minecraft.client.gui.widget.LayoutWidget;
+import net.minecraft.client.gui.layouts.Layout;
 
-public abstract class ScrollableLayoutContainer<T extends LayoutWidget> extends SmoothScrollableContainerWidget {
+public abstract class ScrollableLayoutContainer<T extends Layout> extends SmoothScrollableContainerWidget {
 
     protected T layout;
 
@@ -12,25 +12,25 @@ public abstract class ScrollableLayoutContainer<T extends LayoutWidget> extends 
     }
 
     public void refreshPositions() {
-       this.layout.refreshPositions();
+       this.layout.arrangeElements();
         this.updateChildPos();
     }
 
     public void updateChildPos() {
         int childX = this.getX();
-        int childY = this.getY() - (int) getScrollY();
+        int childY = this.getY() - (int) scrollAmount();
         if(layout.getX() != childX) layout.setX(childX);
         if(layout.getY() != childY) layout.setY(childY);
     }
 
     @Override
-    protected int getContentsHeightWithPadding() {
+    protected int contentHeight() {
         return this.layout.getHeight();
     }
 
     @Override
-    public void setScrollY(double scrollY) {
-        super.setScrollY(scrollY);
+    public void setScrollAmount(double scrollY) {
+        super.setScrollAmount(scrollY);
         this.updateChildPos();
     }
 

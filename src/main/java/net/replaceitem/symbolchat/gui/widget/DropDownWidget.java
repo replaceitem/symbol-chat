@@ -1,14 +1,17 @@
 package net.replaceitem.symbolchat.gui.widget;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.narration.NarrationSupplier;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.container.ScrollableGridContainer;
@@ -18,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DropDownWidget<T> extends NonScrollableContainerWidget implements Drawable, Element, Narratable {
+public class DropDownWidget<T> extends NonScrollableContainerWidget implements Renderable, GuiEventListener, NarrationSupplier {
     public static final int DROPDOWN_HEIGHT = 150;
     public final List<DropDownElementWidget> elements;
     private final Button buttonWidget;
@@ -37,7 +40,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
                 this.width - 2, DROPDOWN_HEIGHT, 1
         ) {
             @Override
-            protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+            protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
                 super.renderWidget(context, mouseX, mouseY, delta);
             }
         };
@@ -60,20 +63,20 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
         this.scrollableGridWidget.visible = this.expanded;
     }
     
-    private ScreenRect getExpandedArea() {
-        return new ScreenRect(scrollableGridWidget.getX()-1, scrollableGridWidget.getY()-1, scrollableGridWidget.getWidth()+2, scrollableGridWidget.getHeight()+2);
+    private ScreenRectangle getExpandedArea() {
+        return new ScreenRectangle(scrollableGridWidget.getX()-1, scrollableGridWidget.getY()-1, scrollableGridWidget.getWidth()+2, scrollableGridWidget.getHeight()+2);
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        ScreenRect expandedArea = getExpandedArea();
-        if(expanded) context.fill(expandedArea.getLeft(), expandedArea.getTop(), expandedArea.getRight(), expandedArea.getBottom(), SymbolChat.config.buttonColor.get());
+    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        ScreenRectangle expandedArea = getExpandedArea();
+        if(expanded) context.fill(expandedArea.left(), expandedArea.top(), expandedArea.right(), expandedArea.bottom(), SymbolChat.config.buttonColor.get());
         super.renderWidget(context, mouseX, mouseY, delta);
     }
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return super.isMouseOver(mouseX, mouseY) || (expanded && getExpandedArea().contains((int) mouseX, (int) mouseY));
+        return super.isMouseOver(mouseX, mouseY) || (expanded && getExpandedArea().containsPoint((int) mouseX, (int) mouseY));
     }
 
     public void changeSelected(int index) {
@@ -88,10 +91,10 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
         return this.elements.get(selected).getElement();
     }
     
-    class Button extends ButtonWidget {
+    class Button extends net.minecraft.client.gui.components.Button {
 
         protected Button(int x, int y, int width, int height) {
-            super(x, y, width, height, Text.empty(), button -> DropDownWidget.this.toggleVisible(), DEFAULT_NARRATION_SUPPLIER);
+            super(x, y, width, height, Component.empty(), button -> DropDownWidget.this.toggleVisible(), DEFAULT_NARRATION);
         }
 
         private int getBackgroundColor() {
@@ -99,25 +102,25 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
         }
 
         @Override
-        public Text getMessage() {
+        public Component getMessage() {
             return DropDownWidget.this.elements.get(DropDownWidget.this.selected).getMessage();
         }
 
         @Override
-        protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-            MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+            Minecraft minecraftClient = Minecraft.getInstance();
             int color = this.isHovered() ? 16777215 : 10526880;
             context.fill(getX(), getY(), getRight(), getBottom(), getBackgroundColor());
-            this.drawMessage(context, minecraftClient.textRenderer, color | MathHelper.ceil(this.alpha * 255.0F) << 24);
+            this.renderString(context, minecraftClient.font, color | Mth.ceil(this.alpha * 255.0F) << 24);
         }
     }
 
-    public class DropDownElementWidget extends ClickableWidget implements Drawable, Element, Narratable {
+    public class DropDownElementWidget extends AbstractWidget implements Renderable, GuiEventListener, NarrationSupplier {
         private final T element;
         private final int index;
     
         public DropDownElementWidget(int x, int y, int width, int height, T element, int index) {
-            super(x, y, width, height, Text.literal(element.toString()));
+            super(x, y, width, height, Component.literal(element.toString()));
             this.element = element;
             this.index = index;
         }
@@ -127,24 +130,24 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements D
         }
     
         @Override
-        public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        public void renderWidget(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
             if (this.visible) {
                 drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, getBackgroundColor());
-                TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+                Font textRenderer = Minecraft.getInstance().font;
                 int z = this.isHovered() ? 16777215 : 10526880;
-                drawContext.drawCenteredTextWithShadow(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, z | MathHelper.ceil(this.alpha * 255.0F) << 24);
+                drawContext.drawCenteredString(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, z | Mth.ceil(this.alpha * 255.0F) << 24);
             }
         }
 
         @Override
-        public void onClick(Click click, boolean doubled) {
+        public void onClick(MouseButtonEvent click, boolean doubled) {
             DropDownWidget.this.changeSelected(this.index);
         }
 
         @Override
-        public void appendClickableNarrations(NarrationMessageBuilder builder) {
-            this.appendDefaultNarrations(builder);
-            builder.put(NarrationPart.HINT, "Dropdown element: " + element.toString());
+        public void updateWidgetNarration(NarrationElementOutput builder) {
+            this.defaultButtonNarrationText(builder);
+            builder.add(NarratedElementType.HINT, "Dropdown element: " + element.toString());
         }
     
         public T getElement() {

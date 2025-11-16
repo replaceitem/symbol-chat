@@ -1,11 +1,10 @@
 package net.replaceitem.symbolchat;
 
 import com.ibm.icu.lang.UCharacter;
-import net.minecraft.util.math.MathHelper;
-
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.stream.IntStream;
+import net.minecraft.util.Mth;
 
 public class UnicodeSearch {
     private final IntStream stream;
@@ -15,8 +14,8 @@ public class UnicodeSearch {
     }
 
     public static UnicodeSearch ofPage(int page) {
-        int start = MathHelper.clamp(page << 16, 0, UCharacter.MAX_CODE_POINT - 1);
-        int end = MathHelper.clamp((page + 1) << 16, 0, UCharacter.MAX_CODE_POINT - 1);
+        int start = Mth.clamp(page << 16, 0, UCharacter.MAX_CODE_POINT - 1);
+        int end = Mth.clamp((page + 1) << 16, 0, UCharacter.MAX_CODE_POINT - 1);
         return new UnicodeSearch(IntStream.range(start, end));
     }
     

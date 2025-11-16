@@ -1,5 +1,5 @@
 accessWidener   v2      named
-accessible class net/minecraft/client/gui/DrawContext$ScissorStack
-accessible method net/minecraft/client/gui/widget/ScrollableWidget getScrollbarThumbHeight ()I
-accessible class net/minecraft/client/gui/EditBox$Substring
-extendable method net/minecraft/client/util/SelectionManager insert (Ljava/lang/String;Ljava/lang/String;)V
+accessible class net/minecraft/client/gui/GuiGraphics$ScissorStack
+accessible method net/minecraft/client/gui/components/AbstractScrollArea scrollerHeight ()I
+accessible class net/minecraft/client/gui/components/MultilineTextField$StringView
+extendable method net/minecraft/client/gui/font/TextFieldHelper insertText (Ljava/lang/String;Ljava/lang/String;)V

@@ -1,12 +1,12 @@
 package net.replaceitem.symbolchat.extensions;
 
-import net.minecraft.client.gui.ScreenPos;
+import net.minecraft.client.gui.navigation.ScreenPosition;
 import org.spongepowered.asm.mixin.Unique;
 
-public interface EditBoxWidgetExtension {
+public interface MultilineEditBoxExtension {
     @Unique
     void insert(String text);
     @Unique
 
-    ScreenPos getCursorPosition();
+    ScreenPosition getCursorPosition();
 }

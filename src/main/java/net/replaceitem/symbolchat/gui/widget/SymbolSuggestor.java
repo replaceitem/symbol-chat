@@ -1,12 +1,12 @@
 package net.replaceitem.symbolchat.gui.widget;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Narratable;
-import net.minecraft.client.gui.ScreenPos;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.narration.NarrationSupplier;
+import net.minecraft.client.gui.navigation.ScreenPosition;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.util.Mth;
 import net.replaceitem.symbolchat.SearchUtil;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
@@ -46,7 +46,7 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
 
     @Override
     public void refresh() {
-        ScreenPos cursorPosition = this.suggestable.getCursorPosition();
+        ScreenPosition cursorPosition = this.suggestable.getCursorPosition();
         this.setY(cursorPosition.y() - HEIGHT - 3);
         
         String search = this.suggestable.getSuggestionTerm();
@@ -65,12 +65,12 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
                         SearchUtil.performSearch(SymbolChat.symbolManager.streamAllSymbols(), search);
                 List<String> symbols = searchStream.limit(shownSymbols).toList();
                 this.width = 1 + SymbolButtonWidget.GRID_SPCAING * symbols.size();
-                this.setX(MathHelper.clamp(this.getX(), 0, this.screen.width - this.width));
+                this.setX(Mth.clamp(this.getX(), 0, this.screen.width - this.width));
                 for (int i = 0; i < symbols.size(); i++) {
                     children().add(new PasteSymbolButtonWidget(this.getX() + 1 + i * (SymbolButtonWidget.GRID_SPCAING), this.getY() + 1, this, symbols.get(i)) {
                         @Override
                         protected boolean isHighlighted() {
-                            return this.isSelected();
+                            return this.isHoveredOrFocused();
                         }
                     });
                 }
@@ -92,15 +92,15 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
 //    }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
         context.fill(this.getX(), this.getY(), this.getRight(), this.getBottom(), SymbolChat.config.hudColor.get());
         super.renderWidget(context, mouseX, mouseY, delta);
     }
 
     @Override
-    public boolean keyPressed(KeyInput input) {
+    public boolean keyPressed(KeyEvent input) {
         if(!visible) return false;
-        if(input.isTab()) {
+        if(input.isCycleFocus()) {
             PasteSymbolButtonWidget focused;
             if(this.getFocused() instanceof PasteSymbolButtonWidget pasteSymbolButtonWidget) {
                 focused = pasteSymbolButtonWidget;
@@ -129,7 +129,7 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
             return true;
         }
 
-        if(input.isEnter() && this.getFocused() != null) {
+        if(input.isConfirmation() && this.getFocused() != null) {
             if(getFocused() instanceof PasteSymbolButtonWidget symbolButtonWidget) symbolButtonWidget.onSymbolClicked();
             this.hide();
             return true;
@@ -144,14 +144,14 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
     }
 
     @Override
-    public SelectionType getType() {
-        return SelectionType.NONE;
+    public NarrationPriority narrationPriority() {
+        return NarrationPriority.NONE;
     }
 
     @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
-        if (getFocused() instanceof Narratable narratable) {
-            narratable.appendNarrations(builder);
+    protected void updateWidgetNarration(NarrationElementOutput builder) {
+        if (getFocused() instanceof NarrationSupplier narratable) {
+            narratable.updateNarration(builder);
         }
     }
 }

@@ -4,13 +4,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourceFinder;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.GsonHelper;
 import net.replaceitem.symbolchat.extensions.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
 import org.jetbrains.annotations.NotNull;
@@ -28,25 +28,25 @@ import static net.replaceitem.symbolchat.SymbolChat.NAMESPACE;
 
 public class FontManager implements SimpleSynchronousResourceReloadListener {
     
-    public static final Identifier IDENTIFIER = Identifier.of(NAMESPACE,"fonts");
-    public static final ResourceFinder FONT_FINDER = new ResourceFinder("symbol_fonts", ".json");
+    public static final ResourceLocation IDENTIFIER = ResourceLocation.fromNamespaceAndPath(NAMESPACE,"fonts");
+    public static final FileToIdConverter FONT_FINDER = new FileToIdConverter("symbol_fonts", ".json");
     private FontProcessor normal;
     private List<FontProcessor> fonts = List.of();
 
     @Override
-    public Identifier getFabricId() {
+    public ResourceLocation getFabricId() {
         return IDENTIFIER;
     }
 
     @Override
-    public void reload(ResourceManager manager) {
-        normal = new FontProcessor(Identifier.of(NAMESPACE, "normal"), Function.identity(), Integer.MIN_VALUE, false);
+    public void onResourceManagerReload(ResourceManager manager) {
+        normal = new FontProcessor(ResourceLocation.fromNamespaceAndPath(NAMESPACE, "normal"), Function.identity(), Integer.MIN_VALUE, false);
         fonts = new ArrayList<>();
         fonts.add(normal);
-        for (Map.Entry<Identifier, Resource> identifierResourceEntry : FONT_FINDER.findResources(manager).entrySet()) {
-            Identifier identifier = FONT_FINDER.toResourceId(identifierResourceEntry.getKey());
+        for (Map.Entry<ResourceLocation, Resource> identifierResourceEntry : FONT_FINDER.listMatchingResources(manager).entrySet()) {
+            ResourceLocation identifier = FONT_FINDER.fileToId(identifierResourceEntry.getKey());
             Resource resource = identifierResourceEntry.getValue();
-            try(BufferedReader reader = resource.getReader()) {
+            try(BufferedReader reader = resource.openAsReader()) {
                 FontProcessor font = readFont(reader, identifier);
                 fonts.add(font);
             } catch (IOException | JsonParseException e) {
@@ -57,11 +57,11 @@ public class FontManager implements SimpleSynchronousResourceReloadListener {
         fonts = Collections.unmodifiableList(fonts);
     }
 
-    private FontProcessor readFont(BufferedReader reader, Identifier identifier) throws JsonParseException {
-        JsonObject object = JsonHelper.deserialize(reader);
-        String type = JsonHelper.getString(object, "type", "mapped");
-        int order = JsonHelper.getInt(object, "order", Integer.MAX_VALUE);
-        boolean reverseDirection = JsonHelper.getBoolean(object, "reverse_direction", false);
+    private FontProcessor readFont(BufferedReader reader, ResourceLocation identifier) throws JsonParseException {
+        JsonObject object = GsonHelper.parse(reader);
+        String type = GsonHelper.getAsString(object, "type", "mapped");
+        int order = GsonHelper.getAsInt(object, "order", Integer.MAX_VALUE);
+        boolean reverseDirection = GsonHelper.getAsBoolean(object, "reverse_direction", false);
         if(type.equals("mapped")) return MappedFontProcessor.read(identifier, object, order, reverseDirection);
         throw new JsonSyntaxException("Invalid font type: " + type);
     }
@@ -76,7 +76,7 @@ public class FontManager implements SimpleSynchronousResourceReloadListener {
     
     @NotNull
     public FontProcessor getCurrentScreenFontProcessor() {
-        Screen screen = MinecraftClient.getInstance().currentScreen;
+        Screen screen = Minecraft.getInstance().screen;
         if (!(screen instanceof ScreenAccess screenAccess)) {
             return normal;
         }

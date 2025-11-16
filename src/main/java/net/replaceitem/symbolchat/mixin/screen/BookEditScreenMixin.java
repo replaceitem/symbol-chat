@@ -1,17 +1,17 @@
 package net.replaceitem.symbolchat.mixin.screen;
 
-import net.minecraft.client.gui.EditBox;
-import net.minecraft.client.gui.ScreenPos;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.BookEditScreen;
-import net.minecraft.client.gui.widget.EditBoxWidget;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.MultiLineEditBox;
+import net.minecraft.client.gui.components.MultilineTextField;
+import net.minecraft.client.gui.navigation.ScreenPosition;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.BookEditScreen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.network.chat.Component;
 import net.replaceitem.symbolchat.*;
-import net.replaceitem.symbolchat.extensions.EditBoxWidgetExtension;
+import net.replaceitem.symbolchat.extensions.MultilineEditBoxExtension;
 import net.replaceitem.symbolchat.extensions.ScreenAccess;
 import net.replaceitem.symbolchat.extensions.SymbolEditableWidget;
-import net.replaceitem.symbolchat.mixin.widget.EditBoxWidgetAccessor;
+import net.replaceitem.symbolchat.mixin.widget.MultiLinedEditBoxAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,9 +22,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BookEditScreen.class)
 public abstract class BookEditScreenMixin extends Screen implements SymbolInsertable, SymbolSuggestable.EditBoxSymbolSuggestable {
 
-    @Shadow private EditBoxWidget editBox;
+    @Shadow private MultiLineEditBox page;
 
-    protected BookEditScreenMixin(Text title) {
+    protected BookEditScreenMixin(Component title) {
         super(title);
     }
 
@@ -35,34 +35,34 @@ public abstract class BookEditScreenMixin extends Screen implements SymbolInsert
 
     @Inject(method = "init", at = @At(value = "RETURN"))
     private void afterInit(CallbackInfo ci) {
-        ((SymbolEditableWidget) this.editBox).setFontProcessorSupplier(() -> ((ScreenAccess) this).getFontProcessor());
-        ((SymbolEditableWidget) this.editBox).setRefreshSuggestions(() -> ((ScreenAccess) this).refreshSuggestions());
+        ((SymbolEditableWidget) this.page).setFontProcessorSupplier(() -> ((ScreenAccess) this).getFontProcessor());
+        ((SymbolEditableWidget) this.page).setRefreshSuggestions(() -> ((ScreenAccess) this).refreshSuggestions());
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    public void keyPressed(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
+    public void keyPressed(KeyEvent input, CallbackInfoReturnable<Boolean> cir) {
         if(((ScreenAccess) this).handleKeyPressed(input)) cir.setReturnValue(true);
     }
 
     @Override
     public void insertSymbol(String symbol) {
-        ((EditBoxWidgetExtension) this.editBox).insert(symbol);
+        ((MultilineEditBoxExtension) this.page).insert(symbol);
     }
 
     @Override
     public void focusTextbox() {
-        if(client != null) this.client.send(() -> {
-            if(client.currentScreen == this) this.setFocused(this.editBox);
+        if(minecraft != null) this.minecraft.schedule(() -> {
+            if(minecraft.screen == this) this.setFocused(this.page);
         });
     }
 
     @Override
-    public ScreenPos getCursorPosition() {
-        return ((EditBoxWidgetExtension) this.editBox).getCursorPosition();
+    public ScreenPosition getCursorPosition() {
+        return ((MultilineEditBoxExtension) this.page).getCursorPosition();
     }
 
     @Override
-    public EditBox getEditBox() {
-        return ((EditBoxWidgetAccessor) this.editBox).getEditBox();
+    public MultilineTextField getMultilineTextField() {
+        return ((MultiLinedEditBoxAccessor) this.page).getMultilineTextField();
     }
 }

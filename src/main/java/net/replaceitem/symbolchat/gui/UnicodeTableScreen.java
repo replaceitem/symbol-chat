@@ -1,21 +1,30 @@
 package net.replaceitem.symbolchat.gui;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.*;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.SpriteIconButton;
+import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.client.gui.layouts.LayoutSettings;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.layouts.SpacerElement;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.replaceitem.symbolchat.SymbolChat;
-import net.replaceitem.symbolchat.extensions.TextRendererAccess;
+import net.replaceitem.symbolchat.extensions.FontAccess;
 import net.replaceitem.symbolchat.UnicodeSearch;
 import net.replaceitem.symbolchat.gui.widget.IntSpinnerWidget;
 import net.replaceitem.symbolchat.gui.widget.UnicodeTable;
 import net.replaceitem.symbolchat.mixin.FontManagerAccessor;
-import net.replaceitem.symbolchat.mixin.MinecraftClientAccessor;
+import net.replaceitem.symbolchat.mixin.MinecraftAccessor;
 
 import java.util.List;
 import java.util.OptionalInt;
@@ -23,24 +32,24 @@ import java.util.function.IntUnaryOperator;
 
 public class UnicodeTableScreen extends Screen {
     public UnicodeTableScreen(Screen parent) {
-        super(Text.of("Unicode Table"));
+        super(Component.nullToEmpty("Unicode Table"));
         this.parent = parent;
     }
 
-    private static final Identifier COPY_TEXTURE = Identifier.of(SymbolChat.NAMESPACE, "copy");
-    private static final Identifier FAVORITE_TEXTURE = Identifier.of(SymbolChat.NAMESPACE, "favorite");
+    private static final ResourceLocation COPY_TEXTURE = ResourceLocation.fromNamespaceAndPath(SymbolChat.NAMESPACE, "copy");
+    private static final ResourceLocation FAVORITE_TEXTURE = ResourceLocation.fromNamespaceAndPath(SymbolChat.NAMESPACE, "favorite");
 
     private final Screen parent;
     
     private UnicodeTable unicodeTable;
 
-    private ButtonWidget copySelectedButton;
-    private ButtonWidget favoriteSymbolButton;
+    private Button copySelectedButton;
+    private Button favoriteSymbolButton;
 
-    private TextFieldWidget searchTextField;
+    private EditBox searchTextField;
     private IntSpinnerWidget pageSpinner;
     private IntSpinnerWidget widthSpinner;
-    private CheckboxWidget hideMissingGlyphsCheckbox;
+    private Checkbox hideMissingGlyphsCheckbox;
     
     public static final int SIDEBAR_WIDTH = 128;
     public static final int SYMBOLS_START_X = SIDEBAR_WIDTH+1;
@@ -49,7 +58,7 @@ public class UnicodeTableScreen extends Screen {
     protected void init() {
         super.init();
         
-        unicodeTable = new UnicodeTable(textRenderer, SYMBOLS_START_X, 0, this.width - SYMBOLS_START_X, height) {
+        unicodeTable = new UnicodeTable(font, SYMBOLS_START_X, 0, this.width - SYMBOLS_START_X, height) {
             @Override
             protected void onRefreshed() {
                 boolean hasSelection = hasSelection();
@@ -57,68 +66,68 @@ public class UnicodeTableScreen extends Screen {
                 if(favoriteSymbolButton != null) favoriteSymbolButton.active = hasSelection;
             }
         };
-        addDrawableChild(unicodeTable);
+        addRenderableWidget(unicodeTable);
         
         int widgetWidth = SIDEBAR_WIDTH-4;
 
-        DirectionalLayoutWidget adder = new DirectionalLayoutWidget(2,2, DirectionalLayoutWidget.DisplayAxis.VERTICAL);
+        LinearLayout adder = new LinearLayout(2,2, LinearLayout.Orientation.VERTICAL);
         adder.spacing(4);
 
         {
-            DirectionalLayoutWidget buttonRow = adder.add(new DirectionalLayoutWidget(0,0, DirectionalLayoutWidget.DisplayAxis.HORIZONTAL));
-            copySelectedButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> unicodeTable.copySelected(), true).texture(COPY_TEXTURE, 16, 16).dimension(20, 20).build();
-            copySelectedButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.unicode_table.copy_to_clipboard")));
-            buttonRow.add(copySelectedButton);
+            LinearLayout buttonRow = adder.addChild(new LinearLayout(0,0, LinearLayout.Orientation.HORIZONTAL));
+            copySelectedButton = SpriteIconButton.builder(CommonComponents.EMPTY, button -> unicodeTable.copySelected(), true).sprite(COPY_TEXTURE, 16, 16).size(20, 20).build();
+            copySelectedButton.setTooltip(Tooltip.create(Component.translatable("symbolchat.unicode_table.copy_to_clipboard")));
+            buttonRow.addChild(copySelectedButton);
 
-            favoriteSymbolButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> unicodeTable.favoriteSymbols(), true).texture(FAVORITE_TEXTURE, 16, 16).dimension(20, 20).build();
-            buttonRow.add(favoriteSymbolButton);
-            favoriteSymbolButton.setTooltip(Tooltip.of(Text.translatable("symbolchat.unicode_table.favorite_symbol")));
+            favoriteSymbolButton = SpriteIconButton.builder(CommonComponents.EMPTY, button -> unicodeTable.favoriteSymbols(), true).sprite(FAVORITE_TEXTURE, 16, 16).size(20, 20).build();
+            buttonRow.addChild(favoriteSymbolButton);
+            favoriteSymbolButton.setTooltip(Tooltip.create(Component.translatable("symbolchat.unicode_table.favorite_symbol")));
         }
 
 
-        adder.add(EmptyWidget.ofHeight(6));
-        adder.add(new TextWidget(Text.translatable("symbolchat.unicode_table.view").styled(style -> style.withUnderline(true)), this.textRenderer));
+        adder.addChild(SpacerElement.height(6));
+        adder.addChild(new StringWidget(Component.translatable("symbolchat.unicode_table.view").withStyle(style -> style.withUnderlined(true)), this.font));
 
         {
-            adder.add(new TextWidget(Text.translatable("symbolchat.unicode_table.font"), this.textRenderer));
+            adder.addChild(new StringWidget(Component.translatable("symbolchat.unicode_table.font"), this.font));
 
-            assert client != null;
-            List<Identifier> fonts = ((FontManagerAccessor) ((MinecraftClientAccessor) client).getFontManager()).getFontStorages().keySet().stream().sorted().toList();
-            CyclingButtonWidget<Identifier> fontButton = CyclingButtonWidget.<Identifier>builder(Text::of).values(fonts).omitKeyText().build(0, 0, widgetWidth, 20, Text.empty(), (button, value) -> {
+            assert minecraft != null;
+            List<ResourceLocation> fonts = ((FontManagerAccessor) ((MinecraftAccessor) minecraft).getFontManager()).getFontSets().keySet().stream().sorted().toList();
+            CycleButton<ResourceLocation> fontButton = CycleButton.<ResourceLocation>builder(Component::translationArg).withValues(fonts).displayOnlyValue().create(0, 0, widgetWidth, 20, Component.empty(), (button, value) -> {
                 unicodeTable.setFont(value);
                 reloadSymbols();
             });
-            fontButton.setValue(MinecraftClient.DEFAULT_FONT_ID);
-            adder.add(fontButton);
+            fontButton.setValue(Minecraft.DEFAULT_FONT);
+            adder.addChild(fontButton);
         }
 
-        CheckboxWidget showBlocksCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.show_blocks"), textRenderer)
-                .checked(SymbolChat.config.unicodeTableShowBlocks.get())
-                .callback((checkbox, checked) -> {
+        Checkbox showBlocksCheckbox = Checkbox.builder(Component.translatable("symbolchat.unicode_table.show_blocks"), font)
+                .selected(SymbolChat.config.unicodeTableShowBlocks.get())
+                .onValueChange((checkbox, checked) -> {
                     SymbolChat.config.unicodeTableShowBlocks.setIfValid(checked);
                     unicodeTable.setShowBlocks(checked);
                 }).build();
-        unicodeTable.setShowBlocks(showBlocksCheckbox.isChecked());
-        adder.add(showBlocksCheckbox);
+        unicodeTable.setShowBlocks(showBlocksCheckbox.selected());
+        adder.addChild(showBlocksCheckbox);
 
-        CheckboxWidget textShadowCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.text_shadow"), textRenderer)
-                .checked(SymbolChat.config.unicodeTableTextShadow.get())
-                .callback((checkbox, checked) -> {
+        Checkbox textShadowCheckbox = Checkbox.builder(Component.translatable("symbolchat.unicode_table.text_shadow"), font)
+                .selected(SymbolChat.config.unicodeTableTextShadow.get())
+                .onValueChange((checkbox, checked) -> {
                     SymbolChat.config.unicodeTableTextShadow.setIfValid(checked);
                     unicodeTable.setRenderTextShadow(checked);
                 }).build();
-        unicodeTable.setRenderTextShadow(textShadowCheckbox.isChecked());
-        adder.add(textShadowCheckbox);
+        unicodeTable.setRenderTextShadow(textShadowCheckbox.selected());
+        adder.addChild(textShadowCheckbox);
 
         {
-            TextWidget jumpToLabel = new TextWidget(Text.translatable("symbolchat.unicode_table.jump_to"), this.textRenderer);
-            TextFieldWidget jumpToTextField = new TextFieldWidget(this.textRenderer, widgetWidth - jumpToLabel.getWidth(), 12, Text.empty()) {
+            StringWidget jumpToLabel = new StringWidget(Component.translatable("symbolchat.unicode_table.jump_to"), this.font);
+            EditBox jumpToTextField = new EditBox(this.font, widgetWidth - jumpToLabel.getWidth(), 12, Component.empty()) {
                 @Override
-                public boolean keyPressed(KeyInput input) {
-                    if(input.isEnter()) {
+                public boolean keyPressed(KeyEvent input) {
+                    if(input.isConfirmation()) {
                         int codepoint;
                         try {
-                            codepoint = Integer.parseInt(this.getText(), 16);
+                            codepoint = Integer.parseInt(this.getValue(), 16);
                         } catch (NumberFormatException e) {
                             return true;
                         }
@@ -132,50 +141,50 @@ public class UnicodeTableScreen extends Screen {
                     return super.keyPressed(input);
                 }
             };
-            jumpToTextField.setChangedListener(s -> this.reloadSymbols());
+            jumpToTextField.setResponder(s -> this.reloadSymbols());
 
-            SimplePositioningWidget jumpToRow = adder.add(new SimplePositioningWidget(widgetWidth, 0));
-            jumpToRow.add(jumpToLabel, Positioner::alignLeft);
-            jumpToRow.add(jumpToTextField, Positioner::alignRight);
+            FrameLayout jumpToRow = adder.addChild(new FrameLayout(widgetWidth, 0));
+            jumpToRow.addChild(jumpToLabel, LayoutSettings::alignHorizontallyLeft);
+            jumpToRow.addChild(jumpToTextField, LayoutSettings::alignHorizontallyRight);
         }
         
-        adder.add(EmptyWidget.ofHeight(6));
-        adder.add(new TextWidget(Text.translatable("symbolchat.unicode_table.filter").styled(style -> style.withUnderline(true)), this.textRenderer));
+        adder.addChild(SpacerElement.height(6));
+        adder.addChild(new StringWidget(Component.translatable("symbolchat.unicode_table.filter").withStyle(style -> style.withUnderlined(true)), this.font));
         
         {
-            TextWidget searchLabel = new TextWidget(Text.translatable("symbolchat.unicode_table.search"), this.textRenderer);
-            searchTextField = new TextFieldWidget(this.textRenderer, widgetWidth - searchLabel.getWidth(), 12, Text.empty());
-            searchTextField.setChangedListener(s -> this.reloadSymbols());
+            StringWidget searchLabel = new StringWidget(Component.translatable("symbolchat.unicode_table.search"), this.font);
+            searchTextField = new EditBox(this.font, widgetWidth - searchLabel.getWidth(), 12, Component.empty());
+            searchTextField.setResponder(s -> this.reloadSymbols());
 
-            SimplePositioningWidget searchRow = adder.add(new SimplePositioningWidget(widgetWidth, 0));
-            searchRow.add(searchLabel, Positioner::alignLeft);
-            searchRow.add(searchTextField, Positioner::alignRight);
+            FrameLayout searchRow = adder.addChild(new FrameLayout(widgetWidth, 0));
+            searchRow.addChild(searchLabel, LayoutSettings::alignHorizontallyLeft);
+            searchRow.addChild(searchTextField, LayoutSettings::alignHorizontallyRight);
         }
         {
-            pageSpinner = IntSpinnerWidget.builder(this.textRenderer).value(0).min(0).changedListener(optionalInt -> reloadSymbols()).build();
+            pageSpinner = IntSpinnerWidget.builder(this.font).value(0).min(0).changedListener(optionalInt -> reloadSymbols()).build();
 
-            SimplePositioningWidget pageRow = adder.add(new SimplePositioningWidget(widgetWidth, 0));
-            pageRow.add(new TextWidget(Text.translatable("symbolchat.unicode_table.page"), this.textRenderer), Positioner::alignLeft);
-            pageRow.add(pageSpinner, Positioner::alignRight);
+            FrameLayout pageRow = adder.addChild(new FrameLayout(widgetWidth, 0));
+            pageRow.addChild(new StringWidget(Component.translatable("symbolchat.unicode_table.page"), this.font), LayoutSettings::alignHorizontallyLeft);
+            pageRow.addChild(pageSpinner, LayoutSettings::alignHorizontallyRight);
         }
         {
-            widthSpinner = IntSpinnerWidget.builder(this.textRenderer).value("").changedListener(optionalInt -> reloadSymbols()).build();
+            widthSpinner = IntSpinnerWidget.builder(this.font).value("").changedListener(optionalInt -> reloadSymbols()).build();
 
-            SimplePositioningWidget pageRow = adder.add(new SimplePositioningWidget(widgetWidth, 0));
-            pageRow.add(new TextWidget(Text.translatable("symbolchat.unicode_table.symbol_width"), this.textRenderer), Positioner::alignLeft);
-            pageRow.add(widthSpinner, Positioner::alignRight);
+            FrameLayout pageRow = adder.addChild(new FrameLayout(widgetWidth, 0));
+            pageRow.addChild(new StringWidget(Component.translatable("symbolchat.unicode_table.symbol_width"), this.font), LayoutSettings::alignHorizontallyLeft);
+            pageRow.addChild(widthSpinner, LayoutSettings::alignHorizontallyRight);
         }
         
-        hideMissingGlyphsCheckbox = CheckboxWidget.builder(Text.translatable("symbolchat.unicode_table.hide_missing_glyphs"), textRenderer)
-                .checked(SymbolChat.config.unicodeTableHideMissingGlyphs.get())
-                .callback((checkbox, checked) -> {
+        hideMissingGlyphsCheckbox = Checkbox.builder(Component.translatable("symbolchat.unicode_table.hide_missing_glyphs"), font)
+                .selected(SymbolChat.config.unicodeTableHideMissingGlyphs.get())
+                .onValueChange((checkbox, checked) -> {
                     SymbolChat.config.unicodeTableHideMissingGlyphs.setIfValid(checked);
                     reloadSymbols();
                 }).build();
-        adder.add(hideMissingGlyphsCheckbox);
+        adder.addChild(hideMissingGlyphsCheckbox);
 
-        adder.refreshPositions();
-        adder.forEachChild(this::addDrawableChild);
+        adder.arrangeElements();
+        adder.visitWidgets(this::addRenderableWidget);
         
         this.reloadSymbols();
     }
@@ -184,28 +193,28 @@ public class UnicodeTableScreen extends Screen {
         OptionalInt page = pageSpinner.getValue();
         UnicodeSearch search = page.isPresent() ? UnicodeSearch.ofPage(page.getAsInt()) : UnicodeSearch.ofAll();
         
-        search = search.search(searchTextField.getText());
+        search = search.search(searchTextField.getValue());
 
         OptionalInt width = widthSpinner.getValue();
         if(width.isPresent()) {
-            IntUnaryOperator codepointWidthGetter = ((TextRendererAccess) textRenderer).getCodepointWidthGetter(unicodeTable.getStyle());
+            IntUnaryOperator codepointWidthGetter = ((FontAccess) font).getCodepointWidthGetter(unicodeTable.getStyle());
             search = search.filterWidth(width.getAsInt(), codepointWidthGetter);
         }
-        if(hideMissingGlyphsCheckbox.isChecked()) {
-            search = search.filter(((TextRendererAccess) textRenderer).getMissingGlyphPredicate(unicodeTable.getStyle()).negate());
+        if(hideMissingGlyphsCheckbox.selected()) {
+            search = search.filter(((FontAccess) font).getMissingGlyphPredicate(unicodeTable.getStyle()).negate());
         }
         
         unicodeTable.setCodepoints(search.collect());
     }
 
     @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float delta) {
         context.fill(0, 0, width, height, 0xFF303030);
-        context.drawVerticalLine(SIDEBAR_WIDTH, -1, height, 0xFFFFFFFF); // sidebar divider line
+        context.vLine(SIDEBAR_WIDTH, -1, height, 0xFFFFFFFF); // sidebar divider line
     }
     
     @Override
-    public void close() {
-        if(this.client != null) this.client.setScreen(this.parent);
+    public void onClose() {
+        if(this.minecraft != null) this.minecraft.setScreen(this.parent);
     }
 }

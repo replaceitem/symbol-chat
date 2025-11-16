@@ -1,10 +1,10 @@
 package net.replaceitem.symbolchat.gui.widget;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 import net.replaceitem.symbolchat.SearchUtil;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.gui.SymbolSelectionPanel;
@@ -21,13 +21,13 @@ import java.util.stream.Stream;
 public class SymbolTabWidget extends NonScrollableContainerWidget implements PasteSymbolButtonWidget.Context {
     
     private static final int SEARCH_BAR_HEIGHT = 10;
-    public static final Text NO_RESULTS = Text.translatable("symbolchat.symbol_panel.no_search_results");
-    public static final Text NO_FAVORITE_SYMBOLS = Text.translatable("symbolchat.symbol_panel.no_favorite_symbols");
+    public static final Component NO_RESULTS = Component.translatable("symbolchat.symbol_panel.no_search_results");
+    public static final Component NO_FAVORITE_SYMBOLS = Component.translatable("symbolchat.symbol_panel.no_favorite_symbols");
 
     private final SymbolSelectionPanel symbolSelectionPanel;
 
     @Nullable
-    private Text emptyText;
+    private Component emptyText;
     protected final SymbolTab tab;
 
     @Nullable
@@ -46,7 +46,7 @@ public class SymbolTabWidget extends NonScrollableContainerWidget implements Pas
         this.addChildren(scrollableWidget);
         if(tab.hasSearchBar()) {
             this.searchBar = new SymbolSearchBar(this.getX() + 2, this.getY() + 1, getWidth() - 4, SEARCH_BAR_HEIGHT);
-            this.searchBar.setChangedListener(s -> refresh());
+            this.searchBar.setResponder(s -> refresh());
             this.addChildren(this.searchBar);
         }
         this.refresh();
@@ -67,14 +67,14 @@ public class SymbolTabWidget extends NonScrollableContainerWidget implements Pas
     protected void addSymbols() {
         Stream<String> stream = this.tab.streamSymbols();
         if(searchBar != null) {
-            stream = SearchUtil.performSearch(stream, searchBar.getText());
+            stream = SearchUtil.performSearch(stream, searchBar.getValue());
         }
         List<PasteSymbolButtonWidget> buttons = stream.map(this::createButton).toList();
         buttons.forEach(scrollableWidget::add);
         this.emptyText = this.getEmptyText(buttons.isEmpty());
     }
     
-    private Text getEmptyText(boolean noSymbols) {
+    private Component getEmptyText(boolean noSymbols) {
         if(!noSymbols) return null;
         if(SymbolChat.symbolManager.isOnlyFavorites(tab)) {
             return NO_FAVORITE_SYMBOLS;
@@ -91,17 +91,17 @@ public class SymbolTabWidget extends NonScrollableContainerWidget implements Pas
     }
 
     @Override
-    public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void renderWidget(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
         super.renderWidget(drawContext, mouseX, mouseY, delta);
         if(emptyText != null) {
-            TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-            List<OrderedText> orderedTexts = textRenderer.wrapLines(emptyText, width - 4);
+            Font textRenderer = Minecraft.getInstance().font;
+            List<FormattedCharSequence> orderedTexts = textRenderer.split(emptyText, width - 4);
             int centerX = this.getX() + this.getWidth() / 2;
-            int startY = this.getY() + (this.getHeight() / 2) - (orderedTexts.size() * textRenderer.fontHeight / 2);
+            int startY = this.getY() + (this.getHeight() / 2) - (orderedTexts.size() * textRenderer.lineHeight / 2);
             for (int i = 0; i < orderedTexts.size(); i++) {
-                OrderedText orderedText = orderedTexts.get(i);
-                int dy = startY + (i * textRenderer.fontHeight);
-                drawContext.drawText(textRenderer, orderedText, centerX - textRenderer.getWidth(orderedText) / 2, dy, 0x66FFFFFF, false);
+                FormattedCharSequence orderedText = orderedTexts.get(i);
+                int dy = startY + (i * textRenderer.lineHeight);
+                drawContext.drawString(textRenderer, orderedText, centerX - textRenderer.width(orderedText) / 2, dy, 0x66FFFFFF, false);
             }
         }
     }
