@@ -4,6 +4,13 @@ plugins {
     id "com.modrinth.minotaur" version "2.+"
 }
 
+version = project.minecraft_version + '-' + project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
 repositories {
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases"}
@@ -24,13 +31,6 @@ loom {
     accessWidenerPath = file("src/main/resources/symbol-chat.accesswidener")
 }
 
-sourceCompatibility = JavaVersion.VERSION_21
-targetCompatibility = JavaVersion.VERSION_21
-
-archivesBaseName = project.archives_base_name
-version = project.minecraft_version + '-' + project.mod_version
-group = project.maven_group
-
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.officialMojangMappings()
@@ -38,7 +38,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     
     modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
-    modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+//    modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
     
     modImplementation "maven.modrinth:reconfigure:${project.reconfigure_version}"
     include "maven.modrinth:reconfigure:${project.reconfigure_version}"
@@ -63,9 +63,14 @@ java {
     // if it is present.
     // If you remove this line, sources will not be generated.
     withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
+    inputs.property "archivesName", project.base.archivesName
+
     from("LICENSE") {
         rename { "${it}_${inputs.properties.archivesBaseName}"}
     }

@@ -9,6 +9,8 @@
         "MinecraftAccessor",
         "StringSplitterAccessor",
         "FontMixin",
+        "FontSetAccessor",
+        "FontSetSourceMixin",
         "screen.AbstractSignEditScreenMixin",
         "screen.AnvilScreenMixin",
         "screen.BookEditScreenMixin",

@@ -107,11 +107,9 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements R
         }
 
         @Override
-        protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
-            Minecraft minecraftClient = Minecraft.getInstance();
-            int color = this.isHovered() ? 16777215 : 10526880;
-            context.fill(getX(), getY(), getRight(), getBottom(), getBackgroundColor());
-            this.renderString(context, minecraftClient.font, color | Mth.ceil(this.alpha * 255.0F) << 24);
+        protected void renderContents(GuiGraphics guiGraphics, int i, int j, float f) {
+            guiGraphics.fill(getX(), getY(), getRight(), getBottom(), getBackgroundColor());
+            this.renderDefaultLabel(guiGraphics.textRendererForWidget(this, GuiGraphics.HoveredTextEffects.NONE));
         }
     }
 

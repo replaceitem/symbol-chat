@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class SymbolTab implements Comparable<SymbolTab> {
-    private final ResourceLocation id;
-    private final ResourceLocation icon;
+    private final Identifier id;
+    private final Identifier icon;
     private final String textIcon;
     private final Component tooltipText;
     private List<SymbolList> symbols;
@@ -21,13 +21,13 @@ public class SymbolTab implements Comparable<SymbolTab> {
     private final Type type;
     private final boolean searchBar;
 
-    public SymbolTab(ResourceLocation id, String icon, int order, Type type, boolean searchBar, List<SymbolList> symbols) {
+    public SymbolTab(Identifier id, String icon, int order, Type type, boolean searchBar, List<SymbolList> symbols) {
         this.id = id;
         if(icon.codePoints().count() == 1) {
             this.icon = null;
             this.textIcon = icon;
         } else {
-            this.icon = ResourceLocation.parse(icon);
+            this.icon = Identifier.parse(icon);
             this.textIcon = null;
         }
         this.order = order;
@@ -37,7 +37,7 @@ public class SymbolTab implements Comparable<SymbolTab> {
         this.symbols = symbols;
     }
 
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return id;
     }
     
@@ -70,7 +70,7 @@ public class SymbolTab implements Comparable<SymbolTab> {
         return type;
     }
 
-    public ResourceLocation getIcon() {
+    public Identifier getIcon() {
         return icon;
     }
 

@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.replaceitem.symbolchat.Util;
 
@@ -17,11 +17,11 @@ import java.util.Map;
 
 public class MappedFontProcessor extends FontProcessor {
 
-    public MappedFontProcessor(ResourceLocation id, Map<String, String> map, int order, boolean reverseDirection) {
+    public MappedFontProcessor(Identifier id, Map<String, String> map, int order, boolean reverseDirection) {
         super(id, key -> map.getOrDefault(key, key), order, reverseDirection);
     }
     
-    public static MappedFontProcessor read(ResourceLocation id, JsonObject object, int order, boolean reverseDirection) throws JsonParseException {
+    public static MappedFontProcessor read(Identifier id, JsonObject object, int order, boolean reverseDirection) throws JsonParseException {
         JsonObject mappings = GsonHelper.getAsJsonObject(object, "mappings");
         Map<String, String> map = new HashMap<>();
         for (Map.Entry<String, JsonElement> stringJsonElementEntry : mappings.entrySet()) {

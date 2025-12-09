@@ -14,7 +14,7 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
@@ -41,11 +41,11 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
     }
     
     @Unique
-    private static final ResourceLocation WRENCH_TEXTURE = ResourceLocation.fromNamespaceAndPath(SymbolChat.NAMESPACE, "wrench");
+    private static final Identifier WRENCH_TEXTURE = Identifier.fromNamespaceAndPath(SymbolChat.NAMESPACE, "wrench");
     @Unique
-    private static final ResourceLocation TABLE_TEXTURE = ResourceLocation.fromNamespaceAndPath(SymbolChat.NAMESPACE, "table");
+    private static final Identifier TABLE_TEXTURE = Identifier.fromNamespaceAndPath(SymbolChat.NAMESPACE, "table");
     @Unique
-    private static final ResourceLocation SMILEY_TEXTURE = ResourceLocation.fromNamespaceAndPath(SymbolChat.NAMESPACE, "smiley");
+    private static final Identifier SMILEY_TEXTURE = Identifier.fromNamespaceAndPath(SymbolChat.NAMESPACE, "smiley");
     
     @Unique
     @Nullable
@@ -124,7 +124,7 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
             FontProcessor selectedFont = null;
             if(SymbolChat.config.keepFontSelected.get()) {
                 String fontString = SymbolChat.config.selectedFont.get();
-                ResourceLocation selectedFontId = fontString.isBlank() ? null : ResourceLocation.tryParse(fontString);
+                Identifier selectedFontId = fontString.isBlank() ? null : Identifier.tryParse(fontString);
                 selectedFont = fonts.stream().filter(
                         fontProcessor -> fontProcessor.getId().equals(selectedFontId)
                 ).findFirst().orElse(null);
