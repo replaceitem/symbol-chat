@@ -17,7 +17,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.extensions.FontAccess;
 import net.replaceitem.symbolchat.UnicodeSearch;
@@ -36,8 +36,8 @@ public class UnicodeTableScreen extends Screen {
         this.parent = parent;
     }
 
-    private static final ResourceLocation COPY_TEXTURE = ResourceLocation.fromNamespaceAndPath(SymbolChat.NAMESPACE, "copy");
-    private static final ResourceLocation FAVORITE_TEXTURE = ResourceLocation.fromNamespaceAndPath(SymbolChat.NAMESPACE, "favorite");
+    private static final Identifier COPY_TEXTURE = Identifier.fromNamespaceAndPath(SymbolChat.NAMESPACE, "copy");
+    private static final Identifier FAVORITE_TEXTURE = Identifier.fromNamespaceAndPath(SymbolChat.NAMESPACE, "favorite");
 
     private final Screen parent;
     
@@ -92,8 +92,8 @@ public class UnicodeTableScreen extends Screen {
             adder.addChild(new StringWidget(Component.translatable("symbolchat.unicode_table.font"), this.font));
 
             assert minecraft != null;
-            List<ResourceLocation> fonts = ((FontManagerAccessor) ((MinecraftAccessor) minecraft).getFontManager()).getFontSets().keySet().stream().sorted().toList();
-            CycleButton<ResourceLocation> fontButton = CycleButton.<ResourceLocation>builder(Component::translationArg).withValues(fonts).displayOnlyValue().create(0, 0, widgetWidth, 20, Component.empty(), (button, value) -> {
+            List<Identifier> fonts = ((FontManagerAccessor) ((MinecraftAccessor) minecraft).getFontManager()).getFontSets().keySet().stream().sorted().toList();
+            CycleButton<Identifier> fontButton = CycleButton.<Identifier>builder(Component::translationArg, fonts.getFirst()).withValues(fonts).displayOnlyValue().create(0, 0, widgetWidth, 20, Component.empty(), (button, value) -> {
                 unicodeTable.setFont(value);
                 reloadSymbols();
             });

@@ -6,7 +6,7 @@ import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.replaceitem.symbolchat.*;
 import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
@@ -29,7 +29,7 @@ public class TabSelectionWidget extends NonScrollableContainerWidget {
     public void addTab(SymbolTab tab) {
         int index = this.children().size();
         MutableComponent narration = tab.getTooltipText().copy();
-        ResourceLocation icon = tab.getIcon();
+        Identifier icon = tab.getIcon();
         String textIcon = tab.getTextIcon();
         boolean hasLiteralIcon = textIcon != null;
         FlatIconButtonWidget switchTabWidget = new FlatIconButtonWidget(

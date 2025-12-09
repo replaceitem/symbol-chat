@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.replaceitem.symbolchat.SymbolChat;
@@ -62,8 +62,8 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
     private int[] codepoints;
 
 
-    private static final ResourceLocation SCROLLER_TEXTURE = ResourceLocation.withDefaultNamespace("widget/scroller");
-    private static final ResourceLocation SCROLLER_BACKGROUND_TEXTURE = ResourceLocation.withDefaultNamespace("widget/scroller_background");
+    private static final Identifier SCROLLER_TEXTURE = Identifier.withDefaultNamespace("widget/scroller");
+    private static final Identifier SCROLLER_BACKGROUND_TEXTURE = Identifier.withDefaultNamespace("widget/scroller_background");
     private static final int[] CYCLING_BLOCK_COLORS = new int[] {0xFF800000,0xFF808000,0xFF008000,0xFF008080,0xFF000080,0xFF800080};
 
     public UnicodeTable(Font textRenderer, int x, int y, int width, int height) {
@@ -150,7 +150,7 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
         refreshButtons();
     }
 
-    public void setFont(ResourceLocation value) {
+    public void setFont(Identifier value) {
         this.style = Style.EMPTY.withFont(new FontDescription.Resource(value));
     }
 

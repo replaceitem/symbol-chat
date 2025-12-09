@@ -8,18 +8,18 @@ import java.io.BufferedReader;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class SymbolList {
-    private final ResourceLocation id;
+    private final Identifier id;
     protected final List<String> symbols;
 
-    public SymbolList(ResourceLocation id, List<String> symbols) {
+    public SymbolList(Identifier id, List<String> symbols) {
         this.id = id;
         this.symbols = symbols;
     }
 
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return id;
     }
 
@@ -31,12 +31,12 @@ public class SymbolList {
 
         private final HashSet<String> set = new HashSet<>();
         
-        public Mutable(ResourceLocation id, List<String> symbols) {
+        public Mutable(Identifier id, List<String> symbols) {
             super(id, new ArrayList<>(symbols));
             set.addAll(symbols);
         }
         
-        public Mutable(ResourceLocation id) {
+        public Mutable(Identifier id) {
             super(id, new ArrayList<>());
         }
 

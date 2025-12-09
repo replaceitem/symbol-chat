@@ -32,11 +32,6 @@ public class FlatIconButtonWidget extends SpriteIconButton.CenteredIcon {
         return outlined;
     }
 
-    @Override
-    public void renderString(GuiGraphics context, Font textRenderer, int color) {
-        if(getMessage() != null && getMessage() != CommonComponents.EMPTY) this.renderScrollingString(context, textRenderer, 0, color);
-    }
-
     public void drawOutline(GuiGraphics drawContext, int color) {
         int alphaColor = ARGB.color((int) (this.alpha*255), color);
         drawContext.hLine(this.getX()-1, this.getX()+width, this.getY()-1, alphaColor);
@@ -46,17 +41,16 @@ public class FlatIconButtonWidget extends SpriteIconButton.CenteredIcon {
     }
 
     @Override
-    public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        context.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), ARGB.multiply(getBackgroundColor(), ARGB.white(alpha)));
-        if(outlined) drawOutline(context, 0xFFFFFFFF);
+    public void renderContents(GuiGraphics guiGraphics, int i, int j, float f) {
+        guiGraphics.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), ARGB.multiply(getBackgroundColor(), ARGB.white(alpha)));
+        if(outlined) drawOutline(guiGraphics, 0xFFFFFFFF);
         int textureX = this.getX() + this.getWidth() / 2 - this.spriteWidth / 2;
         int textureY = this.getY() + this.getHeight() / 2 - this.spriteHeight / 2;
         int textColor = this.isHovered() ? SymbolChat.config.buttonTextHoverColor.get() : SymbolChat.config.buttonTextColor.get();
         if(sprite != null) {
-            context.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite.enabled(), textureX, textureY, this.spriteWidth, this.spriteHeight, ARGB.color((int) (this.alpha*255), textColor));
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite.enabled(), textureX, textureY, this.spriteWidth, this.spriteHeight, ARGB.color((int) (this.alpha*255), textColor));
         }
-        Minecraft minecraftClient = Minecraft.getInstance();
-        this.renderString(context, minecraftClient.font, textColor);
+        this.renderDefaultLabel(guiGraphics.textRendererForWidget(this, GuiGraphics.HoveredTextEffects.NONE));
     }
 
     public interface PressAction extends Button.OnPress {
