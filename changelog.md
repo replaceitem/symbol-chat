@@ -1,1 +1,1 @@
-* Updated reconfigure version to fix a crash when hovering headlines in the config ([reconfigure #2](https://github.com/replaceitem/reconfigure/issues/2))
+* Updated to Minecraft 1.21.11
