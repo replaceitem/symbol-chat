@@ -2,6 +2,7 @@ package net.replaceitem.symbolchat.gui.container;
 
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.components.AbstractContainerWidget;
+import net.minecraft.client.gui.components.AbstractScrollArea;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -16,7 +17,7 @@ public class NonScrollableContainerWidget extends AbstractContainerWidget {
     private final List<AbstractWidget> children = new ArrayList<>();
     
     public NonScrollableContainerWidget(int x, int y, int width, int height) {
-        super(x, y, width, height, Component.empty());
+        super(x, y, width, height, Component.empty(), AbstractScrollArea.defaultSettings(0));
     }
     
     public void addChildren(AbstractWidget element) {
@@ -24,9 +25,9 @@ public class NonScrollableContainerWidget extends AbstractContainerWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         for (GuiEventListener child : this.children) {
-            if(child instanceof Renderable drawable) drawable.render(context, mouseX, mouseY, delta);
+            if(child instanceof Renderable drawable) drawable.extractRenderState(graphics, mouseX, mouseY, a);
         }
     }
 
@@ -87,7 +88,7 @@ public class NonScrollableContainerWidget extends AbstractContainerWidget {
     }
 
     @Override
-    protected boolean scrollbarVisible() {
+    protected boolean scrollable() {
         return false;
     }
 }

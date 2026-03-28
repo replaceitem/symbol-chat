@@ -43,19 +43,17 @@ public abstract class SymbolButtonWidget extends AbstractWidget implements Rende
     }
 
     @Override
-    public void renderWidget(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         if(shouldRenderBackground()) {
-            this.renderBackground(drawContext);
+            this.extractBackgroundRenderState(graphics);
         }
         Font textRenderer = Minecraft.getInstance().font;
         int textColor = this.isHighlighted() ? SymbolChat.config.buttonTextHoverColor.get() : SymbolChat.config.buttonTextColor.get();
-        drawSymbol(drawContext, textRenderer, this.getMessage(), textColor);
-        this.renderOverlay(drawContext);
+        drawSymbol(graphics, textRenderer, this.getMessage(), textColor);
+        this.renderOverlay(graphics);
     }
-    
-    
 
-    protected void renderBackground(GuiGraphics drawContext) {
+    protected void extractBackgroundRenderState(GuiGraphicsExtractor drawContext) {
             int bg = getBackgroundColor();
             drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bg);
     }
@@ -76,9 +74,9 @@ public abstract class SymbolButtonWidget extends AbstractWidget implements Rende
         return true;
     }
 
-    protected void renderOverlay(GuiGraphics drawContext) {
+    protected void renderOverlay(GuiGraphicsExtractor graphics) {
         if(this.shouldDrawOutline()) {
-            this.drawOutline(drawContext);
+            this.extractOutlineRenderState(graphics);
         }
     }
 
@@ -86,33 +84,33 @@ public abstract class SymbolButtonWidget extends AbstractWidget implements Rende
         return false;
     }
 
-    protected void drawOutline(GuiGraphics drawContext) {
-        drawContext.hLine(this.getX()-1, this.getX()+width, this.getY()-1, 0xFFFFFFFF);
-        drawContext.vLine(this.getX()-1, this.getY()-1, this.getY()+height, 0xFFFFFFFF);
-        drawContext.hLine(this.getX()-1, this.getX()+width, this.getY()+height, 0xFFFFFFFF);
-        drawContext.vLine(this.getX()+width, this.getY()-1, this.getY()+height, 0xFFFFFFFF);
+    protected void extractOutlineRenderState(GuiGraphicsExtractor drawContext) {
+        drawContext.horizontalLine(this.getX()-1, this.getX()+width, this.getY()-1, 0xFFFFFFFF);
+        drawContext.verticalLine(this.getX()-1, this.getY()-1, this.getY()+height, 0xFFFFFFFF);
+        drawContext.horizontalLine(this.getX()-1, this.getX()+width, this.getY()+height, 0xFFFFFFFF);
+        drawContext.verticalLine(this.getX()+width, this.getY()-1, this.getY()+height, 0xFFFFFFFF);
     }
     
-    protected void drawCorners(GuiGraphics drawContext, int color) {
+    protected void drawCorners(GuiGraphicsExtractor graphics, int color) {
         int lastX = this.getX()+SYMBOL_SIZE-1;
         int lastY = this.getY()+SYMBOL_SIZE-1;
         for(int i = 0; i < 2; i++) {
             int offset = i*(SYMBOL_SIZE-1);
             int x = this.getX() + offset;
             int y = this.getY() + offset;
-            drawContext.hLine(getX(), getX()+1, y, color);
-            drawContext.hLine(lastX-1, lastX, y, color);
+            graphics.horizontalLine(getX(), getX()+1, y, color);
+            graphics.horizontalLine(lastX-1, lastX, y, color);
             // why does drawVertical work differently -_-
-            drawContext.vLine(x, getY()-1, getY()+2, color);
-            drawContext.vLine(x, lastY-2, lastY+1, color);
+            graphics.verticalLine(x, getY()-1, getY()+2, color);
+            graphics.verticalLine(x, lastY-2, lastY+1, color);
         }
     }
 
-    protected void drawSymbol(GuiGraphics drawContext, Font textRenderer, Component text, int color) {
+    protected void drawSymbol(GuiGraphicsExtractor graphics, Font textRenderer, Component text, int color) {
         FormattedCharSequence orderedText = text.getVisualOrderText();
         int centerX = this.getX() + this.width / 2;
         int y = this.getY() + (this.height - 8) / 2;
-        drawContext.drawString(textRenderer, orderedText, centerX - textRenderer.width(orderedText) / 2, y, color, shouldRenderTextWithShadow());
+        graphics.text(textRenderer, orderedText, centerX - textRenderer.width(orderedText) / 2, y, color, shouldRenderTextWithShadow());
     }
 
     @Override

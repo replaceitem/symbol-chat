@@ -1,44 +1,44 @@
 {
-  "schemaVersion": 1,
-  "id": "symbol-chat",
-  "version": "${version}",
-  "name": "Symbol Chat",
-  "description": "A client side mod that adds a symbol/emoji menu as well as writing in different unicode fonts.",
-  "authors": [
-    "replaceitem"
-  ],
-  "contact": {
-    "homepage": "https://modrinth.com/mod/symbol-chat",
-    "issues": "https://github.com/replaceitem/symbol-chat/issues",
-    "sources": "https://github.com/replaceitem/symbol-chat"
-  },
-  "license": "MIT",
-  "icon": "assets/symbol-chat/icon.png",
-  "environment": "client",
-  "entrypoints": {
-    "client": [
-      "net.replaceitem.symbolchat.SymbolChat"
+    "schemaVersion": 1,
+    "id": "symbol-chat",
+    "version": "${version}",
+    "name": "Symbol Chat",
+    "description": "A client side mod that adds a symbol/emoji menu as well as writing in different unicode fonts.",
+    "authors": [
+        "replaceitem"
     ],
-    "modmenu": [
-      "net.replaceitem.symbolchat.config.ModMenuApiImpl"
-    ]
-  },
-  "mixins": [
-    "symbol-chat.mixins.json"
-  ],
-  "accessWidener": "symbol-chat.accesswidener",
-  "depends": {
-    "minecraft": ">=1.21.9",
-    "fabricloader": ">=0.15.10",
-    "java": ">=21",
-    "fabric": "*",
-    "reconfigure": "~${reconfigure_version}"
-  },
-  "custom": {
-    "modmenu": {
-      "links": {
-        "modmenu.discord": "https://discord.gg/etTDQAVSgt"
-      }
+    "contact": {
+        "homepage": "https://modrinth.com/mod/symbol-chat",
+        "issues": "https://github.com/replaceitem/symbol-chat/issues",
+        "sources": "https://github.com/replaceitem/symbol-chat"
+    },
+    "license": "MIT",
+    "icon": "assets/symbol-chat/icon.png",
+    "environment": "client",
+    "entrypoints": {
+        "client": [
+            "net.replaceitem.symbolchat.SymbolChat"
+        ],
+        "modmenu": [
+            "net.replaceitem.symbolchat.config.ModMenuApiImpl"
+        ]
+    },
+    "mixins": [
+        "symbol-chat.mixins.json"
+    ],
+    "accessWidener": "symbol-chat.accesswidener",
+    "depends": {
+        "minecraft": ">=26.1",
+        "fabricloader": ">=0.18.4",
+        "java": ">=21",
+        "reconfigure": "~${reconfigure_version}",
+        "fabric-api": ">=0.144.0"
+    },
+    "custom": {
+        "modmenu": {
+            "links": {
+                "modmenu.discord": "https://discord.gg/etTDQAVSgt"
+            }
+        }
     }
-  }
 }

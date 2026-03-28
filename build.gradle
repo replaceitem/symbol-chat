@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version "${loom_version}"
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
 }
@@ -33,14 +33,13 @@ loom {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
     
-    modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+    compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 //    modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
     
-    modImplementation "maven.modrinth:reconfigure:${project.reconfigure_version}"
+    implementation "maven.modrinth:reconfigure:${project.reconfigure_version}"
     include "maven.modrinth:reconfigure:${project.reconfigure_version}"
 }
 
@@ -55,7 +54,7 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
-    it.options.release = 21
+    it.options.release = 25
 }
 
 java {
@@ -85,7 +84,7 @@ modrinth {
     projectId = "NKvLVQMc"
     versionNumber = project.mod_version // You don't need to set this manually. Will fail if Modrinth has this version already
     versionType = "release" // This is the default
-    uploadFile = remapJar // With Fabric Loom or Architectury Loom, this MUST be set to `remapJar` instead of `jar`!
+    uploadFile = jar // With Fabric Loom or Architectury Loom, this MUST be set to `remapJar` instead of `jar`!
     loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Fabric Loom or ForgeGradle
     dependencies = [
             // fabric api needed

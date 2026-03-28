@@ -83,7 +83,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
         };
     }
     
-    @ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
+    @ModifyArgs(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;fill(IIIII)V"))
     private void fillBackgroundAtTextBox(Args args) {
         args.set(0, this.input.getX() - 2);
         args.set(1, this.input.getY() - 2);

@@ -4,8 +4,8 @@ package net.replaceitem.symbolchat.mixin.screen;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.replaceitem.symbolchat.extensions.ScreenAccess;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.navigation.ScreenPosition;
 import net.minecraft.client.gui.screens.Screen;
@@ -73,14 +73,14 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
         return true;
     }
 
-    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V"))
-    private boolean doNotRenderSuperBefore(Screen instance, GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
+    @WrapWithCondition(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V"))
+    private boolean doNotRenderSuperBefore(Screen instance, GuiGraphicsExtractor graphics, int mouseX, int mouseY, float aY) {
         return false;
     }
 
-    @Inject(method = "render", at = @At("TAIL"))
-    private void renderSuperAfter(GuiGraphics context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        super.render(context, mouseX, mouseY, deltaTicks);
+    @Inject(method = "extractRenderState", at = @At("TAIL"))
+    private void renderSuperAfter(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
+        super.extractRenderState(graphics, mouseX, mouseY, a);
     }
     
     

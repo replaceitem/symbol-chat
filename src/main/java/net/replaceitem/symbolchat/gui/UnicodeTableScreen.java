@@ -1,7 +1,7 @@
 package net.replaceitem.symbolchat.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.CycleButton;
@@ -208,11 +208,11 @@ public class UnicodeTableScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        context.fill(0, 0, width, height, 0xFF303030);
-        context.vLine(SIDEBAR_WIDTH, -1, height, 0xFFFFFFFF); // sidebar divider line
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.fill(0, 0, width, height, 0xFF303030);
+        graphics.verticalLine(SIDEBAR_WIDTH, -1, height, 0xFFFFFFFF); // sidebar divider line
     }
-    
+
     @Override
     public void onClose() {
         if(this.minecraft != null) this.minecraft.setScreen(this.parent);

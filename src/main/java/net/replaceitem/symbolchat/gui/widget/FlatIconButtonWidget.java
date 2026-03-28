@@ -1,6 +1,6 @@
 package net.replaceitem.symbolchat.gui.widget;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -29,25 +29,23 @@ public class FlatIconButtonWidget extends SpriteIconButton.CenteredIcon {
         return outlined;
     }
 
-    public void drawOutline(GuiGraphics drawContext, int color) {
+    public void drawOutline(GuiGraphicsExtractor drawContext, int color) {
         int alphaColor = ARGB.color((int) (this.alpha*255), color);
-        drawContext.hLine(this.getX()-1, this.getX()+width, this.getY()-1, alphaColor);
-        drawContext.vLine(this.getX()-1, this.getY()-1, this.getY()+height, alphaColor);
-        drawContext.hLine(this.getX()-1, this.getX()+width, this.getY()+height, alphaColor);
-        drawContext.vLine(this.getX()+width, this.getY()-1, this.getY()+height, alphaColor);
+        drawContext.horizontalLine(this.getX()-1, this.getX()+width, this.getY()-1, alphaColor);
+        drawContext.verticalLine(this.getX()-1, this.getY()-1, this.getY()+height, alphaColor);
+        drawContext.horizontalLine(this.getX()-1, this.getX()+width, this.getY()+height, alphaColor);
+        drawContext.verticalLine(this.getX()+width, this.getY()-1, this.getY()+height, alphaColor);
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int i, int j, float f) {
-        guiGraphics.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), ARGB.multiply(getBackgroundColor(), ARGB.white(alpha)));
-        if(outlined) drawOutline(guiGraphics, 0xFFFFFFFF);
+    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), ARGB.multiply(getBackgroundColor(), ARGB.white(alpha)));
+        if(outlined) drawOutline(graphics, 0xFFFFFFFF);
         int textureX = this.getX() + this.getWidth() / 2 - this.spriteWidth / 2;
         int textureY = this.getY() + this.getHeight() / 2 - this.spriteHeight / 2;
         int textColor = this.isHovered() ? SymbolChat.config.buttonTextHoverColor.get() : SymbolChat.config.buttonTextColor.get();
-        if(sprite != null) {
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite.enabled(), textureX, textureY, this.spriteWidth, this.spriteHeight, ARGB.color((int) (this.alpha*255), textColor));
-        }
-        this.renderDefaultLabel(guiGraphics.textRendererForWidget(this, GuiGraphics.HoveredTextEffects.NONE));
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite.enabled(), textureX, textureY, this.spriteWidth, this.spriteHeight, ARGB.color((int) (this.alpha * 255), textColor));
+        this.extractDefaultLabel(graphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE));
     }
 
     public interface PressAction extends Button.OnPress {

@@ -2,7 +2,7 @@ package net.replaceitem.symbolchat.gui.widget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.replaceitem.symbolchat.SearchUtil;
@@ -91,8 +91,8 @@ public class SymbolTabWidget extends NonScrollableContainerWidget implements Pas
     }
 
     @Override
-    public void renderWidget(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
-        super.renderWidget(drawContext, mouseX, mouseY, delta);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, a);
         if(emptyText != null) {
             Font textRenderer = Minecraft.getInstance().font;
             List<FormattedCharSequence> orderedTexts = textRenderer.split(emptyText, width - 4);
@@ -101,7 +101,7 @@ public class SymbolTabWidget extends NonScrollableContainerWidget implements Pas
             for (int i = 0; i < orderedTexts.size(); i++) {
                 FormattedCharSequence orderedText = orderedTexts.get(i);
                 int dy = startY + (i * textRenderer.lineHeight);
-                drawContext.drawString(textRenderer, orderedText, centerX - textRenderer.width(orderedText) / 2, dy, 0x66FFFFFF, false);
+                graphics.text(textRenderer, orderedText, centerX - textRenderer.width(orderedText) / 2, dy, 0x66FFFFFF, false);
             }
         }
     }

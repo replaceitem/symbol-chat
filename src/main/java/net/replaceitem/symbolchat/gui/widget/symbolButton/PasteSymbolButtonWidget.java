@@ -1,6 +1,6 @@
 package net.replaceitem.symbolchat.gui.widget.symbolButton;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -29,9 +29,9 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     }
 
     @Override
-    protected void renderOverlay(GuiGraphics drawContext) {
-        super.renderOverlay(drawContext);
-        if(isFavorite) this.drawCorners(drawContext, SymbolChat.config.favoriteColor.get());
+    protected void renderOverlay(GuiGraphicsExtractor graphics) {
+        super.renderOverlay(graphics);
+        if(isFavorite) this.drawCorners(graphics, SymbolChat.config.favoriteColor.get());
     }
 
     @Override

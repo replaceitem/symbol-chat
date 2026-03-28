@@ -28,10 +28,9 @@ import java.util.function.Supplier;
 
 @Mixin(MultiLineEditBox.class)
 public abstract class MultiLineEditBoxMixin extends AbstractTextAreaWidget implements MultilineEditBoxExtension, SymbolEditableWidget {
-    public MultiLineEditBoxMixin(int i, int j, int k, int l, Component text) {
-        super(i, j, k, l, text);
+    public MultiLineEditBoxMixin(int x, int y, int width, int height, Component narration, ScrollbarSettings scrollbarSettings) {
+        super(x, y, width, height, narration, scrollbarSettings);
     }
-
 
     @Shadow @Final private MultilineTextField textField;
     @Shadow @Final private Font font;

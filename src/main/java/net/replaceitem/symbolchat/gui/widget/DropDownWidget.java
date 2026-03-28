@@ -38,12 +38,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements R
                 this.getX() + 1 ,
                 upward ? this.getY() - 1 - DROPDOWN_HEIGHT : this.getBottom() + 1, 
                 this.width - 2, DROPDOWN_HEIGHT, 1
-        ) {
-            @Override
-            protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
-                super.renderWidget(context, mouseX, mouseY, delta);
-            }
-        };
+        );
         this.scrollableGridWidget.setScrollbarStyle(SmoothScrollableContainerWidget.ScrollbarStyle.SLIM);
         this.scrollableGridWidget.setSmoothScrolling(true);
         this.scrollableGridWidget.visible = this.expanded;
@@ -68,10 +63,10 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements R
     }
 
     @Override
-    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         ScreenRectangle expandedArea = getExpandedArea();
-        if(expanded) context.fill(expandedArea.left(), expandedArea.top(), expandedArea.right(), expandedArea.bottom(), SymbolChat.config.buttonColor.get());
-        super.renderWidget(context, mouseX, mouseY, delta);
+        if(expanded) graphics.fill(expandedArea.left(), expandedArea.top(), expandedArea.right(), expandedArea.bottom(), SymbolChat.config.buttonColor.get());
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, a);
     }
 
     @Override
@@ -107,9 +102,9 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements R
         }
 
         @Override
-        protected void renderContents(GuiGraphics guiGraphics, int i, int j, float f) {
-            guiGraphics.fill(getX(), getY(), getRight(), getBottom(), getBackgroundColor());
-            this.renderDefaultLabel(guiGraphics.textRendererForWidget(this, GuiGraphics.HoveredTextEffects.NONE));
+        protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+            graphics.fill(getX(), getY(), getRight(), getBottom(), getBackgroundColor());
+            this.extractDefaultLabel(graphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE));
         }
     }
 
@@ -126,15 +121,13 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements R
         private int getBackgroundColor() {
             return this.isHovered() ? SymbolChat.config.buttonActiveColor.get() : SymbolChat.config.buttonColor.get();
         }
-    
+
         @Override
-        public void renderWidget(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
-            if (this.visible) {
-                drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, getBackgroundColor());
-                Font textRenderer = Minecraft.getInstance().font;
-                int z = this.isHovered() ? 16777215 : 10526880;
-                drawContext.drawCenteredString(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, z | Mth.ceil(this.alpha * 255.0F) << 24);
-            }
+        protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+            graphics.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, getBackgroundColor());
+            Font textRenderer = Minecraft.getInstance().font;
+            int z = this.isHovered() ? 16777215 : 10526880;
+            graphics.centeredText(textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, z | Mth.ceil(this.alpha * 255.0F) << 24);
         }
 
         @Override

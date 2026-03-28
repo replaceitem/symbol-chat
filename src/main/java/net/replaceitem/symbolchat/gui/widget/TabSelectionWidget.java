@@ -69,19 +69,20 @@ public class TabSelectionWidget extends NonScrollableContainerWidget {
     protected void onTabSwitched(int previousIndex, int newIndex) {}
 
     @Override
-    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        super.renderWidget(context, mouseX, mouseY, delta);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, a);
         int dx = this.getX() + selectedTab * SymbolButtonWidget.GRID_SPCAING;
         int color = 0xFFFFFFFF;
-        if(dx > getX()) context.hLine(getX(), dx-1, getY() + SymbolButtonWidget.SYMBOL_SIZE, color);
-        if(getRight() > dx + SymbolButtonWidget.GRID_SPCAING) context.hLine(dx + SymbolButtonWidget.GRID_SPCAING, getRight() - 1, getY() + SymbolButtonWidget.SYMBOL_SIZE, color);
+        if(dx > getX()) graphics.horizontalLine(getX(), dx-1, getY() + SymbolButtonWidget.SYMBOL_SIZE, color);
+        if(getRight() > dx + SymbolButtonWidget.GRID_SPCAING) graphics.horizontalLine(dx + SymbolButtonWidget.GRID_SPCAING, getRight() - 1, getY() + SymbolButtonWidget.SYMBOL_SIZE, color);
         if(selectedTab != -1) {
-            context.vLine(dx, getY(), getBottom(), color);
-            context.hLine(dx, dx + SymbolButtonWidget.GRID_SPCAING, getY(), color);
-            context.vLine(dx + SymbolButtonWidget.GRID_SPCAING, getY(), getY() + SymbolButtonWidget.SYMBOL_SIZE, color);
+            graphics.verticalLine(dx, getY(), getBottom(), color);
+            graphics.horizontalLine(dx, dx + SymbolButtonWidget.GRID_SPCAING, getY(), color);
+            graphics.verticalLine(dx + SymbolButtonWidget.GRID_SPCAING, getY(), getY() + SymbolButtonWidget.SYMBOL_SIZE, color);
         }
     }
-//
+
+    //
 //    @Override
 //    public void setX(int x) {
 //        this.x = x;

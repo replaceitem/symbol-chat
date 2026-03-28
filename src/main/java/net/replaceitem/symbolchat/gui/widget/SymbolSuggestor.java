@@ -1,6 +1,6 @@
 package net.replaceitem.symbolchat.gui.widget;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.narration.NarrationSupplier;
 import net.minecraft.client.gui.navigation.ScreenPosition;
@@ -92,9 +92,9 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
 //    }
 
     @Override
-    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        context.fill(this.getX(), this.getY(), this.getRight(), this.getBottom(), SymbolChat.config.hudColor.get());
-        super.renderWidget(context, mouseX, mouseY, delta);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.fill(this.getX(), this.getY(), this.getRight(), this.getBottom(), SymbolChat.config.hudColor.get());
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, a);
     }
 
     @Override

@@ -2,7 +2,8 @@ package net.replaceitem.symbolchat.gui.container;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.layouts.GridLayout;
@@ -28,9 +29,9 @@ public class ScrollableGridContainer extends ScrollableLayoutContainer<GridLayou
     }
 
     @Override
-    protected void renderContents(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    protected void extractContentRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         for (AbstractWidget child : children) {
-            child.render(context, mouseX, mouseY, delta);
+            child.extractRenderState(graphics, mouseX, mouseY, delta);
         }
     }
 

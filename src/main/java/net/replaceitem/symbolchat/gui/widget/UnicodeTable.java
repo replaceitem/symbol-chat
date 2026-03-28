@@ -5,7 +5,7 @@ import com.ibm.icu.lang.UProperty;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -85,17 +85,17 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
     }
 
     @Override
-    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        this.drawBackground(context);
-        super.renderWidget(context, mouseX, mouseY, delta);
-        
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        this.extractBackgroundRenderState(graphics);
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, a);
+
         if(scrollbarHeight != getHeight()) {
-            context.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER_BACKGROUND_TEXTURE, scrollbarX, getY(), SCROLLBAR_WIDTH, getHeight());
-            context.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER_TEXTURE, scrollbarX, scrollbarY, SCROLLBAR_WIDTH, scrollbarHeight);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER_BACKGROUND_TEXTURE, scrollbarX, getY(), SCROLLBAR_WIDTH, getHeight());
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SCROLLER_TEXTURE, scrollbarX, scrollbarY, SCROLLBAR_WIDTH, scrollbarHeight);
         }
     }
 
-    private void drawBackground(GuiGraphics context) {
+    private void extractBackgroundRenderState(GuiGraphicsExtractor graphics) {
         int color = SymbolChat.config.buttonColor.get();
         int alpha = ARGB.alpha(color);
         // remove alpha of color and apply it as fading to black instead
@@ -108,12 +108,12 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
         int partialRowsCount = Math.ceilDiv(visibleSymbols, columns);
         int firstRowCount = Math.min(visibleSymbols, columns);
         if(fullRowsCount != 0 && firstRowCount != 0) {
-            context.fill(getX(), getY(), getX() + firstRowCount*GRID_SPCAING, getY()+fullRowsCount*GRID_SPCAING, color);
+            graphics.fill(getX(), getY(), getX() + firstRowCount*GRID_SPCAING, getY()+fullRowsCount*GRID_SPCAING, color);
         }
         if(partialRowsCount != fullRowsCount) {
             int partialRowSymbolCount = visibleSymbols % columns;
             if(partialRowSymbolCount != 0 && partialRowsCount != 0) {
-                context.fill(getX(), getY(), getX() + partialRowSymbolCount * GRID_SPCAING, getY() + partialRowsCount * GRID_SPCAING, color);
+                graphics.fill(getX(), getY(), getX() + partialRowSymbolCount * GRID_SPCAING, getY() + partialRowsCount * GRID_SPCAING, color);
             }
         }
         
@@ -121,13 +121,13 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
             int leftSymbols = visibleSymbols - i;
             if(leftSymbols < 0) break;
             int lineHeight = Mth.clamp(Mth.positiveCeilDiv(leftSymbols+1, columns) * GRID_SPCAING + 1, 0, height);
-            context.vLine(getX() + i* GRID_SPCAING, getY()-1, getY()+lineHeight, 0xFF303030);
+            graphics.verticalLine(getX() + i* GRID_SPCAING, getY()-1, getY()+lineHeight, 0xFF303030);
         }
         for (int i = 0; i <= visibleRows; i++) {
             int leftSymbols = visibleSymbols - Math.max(i-1, 0)*columns;
             int lineWidth = Math.min(leftSymbols, columns) * GRID_SPCAING;
             if(lineWidth <= 0) break;
-            context.hLine(getX(), getX() + lineWidth - 1, getY() + i * GRID_SPCAING, 0xFF303030);
+            graphics.horizontalLine(getX(), getX() + lineWidth - 1, getY() + i * GRID_SPCAING, 0xFF303030);
         }
     }
 
@@ -347,9 +347,9 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
         }
 
         @Override
-        protected void renderOverlay(GuiGraphics drawContext) {
-            if(this.missing) drawContext.hLine(this.getX()+4, this.getRight()-5, this.getY() + getHeight()/2, 0xFFFF0000);
-            super.renderOverlay(drawContext);
+        protected void renderOverlay(GuiGraphicsExtractor graphics) {
+            if(this.missing) graphics.horizontalLine(this.getX()+4, this.getRight()-5, this.getY() + getHeight()/2, 0xFFFF0000);
+            super.renderOverlay(graphics);
         }
 
         @Override
