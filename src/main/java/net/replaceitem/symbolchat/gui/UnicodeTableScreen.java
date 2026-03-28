@@ -25,6 +25,7 @@ import net.replaceitem.symbolchat.gui.widget.IntSpinnerWidget;
 import net.replaceitem.symbolchat.gui.widget.UnicodeTable;
 import net.replaceitem.symbolchat.mixin.FontManagerAccessor;
 import net.replaceitem.symbolchat.mixin.MinecraftAccessor;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
 import java.util.OptionalInt;
@@ -40,15 +41,22 @@ public class UnicodeTableScreen extends Screen {
     private static final Identifier FAVORITE_TEXTURE = Identifier.fromNamespaceAndPath(SymbolChat.NAMESPACE, "favorite");
 
     private final Screen parent;
-    
+
+    @UnknownNullability
     private UnicodeTable unicodeTable;
 
+    @UnknownNullability
     private Button copySelectedButton;
+    @UnknownNullability
     private Button favoriteSymbolButton;
 
+    @UnknownNullability
     private EditBox searchTextField;
+    @UnknownNullability
     private IntSpinnerWidget pageSpinner;
+    @UnknownNullability
     private IntSpinnerWidget widthSpinner;
+    @UnknownNullability
     private Checkbox hideMissingGlyphsCheckbox;
     
     public static final int SIDEBAR_WIDTH = 128;
@@ -62,8 +70,8 @@ public class UnicodeTableScreen extends Screen {
             @Override
             protected void onRefreshed() {
                 boolean hasSelection = hasSelection();
-                if(copySelectedButton != null) copySelectedButton.active = hasSelection;
-                if(favoriteSymbolButton != null) favoriteSymbolButton.active = hasSelection;
+                copySelectedButton.active = hasSelection;
+                favoriteSymbolButton.active = hasSelection;
             }
         };
         addRenderableWidget(unicodeTable);
@@ -91,9 +99,8 @@ public class UnicodeTableScreen extends Screen {
         {
             adder.addChild(new StringWidget(Component.translatable("symbolchat.unicode_table.font"), this.font));
 
-            assert minecraft != null;
             List<Identifier> fonts = ((FontManagerAccessor) ((MinecraftAccessor) minecraft).getFontManager()).getFontSets().keySet().stream().sorted().toList();
-            CycleButton<Identifier> fontButton = CycleButton.<Identifier>builder(Component::translationArg, fonts.getFirst()).withValues(fonts).displayOnlyValue().create(0, 0, widgetWidth, 20, Component.empty(), (button, value) -> {
+            CycleButton<Identifier> fontButton = CycleButton.builder(Component::translationArg, fonts.getFirst()).withValues(fonts).displayOnlyValue().create(0, 0, widgetWidth, 20, Component.empty(), (button, value) -> {
                 unicodeTable.setFont(value);
                 reloadSymbols();
             });
@@ -102,18 +109,18 @@ public class UnicodeTableScreen extends Screen {
         }
 
         Checkbox showBlocksCheckbox = Checkbox.builder(Component.translatable("symbolchat.unicode_table.show_blocks"), font)
-                .selected(SymbolChat.config.unicodeTableShowBlocks.get())
+                .selected(SymbolChat.getConfig().unicodeTableShowBlocks.get())
                 .onValueChange((checkbox, checked) -> {
-                    SymbolChat.config.unicodeTableShowBlocks.setIfValid(checked);
+                    SymbolChat.getConfig().unicodeTableShowBlocks.setIfValid(checked);
                     unicodeTable.setShowBlocks(checked);
                 }).build();
         unicodeTable.setShowBlocks(showBlocksCheckbox.selected());
         adder.addChild(showBlocksCheckbox);
 
         Checkbox textShadowCheckbox = Checkbox.builder(Component.translatable("symbolchat.unicode_table.text_shadow"), font)
-                .selected(SymbolChat.config.unicodeTableTextShadow.get())
+                .selected(SymbolChat.getConfig().unicodeTableTextShadow.get())
                 .onValueChange((checkbox, checked) -> {
-                    SymbolChat.config.unicodeTableTextShadow.setIfValid(checked);
+                    SymbolChat.getConfig().unicodeTableTextShadow.setIfValid(checked);
                     unicodeTable.setRenderTextShadow(checked);
                 }).build();
         unicodeTable.setRenderTextShadow(textShadowCheckbox.selected());
@@ -176,9 +183,9 @@ public class UnicodeTableScreen extends Screen {
         }
         
         hideMissingGlyphsCheckbox = Checkbox.builder(Component.translatable("symbolchat.unicode_table.hide_missing_glyphs"), font)
-                .selected(SymbolChat.config.unicodeTableHideMissingGlyphs.get())
+                .selected(SymbolChat.getConfig().unicodeTableHideMissingGlyphs.get())
                 .onValueChange((checkbox, checked) -> {
-                    SymbolChat.config.unicodeTableHideMissingGlyphs.setIfValid(checked);
+                    SymbolChat.getConfig().unicodeTableHideMissingGlyphs.setIfValid(checked);
                     reloadSymbols();
                 }).build();
         adder.addChild(hideMissingGlyphsCheckbox);
@@ -215,6 +222,6 @@ public class UnicodeTableScreen extends Screen {
 
     @Override
     public void onClose() {
-        if(this.minecraft != null) this.minecraft.setScreen(this.parent);
+        this.minecraft.setScreen(this.parent);
     }
 }

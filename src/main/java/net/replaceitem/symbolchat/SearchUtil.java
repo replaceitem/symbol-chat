@@ -1,7 +1,6 @@
 package net.replaceitem.symbolchat;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,14 +8,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SearchUtil {
-    @NotNull
-    public static Stream<String> performSearch(@NotNull Stream<String> symbols, @Nullable String search) {
+    public static Stream<String> performSearch(Stream<String> symbols, @Nullable String search) {
         if(search == null || search.isBlank()) return symbols;
         String lowerSearch = search.toLowerCase();
         List<String> searchWords = Arrays.stream(lowerSearch.split(" ")).toList();
         record CachedPriorityComparable<T>(T element, double priority) implements Comparable<CachedPriorityComparable<?>> {
             @Override
-            public int compareTo(@NotNull CachedPriorityComparable other) {
+            public int compareTo(CachedPriorityComparable other) {
                 return Double.compare(other.priority, priority);
             }
         }

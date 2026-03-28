@@ -29,9 +29,9 @@ public class SymbolSelectionPanel extends NonScrollableContainerWidget {
 
     public SymbolSelectionPanel(int x, int y, int height, SymbolInsertable symbolInsertable) {
         super(x, y, 0, height);
-        int columns = Math.max(SymbolChat.symbolManager.getTabs().size(), MIN_COLUMNS);
-        this.width = getWidthForTabs(SymbolChat.symbolManager.getTabs().size());
-        this.visible = SymbolChat.config.keepPanelOpen.get() && SymbolChat.isPanelOpen;
+        int columns = Math.max(SymbolChat.getSymbolManager().getTabs().size(), MIN_COLUMNS);
+        this.width = getWidthForTabs(SymbolChat.getSymbolManager().getTabs().size());
+        this.visible = SymbolChat.getConfig().keepPanelOpen.get() && SymbolChat.isPanelOpen;
         this.symbolInsertable = symbolInsertable;
         this.tabSelectionWidget = new TabSelectionWidget(this.getX(), this.getY() + 1, width) {
             @Override
@@ -43,7 +43,7 @@ public class SymbolSelectionPanel extends NonScrollableContainerWidget {
         this.tabSelectionWidget.setTab(SymbolChat.selectedTab);
         this.addChildren(tabSelectionWidget);
 
-        for (SymbolTab tab : SymbolChat.symbolManager.getTabs()) {
+        for (SymbolTab tab : SymbolChat.getSymbolManager().getTabs()) {
             addTab(tab, columns);
         }
 
@@ -85,12 +85,12 @@ public class SymbolSelectionPanel extends NonScrollableContainerWidget {
     
     public void toggleVisible() {
         this.visible = !this.visible;
-        if(SymbolChat.config.keepPanelOpen.get()) SymbolChat.isPanelOpen = this.visible;
+        if(SymbolChat.getConfig().keepPanelOpen.get()) SymbolChat.isPanelOpen = this.visible;
     }
 
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        graphics.fill(this.getX(), this.getY() + SymbolButtonWidget.GRID_SPCAING + 1, this.getX() + width, this.getY() + height, SymbolChat.config.hudColor.get());
+        graphics.fill(this.getX(), this.getY() + SymbolButtonWidget.GRID_SPCAING + 1, this.getX() + width, this.getY() + height, SymbolChat.getConfig().hudColor.get());
         super.extractWidgetRenderState(graphics, mouseX, mouseY, a);
     }
 }

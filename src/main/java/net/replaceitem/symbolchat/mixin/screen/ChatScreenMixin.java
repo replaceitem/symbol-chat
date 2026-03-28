@@ -67,7 +67,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
 
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 1),require = 1)
     private int changeTextBoxWidth(int original) {
-        int symbolButtonWidth = switch (SymbolChat.config.symbolButtonPosition.get().getVertical()) {
+        int symbolButtonWidth = switch (SymbolChat.getConfig().symbolButtonPosition.get().getVertical()) {
             case TOP -> 0;
             case BOTTOM -> SymbolButtonWidget.SYMBOL_SIZE + 2;
         };
@@ -75,7 +75,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     }
     @ModifyConstant(method = "init",constant = @Constant(intValue = 4, ordinal = 0),require = 1)
     private int changeTextBoxX(int original) {
-        Config.HudCorner symbolButtonPosition = SymbolChat.config.symbolButtonPosition.get();
+        Config.HudCorner symbolButtonPosition = SymbolChat.getConfig().symbolButtonPosition.get();
         if(symbolButtonPosition.getVertical() == Config.HudVerticalSide.TOP) return original;
         return switch(symbolButtonPosition.getHorizontal()) {
             case LEFT -> original + SymbolButtonWidget.SYMBOL_SIZE + 2;
@@ -99,14 +99,14 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     @Override
     public void insertSymbol(String symbol) {
         this.input.insertText(symbol);
-        if(minecraft != null) this.minecraft.schedule(() -> {
+        this.minecraft.schedule(() -> {
             if(minecraft.screen == this) this.setFocused(this.input);
         });
     }
 
     @Override
     public void focusTextbox() {
-        if(minecraft != null) this.minecraft.schedule(() -> {
+        this.minecraft.schedule(() -> {
             if(minecraft.screen == this) this.setFocused(this.input);
         });
     }
@@ -122,6 +122,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
         return input;
     }
 
+    @Unique
     private boolean isInMessage(String text, @Nullable String insert) {
         // Never convert slashes at the start for commands
         if(text.isEmpty() && Objects.equals(insert, "/")) return false;
@@ -132,7 +133,7 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
             stringReader.skip();
         }
 
-        if (startsWithSlash && this.input.getCursorPosition() > 0 && this.minecraft != null && this.minecraft.player != null) {
+        if (startsWithSlash && this.input.getCursorPosition() > 0 && this.minecraft.player != null) {
             try {
                 CommandDispatcher<ClientSuggestionProvider> commandDispatcher = this.minecraft.player.connection.getCommands();
                 ParseResults<ClientSuggestionProvider> parse = commandDispatcher.parse(stringReader, this.minecraft.player.connection.getSuggestionsProvider());

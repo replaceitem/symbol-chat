@@ -13,6 +13,8 @@ import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.*;
 import net.replaceitem.symbolchat.resource.*;
 
+import java.util.Objects;
+
 public class TabSelectionWidget extends NonScrollableContainerWidget {
 
     private static final int HEIGHT = SymbolButtonWidget.GRID_SPCAING;
@@ -36,10 +38,10 @@ public class TabSelectionWidget extends NonScrollableContainerWidget {
                 SymbolButtonWidget.SYMBOL_SIZE, SymbolButtonWidget.SYMBOL_SIZE,
                 hasLiteralIcon ? Component.literal(textIcon) : Component.empty(),
                 SymbolButtonWidget.SYMBOL_SIZE, SymbolButtonWidget.SYMBOL_SIZE,
-                hasLiteralIcon ? null : new WidgetSprites(icon),
-                button -> setTab(index),
+                hasLiteralIcon ? null : new WidgetSprites(Objects.requireNonNull(icon)),
+                _ -> setTab(index),
                 tab.getTooltipText(),
-                textSupplier -> narration
+                _ -> narration
         );
         this.children().add(switchTabWidget);
     }

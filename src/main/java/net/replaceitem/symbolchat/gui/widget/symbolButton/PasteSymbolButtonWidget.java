@@ -6,7 +6,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.Util;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class PasteSymbolButtonWidget extends SymbolButtonWidget {
@@ -24,14 +24,14 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
         this.symbol = symbol;
         this.context = context;
         this.setTooltip(tooltip);
-        this.setTooltipDelay(SymbolChat.config.symbolTooltipMode.get().getDelay());
-        this.isFavorite = SymbolChat.symbolManager.isFavorite(symbol);
+        this.setTooltipDelay(SymbolChat.getConfig().symbolTooltipMode.get().getDelay());
+        this.isFavorite = SymbolChat.getSymbolManager().isFavorite(symbol);
     }
 
     @Override
     protected void renderOverlay(GuiGraphicsExtractor graphics) {
         super.renderOverlay(graphics);
-        if(isFavorite) this.drawCorners(graphics, SymbolChat.config.favoriteColor.get());
+        if(isFavorite) this.drawCorners(graphics, SymbolChat.getConfig().favoriteColor.get());
     }
 
     @Override
@@ -54,15 +54,15 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
 
     protected void onRightClick() {
         if(symbol.codePoints().count() > 1) return; // With current config implementation, favoriting more than once codepoint isn't possible
-        boolean currentlyFavorite = SymbolChat.symbolManager.isFavorite(this.symbol);
-        String currentFavorites = SymbolChat.config.favoriteSymbols.get();
+        boolean currentlyFavorite = SymbolChat.getSymbolManager().isFavorite(this.symbol);
+        String currentFavorites = SymbolChat.getConfig().favoriteSymbols.get();
 
         if(currentlyFavorite) {
-            SymbolChat.config.favoriteSymbols.set(currentFavorites.replace(this.getSymbol(), ""));
+            SymbolChat.getConfig().favoriteSymbols.set(currentFavorites.replace(this.getSymbol(), ""));
         } else {
-            SymbolChat.config.favoriteSymbols.set(currentFavorites + getSymbol());
+            SymbolChat.getConfig().favoriteSymbols.set(currentFavorites + getSymbol());
         }
-        SymbolChat.config.scheduleSave();
+        SymbolChat.getConfig().scheduleSave();
         this.isFavorite = !currentlyFavorite;
     }
 

@@ -1,14 +1,13 @@
 package net.replaceitem.symbolchat.resource;
 
 import com.ibm.icu.lang.UCharacter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.Nullable;
 
 public class SymbolList {
     private final Identifier id;
@@ -77,8 +76,8 @@ public class SymbolList {
             return splitType;
         }
 
-        @NotNull
-        public static SplitType getOrDefault(String name, @NotNull SplitType defaultType) {
+        public static SplitType getOrDefault(@Nullable String name, SplitType defaultType) {
+            if(name == null) return defaultType;
             SplitType splitType = get(name);
             return splitType == null ? defaultType : splitType;
         }

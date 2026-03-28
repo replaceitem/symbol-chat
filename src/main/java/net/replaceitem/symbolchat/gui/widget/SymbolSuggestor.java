@@ -14,7 +14,7 @@ import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -53,7 +53,7 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
 
         
         int fittingSymbols = Math.floorDiv(this.screen.width, SymbolButtonWidget.SYMBOL_SIZE + 1);
-        int shownSymbols = Math.min(fittingSymbols, SymbolChat.config.maxSymbolSuggestions.get());
+        int shownSymbols = Math.min(fittingSymbols, SymbolChat.getConfig().maxSymbolSuggestions.get());
         
         if (!Objects.equals(previousSearchTerm, search)) {
             previousSearchTerm = search;
@@ -61,8 +61,8 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
 
             if(search != null) {
                 Stream<String> searchStream = search.isBlank() ?
-                        SymbolChat.symbolManager.getFavoriteSymbols() :
-                        SearchUtil.performSearch(SymbolChat.symbolManager.streamAllSymbols(), search);
+                        SymbolChat.getSymbolManager().getFavoriteSymbols() :
+                        SearchUtil.performSearch(SymbolChat.getSymbolManager().streamAllSymbols(), search);
                 List<String> symbols = searchStream.limit(shownSymbols).toList();
                 this.width = 1 + SymbolButtonWidget.GRID_SPCAING * symbols.size();
                 this.setX(Mth.clamp(this.getX(), 0, this.screen.width - this.width));
@@ -93,7 +93,7 @@ public class SymbolSuggestor extends NonScrollableContainerWidget implements Pas
 
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        graphics.fill(this.getX(), this.getY(), this.getRight(), this.getBottom(), SymbolChat.config.hudColor.get());
+        graphics.fill(this.getX(), this.getY(), this.getRight(), this.getBottom(), SymbolChat.getConfig().hudColor.get());
         super.extractWidgetRenderState(graphics, mouseX, mouseY, a);
     }
 

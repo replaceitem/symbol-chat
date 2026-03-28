@@ -3,33 +3,31 @@ package net.replaceitem.symbolchat.resource;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.replaceitem.symbolchat.extensions.ScreenAccess;
 import net.replaceitem.symbolchat.SymbolChat;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 import static net.replaceitem.symbolchat.SymbolChat.NAMESPACE;
 
-public class FontManager implements SimpleSynchronousResourceReloadListener {
+public class FontManager implements ResourceManagerReloadListener, IdentifiableResourceReloadListener {
     
     public static final Identifier IDENTIFIER = Identifier.fromNamespaceAndPath(NAMESPACE,"fonts");
     public static final FileToIdConverter FONT_FINDER = new FileToIdConverter("symbol_fonts", ".json");
+    @Nullable
     private FontProcessor normal;
     private List<FontProcessor> fonts = List.of();
 
@@ -67,18 +65,17 @@ public class FontManager implements SimpleSynchronousResourceReloadListener {
     }
 
     public FontProcessor getNormal() {
-        return normal;
+        return Objects.requireNonNull(normal, "Font has not been loaded");
     }
     
     public List<FontProcessor> getFontProcessors() {
         return fonts;
     }
     
-    @NotNull
     public FontProcessor getCurrentScreenFontProcessor() {
         Screen screen = Minecraft.getInstance().screen;
         if (!(screen instanceof ScreenAccess screenAccess)) {
-            return normal;
+            return getNormal();
         }
         return screenAccess.getFontProcessor();
     }

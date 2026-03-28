@@ -63,7 +63,7 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
     
     @WrapOperation(method = "charTyped", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/TextFieldHelper;charTyped(Lnet/minecraft/client/input/CharacterEvent;)Z"))
     private boolean processFont(TextFieldHelper instance, CharacterEvent input, Operation<Boolean> original) {
-        FontProcessor fontProcessor = SymbolChat.fontManager.getCurrentScreenFontProcessor();
+        FontProcessor fontProcessor = SymbolChat.getFontManager().getCurrentScreenFontProcessor();
         String string = fontProcessor.convertString(Character.toString(input.codepoint()));
         instance.insertText(string);
         if(fontProcessor.isReverseDirection()) {
@@ -99,7 +99,7 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
         Vector3f textScale = this.getSignTextScale();
         String string = this.getText();
         int cursor = this.getTextFieldHelper().getCursorPos();
-        if (string == null || cursor < 0 || minecraft == null) return new ScreenPosition(0,0);
+        if (cursor < 0) return new ScreenPosition(0,0);
         int halfY = 4 * this.sign.getTextLineHeight() / 2;
         int y = this.line * this.sign.getTextLineHeight() - halfY;
         int cx = this.minecraft.font.width(string.substring(0, Math.min(cursor, string.length())));

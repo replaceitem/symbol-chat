@@ -1,7 +1,7 @@
 package net.replaceitem.symbolchat.extensions;
 
 import net.replaceitem.symbolchat.resource.FontProcessor;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;

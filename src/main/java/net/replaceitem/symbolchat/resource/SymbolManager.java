@@ -10,7 +10,6 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
 import net.replaceitem.symbolchat.SymbolChat;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -77,7 +76,6 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
         return allSymbols.stream().filter(s -> s.codePoints().count() <= 1);
     }
 
-    @NotNull
     private SymbolTab readTab(ResourceManager manager, BufferedReader symbolTabReader, Identifier identifier) {
         JsonObject object = GsonHelper.parse(symbolTabReader);
         String icon = GsonHelper.getAsString(object, "icon");
@@ -89,7 +87,6 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
         return new SymbolTab(identifier, icon, order, type, searchBar, symbols);
     }
 
-    @NotNull
     private List<SymbolList> readSymbolLists(ResourceManager manager, JsonArray symbolFiles) {
         List<SymbolList> symbols = new ArrayList<>();
         for (JsonElement symbolFile : symbolFiles) {
@@ -113,7 +110,6 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
         return symbols;
     }
     
-    @NotNull
     private SymbolList readSymbolList(ResourceManager manager, Identifier identifier, SymbolList.SplitType type) throws IOException, JsonParseException {
         if(listCache.containsKey(identifier)) return listCache.get(identifier);
         try(BufferedReader symbolsReader = manager.openAsReader(SYMBOLS_FINDER.idToFile(identifier))) {

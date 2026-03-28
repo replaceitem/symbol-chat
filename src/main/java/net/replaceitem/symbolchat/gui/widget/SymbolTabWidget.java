@@ -13,7 +13,7 @@ import net.replaceitem.symbolchat.gui.container.ScrollableGridContainer;
 import net.replaceitem.symbolchat.gui.container.SmoothScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
 import net.replaceitem.symbolchat.resource.SymbolTab;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -74,9 +74,9 @@ public class SymbolTabWidget extends NonScrollableContainerWidget implements Pas
         this.emptyText = this.getEmptyText(buttons.isEmpty());
     }
     
-    private Component getEmptyText(boolean noSymbols) {
+    private @Nullable Component getEmptyText(boolean noSymbols) {
         if(!noSymbols) return null;
-        if(SymbolChat.symbolManager.isOnlyFavorites(tab)) {
+        if(SymbolChat.getSymbolManager().isOnlyFavorites(tab)) {
             return NO_FAVORITE_SYMBOLS;
         }
         return NO_RESULTS;

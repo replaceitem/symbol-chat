@@ -51,7 +51,7 @@ public abstract class BookEditScreenMixin extends Screen implements SymbolInsert
 
     @Override
     public void focusTextbox() {
-        if(minecraft != null) this.minecraft.schedule(() -> {
+        this.minecraft.schedule(() -> {
             if(minecraft.screen == this) this.setFocused(this.page);
         });
     }

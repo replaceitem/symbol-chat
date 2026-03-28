@@ -1,8 +1,6 @@
 package net.replaceitem.symbolchat.resource;
 
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,10 +8,13 @@ import java.util.Map;
 import java.util.stream.Stream;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.Nullable;
 
 public class SymbolTab implements Comparable<SymbolTab> {
     private final Identifier id;
+    @Nullable
     private final Identifier icon;
+    @Nullable
     private final String textIcon;
     private final Component tooltipText;
     private List<SymbolList> symbols;
@@ -62,7 +63,7 @@ public class SymbolTab implements Comparable<SymbolTab> {
     }
 
     @Override
-    public int compareTo(@NotNull SymbolTab o) {
+    public int compareTo(SymbolTab o) {
         return Integer.compare(order, o.order);
     }
 
@@ -70,11 +71,11 @@ public class SymbolTab implements Comparable<SymbolTab> {
         return type;
     }
 
-    public Identifier getIcon() {
+    public @Nullable Identifier getIcon() {
         return icon;
     }
 
-    public String getTextIcon() {
+    public @Nullable String getTextIcon() {
         return textIcon;
     }
 
@@ -82,7 +83,7 @@ public class SymbolTab implements Comparable<SymbolTab> {
         private static final Map<String, Type> TYPES = new HashMap<>();
 
         public static final Type SYMBOLS = register("symbols", new Type(i -> i, true, false));
-        public static final Type KAOMOJIS = register("kaomojis", new Type(i -> 1, false, true));
+        public static final Type KAOMOJIS = register("kaomojis", new Type(_ -> 1, false, true));
         
         private final Int2IntFunction columnFunction;
         private final boolean hasTooltip;
@@ -99,8 +100,8 @@ public class SymbolTab implements Comparable<SymbolTab> {
             return type;
         }
 
-        @NotNull
-        public static Type getOrDefault(String name, @NotNull Type defaultType) {
+        public static Type getOrDefault(@Nullable String name, Type defaultType) {
+            if(name == null) return defaultType;
             Type type = get(name);
             return type == null ? defaultType : type;
         }

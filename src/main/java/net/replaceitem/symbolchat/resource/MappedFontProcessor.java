@@ -80,7 +80,7 @@ public class MappedFontProcessor extends FontProcessor {
             if(primitive.isNumber()) return Util.stringFromCodePoint(primitive.getAsNumber().intValue());
             return primitive.getAsString();
         }
-        throw new JsonSyntaxException("Not a string or codepoint number: " + element.toString());
+        throw new JsonSyntaxException("Not a string or codepoint number: " + element);
     }
     
     static abstract class CodepointIterator implements Iterator<String> {

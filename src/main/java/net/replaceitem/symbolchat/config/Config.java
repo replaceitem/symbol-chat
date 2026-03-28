@@ -7,7 +7,6 @@ import net.replaceitem.reconfigure.api.serializer.Serializers;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class Config {

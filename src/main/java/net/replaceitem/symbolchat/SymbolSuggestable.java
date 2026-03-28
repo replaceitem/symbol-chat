@@ -8,7 +8,7 @@ import net.minecraft.client.gui.navigation.ScreenPosition;
 import net.minecraft.util.Mth;
 import net.replaceitem.symbolchat.mixin.MultilineTextFieldAccessor;
 import net.replaceitem.symbolchat.mixin.widget.EditBoxAccessor;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -32,7 +32,7 @@ public interface SymbolSuggestable {
             return new ScreenPosition(x, chatField.getY());
         }
 
-        default String getSuggestionTerm() {
+        default @Nullable String getSuggestionTerm() {
             if(suggestionsDisabled()) return null;
             EditBox chatField = getTextField();
             if(((EditBoxAccessor) chatField).getCursorPos() != ((EditBoxAccessor) chatField).getHighlightPos()) return null;
@@ -60,7 +60,7 @@ public interface SymbolSuggestable {
     }
 
     interface SelectionManagerSymbolSuggestable extends SymbolSuggestable {
-        default String getSuggestionTerm() {
+        default @Nullable String getSuggestionTerm() {
             if(suggestionsDisabled()) return null;
             if(this.getTextFieldHelper().isSelecting()) return null;
             int cursor = this.getTextFieldHelper().getCursorPos();
@@ -86,7 +86,7 @@ public interface SymbolSuggestable {
     }
 
     interface EditBoxSymbolSuggestable extends SymbolSuggestable {
-        default String getSuggestionTerm() {
+        default @Nullable String getSuggestionTerm() {
             if(suggestionsDisabled()) return null;
             if(this.getMultilineTextField().hasSelection()) return null;
             int cursor = this.getMultilineTextField().cursor();

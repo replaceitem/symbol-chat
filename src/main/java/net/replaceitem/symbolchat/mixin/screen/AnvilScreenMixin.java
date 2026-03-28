@@ -41,10 +41,9 @@ public abstract class AnvilScreenMixin extends ItemCombinerScreen<AnvilMenu> imp
 
     @Override
     public void insertSymbol(String symbol) {
-        if(name == null) return;
         if(this.name.canConsumeInput()) {
             this.name.insertText(symbol);
-            if(minecraft != null) this.minecraft.schedule(() -> {
+            this.minecraft.schedule(() -> {
                 if(minecraft.screen == this) this.setFocused(this.name);
             });
         }
@@ -52,7 +51,7 @@ public abstract class AnvilScreenMixin extends ItemCombinerScreen<AnvilMenu> imp
 
     @Override
     public void focusTextbox() {
-        if(minecraft != null) this.minecraft.schedule(() -> {
+        this.minecraft.schedule(() -> {
             if(minecraft.screen == this) this.setFocused(this.name);
         });
     }

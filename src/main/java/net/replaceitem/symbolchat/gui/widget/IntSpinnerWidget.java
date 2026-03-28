@@ -6,8 +6,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.OptionalInt;
 import java.util.function.Consumer;
@@ -52,7 +51,7 @@ public class IntSpinnerWidget extends GridLayout {
         textField.setValue(String.valueOf(Mth.clamp(value, min, max)));
     }
     
-    public void setValue(@NotNull String value) {
+    public void setValue(String value) {
         textField.setValue(value);
     }
     
@@ -69,12 +68,11 @@ public class IntSpinnerWidget extends GridLayout {
         return button -> setValue(getValue().orElse(0) + delta);
     }
     
-    public static Builder builder(@NotNull Font textRenderer) {
+    public static Builder builder(Font textRenderer) {
         return new Builder(textRenderer);
     }
 
     public static class Builder {
-        @NotNull
         private final Font textRenderer;
         @Nullable
         private Consumer<OptionalInt> changedListener;
@@ -84,7 +82,7 @@ public class IntSpinnerWidget extends GridLayout {
         private int min = Integer.MIN_VALUE;
         private int max = Integer.MAX_VALUE;
 
-        public Builder(@NotNull Font textRenderer) {
+        public Builder(Font textRenderer) {
             this.textRenderer = textRenderer;
         }
         

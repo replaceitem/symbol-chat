@@ -16,7 +16,7 @@ import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.container.ScrollableGridContainer;
 import net.replaceitem.symbolchat.gui.container.SmoothScrollableContainerWidget;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements R
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         ScreenRectangle expandedArea = getExpandedArea();
-        if(expanded) graphics.fill(expandedArea.left(), expandedArea.top(), expandedArea.right(), expandedArea.bottom(), SymbolChat.config.buttonColor.get());
+        if(expanded) graphics.fill(expandedArea.left(), expandedArea.top(), expandedArea.right(), expandedArea.bottom(), SymbolChat.getConfig().buttonColor.get());
         super.extractWidgetRenderState(graphics, mouseX, mouseY, a);
     }
 
@@ -93,7 +93,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements R
         }
 
         private int getBackgroundColor() {
-            return this.isHovered() ? SymbolChat.config.buttonActiveColor.get() : SymbolChat.config.buttonColor.get();
+            return this.isHovered() ? SymbolChat.getConfig().buttonActiveColor.get() : SymbolChat.getConfig().buttonColor.get();
         }
 
         @Override
@@ -119,7 +119,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements R
         }
         
         private int getBackgroundColor() {
-            return this.isHovered() ? SymbolChat.config.buttonActiveColor.get() : SymbolChat.config.buttonColor.get();
+            return this.isHovered() ? SymbolChat.getConfig().buttonActiveColor.get() : SymbolChat.getConfig().buttonColor.get();
         }
 
         @Override
@@ -138,7 +138,7 @@ public class DropDownWidget<T> extends NonScrollableContainerWidget implements R
         @Override
         public void updateWidgetNarration(NarrationElementOutput builder) {
             this.defaultButtonNarrationText(builder);
-            builder.add(NarratedElementType.HINT, "Dropdown element: " + element.toString());
+            builder.add(NarratedElementType.HINT, "Dropdown element: " + element);
         }
     
         public T getElement() {

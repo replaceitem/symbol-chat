@@ -1,5 +1,4 @@
 accessWidener   v2      official
-accessible class net/minecraft/client/gui/GuiGraphics$ScissorStack
 accessible method net/minecraft/client/gui/components/AbstractScrollArea scrollerHeight ()I
 accessible class net/minecraft/client/gui/components/MultilineTextField$StringView
 extendable method net/minecraft/client/gui/font/TextFieldHelper insertText (Ljava/lang/String;Ljava/lang/String;)V

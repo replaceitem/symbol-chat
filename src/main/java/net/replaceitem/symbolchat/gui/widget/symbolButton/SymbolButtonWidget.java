@@ -48,7 +48,7 @@ public abstract class SymbolButtonWidget extends AbstractWidget implements Rende
             this.extractBackgroundRenderState(graphics);
         }
         Font textRenderer = Minecraft.getInstance().font;
-        int textColor = this.isHighlighted() ? SymbolChat.config.buttonTextHoverColor.get() : SymbolChat.config.buttonTextColor.get();
+        int textColor = this.isHighlighted() ? SymbolChat.getConfig().buttonTextHoverColor.get() : SymbolChat.getConfig().buttonTextColor.get();
         drawSymbol(graphics, textRenderer, this.getMessage(), textColor);
         this.renderOverlay(graphics);
     }
@@ -63,7 +63,7 @@ public abstract class SymbolButtonWidget extends AbstractWidget implements Rende
     }
 
     protected int getBackgroundColor() {
-        return this.isHighlighted() ? SymbolChat.config.buttonActiveColor.get() : SymbolChat.config.buttonColor.get();
+        return this.isHighlighted() ? SymbolChat.getConfig().buttonActiveColor.get() : SymbolChat.getConfig().buttonColor.get();
     }
     
     protected boolean shouldRenderBackground() {
