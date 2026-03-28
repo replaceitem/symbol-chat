@@ -1,7 +1,8 @@
 package net.replaceitem.symbolchat;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.replaceitem.symbolchat.config.Config;
 import net.replaceitem.symbolchat.resource.FontManager;
@@ -36,8 +37,9 @@ public class SymbolChat implements ClientModInitializer {
         config.load();
         config.favoriteSymbols.observe(favoriteSymbols -> symbolManager.onCustomSymbolsChanged(favoriteSymbols));
         config.customKaomojis.observe(customKaomojis -> symbolManager.onCustomKaomojisChanged(customKaomojis));
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(symbolManager);
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(fontManager);
+        ResourceLoader resourceLoader = ResourceLoader.get(PackType.CLIENT_RESOURCES);
+        resourceLoader.registerReloadListener(Identifier.fromNamespaceAndPath(NAMESPACE,"symbols"), symbolManager);
+        resourceLoader.registerReloadListener(Identifier.fromNamespaceAndPath(NAMESPACE,"fonts"), fontManager);
     }
 
     public static Config getConfig() {

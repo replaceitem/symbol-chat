@@ -2,12 +2,12 @@ package net.replaceitem.symbolchat.resource;
 
 import com.google.gson.*;
 import com.ibm.icu.lang.UCharacter;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.IdentifierException;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.replaceitem.symbolchat.SymbolChat;
 
@@ -18,9 +18,7 @@ import java.util.stream.Stream;
 
 import static net.replaceitem.symbolchat.SymbolChat.NAMESPACE;
 
-public class SymbolManager implements SimpleSynchronousResourceReloadListener {
-    
-    public static final Identifier IDENTIFIER = Identifier.fromNamespaceAndPath(NAMESPACE,"symbols");
+public class SymbolManager implements ResourceManagerReloadListener {
     public static final FileToIdConverter SYMBOLS_FINDER = new FileToIdConverter("symbols", ".txt");
     public static final FileToIdConverter SYMBOL_TABS_FINDER = FileToIdConverter.json("symbol_tabs");
 
@@ -29,11 +27,6 @@ public class SymbolManager implements SimpleSynchronousResourceReloadListener {
     private final HashMap<Identifier, SymbolList> listCache = new HashMap<>();
     private final SymbolList.Mutable favoritesList = new SymbolList.Mutable(Identifier.fromNamespaceAndPath(NAMESPACE, "favorites"));
     private final SymbolList.Mutable customKaomojisList = new SymbolList.Mutable(Identifier.fromNamespaceAndPath(NAMESPACE, "custom_kaomojis"));
-    
-    @Override
-    public Identifier getFabricId() {
-        return IDENTIFIER;
-    }
 
     @Override
     public void onResourceManagerReload(ResourceManager manager) {

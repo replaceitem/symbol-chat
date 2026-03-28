@@ -23,18 +23,11 @@ import java.util.function.Function;
 
 import static net.replaceitem.symbolchat.SymbolChat.NAMESPACE;
 
-public class FontManager implements ResourceManagerReloadListener, IdentifiableResourceReloadListener {
-    
-    public static final Identifier IDENTIFIER = Identifier.fromNamespaceAndPath(NAMESPACE,"fonts");
+public class FontManager implements ResourceManagerReloadListener {
     public static final FileToIdConverter FONT_FINDER = new FileToIdConverter("symbol_fonts", ".json");
     @Nullable
     private FontProcessor normal;
     private List<FontProcessor> fonts = List.of();
-
-    @Override
-    public Identifier getFabricId() {
-        return IDENTIFIER;
-    }
 
     @Override
     public void onResourceManagerReload(ResourceManager manager) {
