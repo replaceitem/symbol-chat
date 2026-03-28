@@ -25,7 +25,7 @@ import net.replaceitem.symbolchat.gui.widget.IntSpinnerWidget;
 import net.replaceitem.symbolchat.gui.widget.UnicodeTable;
 import net.replaceitem.symbolchat.mixin.FontManagerAccessor;
 import net.replaceitem.symbolchat.mixin.MinecraftAccessor;
-import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.OptionalInt;
@@ -42,21 +42,21 @@ public class UnicodeTableScreen extends Screen {
 
     private final Screen parent;
 
-    @UnknownNullability
+    @Nullable
     private UnicodeTable unicodeTable;
 
-    @UnknownNullability
+    @Nullable
     private Button copySelectedButton;
-    @UnknownNullability
+    @Nullable
     private Button favoriteSymbolButton;
 
-    @UnknownNullability
+    @Nullable
     private EditBox searchTextField;
-    @UnknownNullability
+    @Nullable
     private IntSpinnerWidget pageSpinner;
-    @UnknownNullability
+    @Nullable
     private IntSpinnerWidget widthSpinner;
-    @UnknownNullability
+    @Nullable
     private Checkbox hideMissingGlyphsCheckbox;
     
     public static final int SIDEBAR_WIDTH = 128;
@@ -70,8 +70,8 @@ public class UnicodeTableScreen extends Screen {
             @Override
             protected void onRefreshed() {
                 boolean hasSelection = hasSelection();
-                copySelectedButton.active = hasSelection;
-                favoriteSymbolButton.active = hasSelection;
+                if(copySelectedButton != null) copySelectedButton.active = hasSelection;
+                if(favoriteSymbolButton != null) favoriteSymbolButton.active = hasSelection;
             }
         };
         addRenderableWidget(unicodeTable);
@@ -139,7 +139,7 @@ public class UnicodeTableScreen extends Screen {
                             return true;
                         }
                         int page = (codepoint & 0xFF0000) >> 16;
-                        if(pageSpinner.getValue().isEmpty() || pageSpinner.getValue().getAsInt() != page) {
+                        if(pageSpinner != null && (pageSpinner.getValue().isEmpty() || pageSpinner.getValue().getAsInt() != page)) {
                             pageSpinner.setValue(page);
                         }
                         unicodeTable.jumpTo(codepoint);
@@ -197,6 +197,7 @@ public class UnicodeTableScreen extends Screen {
     }
 
     private void reloadSymbols() {
+        if(pageSpinner == null || searchTextField == null || hideMissingGlyphsCheckbox == null || unicodeTable == null || widthSpinner == null) return;
         OptionalInt page = pageSpinner.getValue();
         UnicodeSearch search = page.isPresent() ? UnicodeSearch.ofPage(page.getAsInt()) : UnicodeSearch.ofAll();
         
