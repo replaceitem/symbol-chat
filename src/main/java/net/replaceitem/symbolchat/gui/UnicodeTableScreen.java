@@ -148,7 +148,8 @@ public class UnicodeTableScreen extends Screen {
                     return super.keyPressed(input);
                 }
             };
-            jumpToTextField.setResponder(s -> this.reloadSymbols());
+            jumpToTextField.setResponder(_ -> this.reloadSymbols());
+            jumpToTextField.setHint(Component.translatable("symbolchat.unicode_table.jump_to.hint"));
 
             FrameLayout jumpToRow = adder.addChild(new FrameLayout(widgetWidth, 0));
             jumpToRow.addChild(jumpToLabel, LayoutSettings::alignHorizontallyLeft);

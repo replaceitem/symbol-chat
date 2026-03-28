@@ -47,6 +47,7 @@
   "symbolchat.unicode_table.font": "Font",
   "symbolchat.unicode_table.hide_missing_glyphs": "Hide Missing Glyphs",
   "symbolchat.unicode_table.jump_to": "Jump to",
+  "symbolchat.unicode_table.jump_to.hint": "Codepoint (Hex)",
   "symbolchat.unicode_table.page": "Page",
   "symbolchat.unicode_table.search": "Search",
   "symbolchat.unicode_table.show_blocks": "Show Blocks",
