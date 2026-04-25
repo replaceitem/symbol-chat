@@ -3,6 +3,7 @@ package net.replaceitem.symbolchat.gui.widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.replaceitem.symbolchat.SearchUtil;
@@ -62,6 +63,17 @@ public class SymbolTabWidget extends NonScrollableContainerWidget implements Pas
         scrollableWidget.clearElements();
         addSymbols();
         this.scrollableWidget.refreshPositions();
+    }
+
+    /**
+     * Why is {@link net.minecraft.client.gui.components.AbstractContainerWidget#setFocused(GuiEventListener)}
+     * different from the (better implemented) {@link net.minecraft.client.gui.components.events.AbstractContainerEventHandler#setFocused(GuiEventListener)}
+     */
+    @Override
+    public void setFocused(@Nullable GuiEventListener focused) {
+        if(this.getFocused() != focused) {
+            super.setFocused(focused);
+        }
     }
 
     protected void addSymbols() {

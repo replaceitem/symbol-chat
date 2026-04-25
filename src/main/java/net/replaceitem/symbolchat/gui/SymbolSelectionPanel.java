@@ -1,6 +1,7 @@
 package net.replaceitem.symbolchat.gui;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
@@ -9,6 +10,7 @@ import net.replaceitem.symbolchat.gui.widget.SymbolTabWidget;
 import net.replaceitem.symbolchat.gui.widget.TabSelectionWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.SymbolButtonWidget;
 import net.replaceitem.symbolchat.resource.SymbolTab;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,18 @@ public class SymbolSelectionPanel extends NonScrollableContainerWidget {
         getCurrentTab().ifPresent(this::setVisibleTab);
         tabSelectionWidget.refreshPositions();
     }
-    
+
+    /**
+     * Why is {@link net.minecraft.client.gui.components.AbstractContainerWidget#setFocused(GuiEventListener)}
+     * different from the (better implemented) {@link net.minecraft.client.gui.components.events.AbstractContainerEventHandler#setFocused(GuiEventListener)}
+     */
+    @Override
+    public void setFocused(@Nullable GuiEventListener focused) {
+        if(this.getFocused() != focused) {
+            super.setFocused(focused);
+        }
+    }
+
     private void setVisibleTab(SymbolTabWidget tab) {
         tabs.forEach(symbolTabWidget -> symbolTabWidget.visible = false);
         tab.visible = true;

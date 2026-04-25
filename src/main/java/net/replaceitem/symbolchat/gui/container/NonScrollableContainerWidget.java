@@ -8,7 +8,6 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.narration.NarrationSupplier;
-import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +28,6 @@ public class NonScrollableContainerWidget extends AbstractContainerWidget {
         for (GuiEventListener child : this.children) {
             if(child instanceof Renderable drawable) drawable.extractRenderState(graphics, mouseX, mouseY, a);
         }
-    }
-
-    @Override
-    public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
-        if(this.isMouseOver(click.x(), click.y())) {
-            return super.mouseClicked(click, doubled);
-        }
-        return false;
     }
 
     @Override
