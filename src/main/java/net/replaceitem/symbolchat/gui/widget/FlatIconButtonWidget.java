@@ -5,6 +5,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.replaceitem.symbolchat.SymbolChat;
@@ -13,10 +14,15 @@ import org.jspecify.annotations.Nullable;
 public class FlatIconButtonWidget extends SpriteIconButton.CenteredIcon {
     private boolean outlined = false;
 
-    public FlatIconButtonWidget(int width, int height, Component message, int textureWidth, int textureHeight, @Nullable WidgetSprites buttonTextures, PressAction pressAction, @Nullable Component tooltipText, Button.@Nullable CreateNarration narrationSupplier) {
-        // buttonTextures is not nullable, but is not used in this subclass
-        //noinspection DataFlowIssue
-        super(width, height, message, textureWidth, textureHeight, buttonTextures, pressAction, tooltipText, narrationSupplier);
+    /**
+     * Copy of {@link SpriteIconButton#sprite}, but nullable.
+     * The original is not used in this subclass and set to missing texture for NPE prevention.
+     */
+    @Nullable WidgetSprites sprite;
+
+    public FlatIconButtonWidget(int width, int height, Component message, int textureWidth, int textureHeight, @Nullable WidgetSprites sprite, PressAction pressAction, @Nullable Component tooltipText, Button.@Nullable CreateNarration narrationSupplier) {
+        super(width, height, message, textureWidth, textureHeight, new WidgetSprites(MissingTextureAtlasSprite.getLocation()), pressAction, tooltipText, narrationSupplier);
+        this.sprite = sprite;
     }
 
     protected int getBackgroundColor() {
@@ -46,8 +52,11 @@ public class FlatIconButtonWidget extends SpriteIconButton.CenteredIcon {
         int textureX = this.getX() + this.getWidth() / 2 - this.spriteWidth / 2;
         int textureY = this.getY() + this.getHeight() / 2 - this.spriteHeight / 2;
         int textColor = this.isHovered() ? SymbolChat.getConfig().buttonTextHoverColor.get() : SymbolChat.getConfig().buttonTextColor.get();
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite.enabled(), textureX, textureY, this.spriteWidth, this.spriteHeight, ARGB.color((int) (this.alpha * 255), textColor));
-        this.extractDefaultLabel(graphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE));
+        if(this.sprite != null) {
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite.enabled(), textureX, textureY, this.spriteWidth, this.spriteHeight, ARGB.color((int) (this.alpha * 255), textColor));
+        } else {
+            this.extractDefaultLabel(graphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE));
+        }
     }
 
     public interface PressAction extends Button.OnPress {
