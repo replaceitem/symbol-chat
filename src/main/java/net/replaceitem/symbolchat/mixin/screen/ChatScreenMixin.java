@@ -100,14 +100,14 @@ public class ChatScreenMixin extends Screen implements SymbolInsertable, SymbolS
     public void insertSymbol(String symbol) {
         this.input.insertText(symbol);
         this.minecraft.schedule(() -> {
-            if(minecraft.screen == this) this.setFocused(this.input);
+            if(minecraft.gui.screen() == this) this.setFocused(this.input);
         });
     }
 
     @Override
     public void focusTextbox() {
         this.minecraft.schedule(() -> {
-            if(minecraft.screen == this) this.setFocused(this.input);
+            if(minecraft.gui.screen() == this) this.setFocused(this.input);
         });
     }
 

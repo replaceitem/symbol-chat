@@ -32,7 +32,7 @@ public class EditBoxMixin implements SymbolEditableWidget {
     @Unique private boolean lastReverseDirection;
 
     @Inject(method = "insertText", at = @At(value = "HEAD"))
-    private void beforeInsertText(String text, CallbackInfo ci, @Local(argsOnly = true) LocalRef<String> textRef) {
+    private void beforeInsertText(String text, CallbackInfo ci, @Local(argsOnly = true, name = "input") LocalRef<String> textRef) {
         this.lastReverseDirection = false;
         if (convertFontsPredicate == null || convertFontsPredicate.apply(this.value, text)) {
             FontProcessor fontProcessor = fontProcessorSupplier == null ? null : fontProcessorSupplier.get();

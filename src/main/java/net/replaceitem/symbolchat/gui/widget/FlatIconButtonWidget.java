@@ -21,7 +21,7 @@ public class FlatIconButtonWidget extends SpriteIconButton.CenteredIcon {
     @Nullable WidgetSprites sprite;
 
     public FlatIconButtonWidget(int width, int height, Component message, int textureWidth, int textureHeight, @Nullable WidgetSprites sprite, PressAction pressAction, @Nullable Component tooltipText, Button.@Nullable CreateNarration narrationSupplier) {
-        super(width, height, message, textureWidth, textureHeight, new WidgetSprites(MissingTextureAtlasSprite.getLocation()), pressAction, tooltipText, narrationSupplier);
+        super(width, height, message, textureWidth, textureHeight, 0, 0, new WidgetSprites(MissingTextureAtlasSprite.getLocation()), pressAction, tooltipText, narrationSupplier, false);
         this.sprite = sprite;
     }
 

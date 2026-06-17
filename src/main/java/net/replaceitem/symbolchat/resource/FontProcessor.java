@@ -2,6 +2,7 @@ package net.replaceitem.symbolchat.resource;
 
 
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.locale.Language;
 import net.minecraft.resources.Identifier;
 import net.replaceitem.symbolchat.Util;
 
@@ -21,7 +22,7 @@ public class FontProcessor {
         this.codePointConverter = codePointConverter;
         this.reverseDirection = reverseDirection;
         String translationKey = id.toLanguageKey("symbolchat.font");
-        if(I18n.exists(translationKey)) {
+        if(Language.getInstance().has(translationKey)) {
             String name = I18n.get(translationKey);
             if(reverseDirection) name = new StringBuilder(name).reverse().toString();
             this.convertedName = convertString(name);

@@ -153,7 +153,7 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
                     15,
                     hudButtonsHeight,
                     new WidgetSprites(WRENCH_TEXTURE),
-                    button -> Minecraft.getInstance().setScreen(SymbolChat.getConfig().createScreen(ScreensMixin.this)),
+                    button -> Minecraft.getInstance().setScreenAndShow(SymbolChat.getConfig().createScreen(ScreensMixin.this)),
                     Component.translatable("reconfigure.title.symbol-chat"),
                     textSupplier -> Component.translatable("reconfigure.title.symbol-chat"));
             adder.addChild(settingsButtonWidget);
@@ -166,7 +166,7 @@ public abstract class ScreensMixin extends Screen implements ScreenAccess, Symbo
                     15,
                     hudButtonsHeight,
                     new WidgetSprites(TABLE_TEXTURE),
-                    _ -> ScreensMixin.this.minecraft.setScreen(new UnicodeTableScreen(ScreensMixin.this)),
+                    _ -> ScreensMixin.this.minecraft.setScreenAndShow(new UnicodeTableScreen(ScreensMixin.this)),
                     Component.translatable("symbolchat.unicode_table"),
                     _ -> Component.translatable("symbolchat.unicode_table")
             );

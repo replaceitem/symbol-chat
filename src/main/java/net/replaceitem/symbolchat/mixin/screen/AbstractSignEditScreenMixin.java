@@ -19,7 +19,7 @@ import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.SymbolInsertable;
 import net.replaceitem.symbolchat.SymbolSuggestable;
 import net.replaceitem.symbolchat.resource.FontProcessor;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,7 +35,7 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
     @Shadow @Final private String[] messages;
     @Shadow @Final protected SignBlockEntity sign;
 
-    @Shadow protected abstract Vector3f getSignTextScale();
+    @Shadow protected abstract Vector3fc getSignTextScale();
 
     protected AbstractSignEditScreenMixin(Component title) {
         super(title);
@@ -96,7 +96,7 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
 
     @Override
     public ScreenPosition getCursorPosition() {
-        Vector3f textScale = this.getSignTextScale();
+        Vector3fc textScale = this.getSignTextScale();
         String string = this.getText();
         int cursor = this.getTextFieldHelper().getCursorPos();
         if (cursor < 0) return new ScreenPosition(0,0);
@@ -107,7 +107,7 @@ public abstract class AbstractSignEditScreenMixin extends Screen implements Symb
         x += this.width/2; // see translateForRender()
         y += 90;
         if(((Object) this) instanceof HangingSignEditScreen) y += 35;
-        return new ScreenPosition((int) (x * textScale.x), (int) (y * textScale.y));
+        return new ScreenPosition((int) (x * textScale.x()), (int) (y * textScale.y()));
     }
 
     @Override
