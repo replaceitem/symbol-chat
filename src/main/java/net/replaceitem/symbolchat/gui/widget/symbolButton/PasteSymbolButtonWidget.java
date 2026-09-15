@@ -1,13 +1,14 @@
 package net.replaceitem.symbolchat.gui.widget.symbolButton;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.network.chat.Component;
 import net.replaceitem.symbolchat.SymbolChat;
 import net.replaceitem.symbolchat.Util;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     @Nullable
@@ -35,12 +36,17 @@ public class PasteSymbolButtonWidget extends SymbolButtonWidget {
     }
 
     @Override
+    protected boolean isValidClickButton(MouseButtonInfo input) {
+        return super.isValidClickButton(input) || input.button() == InputConstants.MOUSE_BUTTON_RIGHT;
+    }
+
+    @Override
     public void onClick(MouseButtonEvent click, boolean doubled) {
-        if(click.button() == GLFW.GLFW_MOUSE_BUTTON_1) {
+        if(click.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             this.onSymbolClicked();
             return;
         }
-        if(click.button() == GLFW.GLFW_MOUSE_BUTTON_2) {
+        if(click.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             onRightClick();
             if(this.context != null) this.context.refresh();
         }

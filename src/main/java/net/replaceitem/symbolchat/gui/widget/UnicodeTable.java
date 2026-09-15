@@ -2,6 +2,7 @@ package net.replaceitem.symbolchat.gui.widget;
 
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.lang.UProperty;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -22,7 +23,6 @@ import net.replaceitem.symbolchat.extensions.FontAccess;
 import net.replaceitem.symbolchat.Util;
 import net.replaceitem.symbolchat.gui.container.NonScrollableContainerWidget;
 import net.replaceitem.symbolchat.gui.widget.symbolButton.PasteSymbolButtonWidget;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.Set;
@@ -236,7 +236,7 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
     public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
         if(super.mouseClicked(click, doubled)) return true;
         if(click.x() >= scrollbarX && click.x() < scrollbarX+SCROLLBAR_WIDTH && click.y() >= scrollbarY && click.y() < scrollbarY+scrollbarHeight) {
-            scrolling = click.button() == 0;
+            scrolling = click.button() == InputConstants.MOUSE_BUTTON_LEFT;
             return true;
         }
         return false;
@@ -245,7 +245,7 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
     @Override
     public boolean mouseReleased(MouseButtonEvent click) {
         if(super.mouseReleased(click)) return true;
-        if(click.button() == 0) {
+        if(click.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             scrolling = false;
             return true;
         }
@@ -257,7 +257,7 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
         if (super.mouseDragged(click, offsetX, offsetY)) {
             return true;
         }
-        if (click.button() == 0 && this.scrolling) {
+        if (click.button() == InputConstants.MOUSE_BUTTON_LEFT && this.scrolling) {
             if (click.y() < (double)this.getY()) {
                 scroll = 0;
             } else if (click.y() > (double)this.getBottom()) {
@@ -369,7 +369,7 @@ public class UnicodeTable extends NonScrollableContainerWidget implements PasteS
 
         @Override
         public void onClick(MouseButtonEvent click, boolean doubled) {
-            if(click.button() == GLFW.GLFW_MOUSE_BUTTON_1) {
+            if(click.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 if (click.hasShiftDown() && selectionStart != -1) {
                     if (selectionStart > index) {
                         selectionEnd = selectionStart;

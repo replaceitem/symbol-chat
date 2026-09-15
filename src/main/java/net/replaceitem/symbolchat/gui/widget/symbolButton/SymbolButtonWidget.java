@@ -8,12 +8,10 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.narration.NarrationSupplier;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.replaceitem.symbolchat.SymbolChat;
-import org.lwjgl.glfw.GLFW;
 
 public abstract class SymbolButtonWidget extends AbstractWidget implements Renderable, GuiEventListener, NarrationSupplier {
     public static final int SYMBOL_SIZE = 12;
@@ -30,11 +28,6 @@ public abstract class SymbolButtonWidget extends AbstractWidget implements Rende
     @Override
     public boolean mouseReleased(MouseButtonEvent click) {
         return false; // default behaviour consumes any release event which is problematic when trying to un-set ScrollableWidget.scrollbarDragged
-    }
-
-    @Override
-    protected boolean isValidClickButton(MouseButtonInfo input) {
-        return super.isValidClickButton(input) || input.button() == GLFW.GLFW_MOUSE_BUTTON_2;
     }
 
     @Override
